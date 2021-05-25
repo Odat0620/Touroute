@@ -6,3 +6,8 @@ ENV WORKDIR=/front/ \
   HOST=0.0.0.0
 
 WORKDIR ${WORKDIR}
+
+COPY package.json ${WORKDIR}
+COPY yarn.lock ${WORKDIR}
+
+RUN yarn install
