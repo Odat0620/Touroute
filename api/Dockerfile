@@ -8,10 +8,10 @@ WORKDIR ${WORKDIR}
 
 RUN apt-get update -qq && \
   apt-get install -y build-essential \
+  vim \
   nodejs \
   default-mysql-client
 
 
 COPY Gemfile* ${WORKDIR}
-RUN gem install bundler
-RUN bundle install
+RUN gem install bundler && bundle install
