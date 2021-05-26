@@ -25,6 +25,8 @@ services:
       - api-bundle:/usr/local/bundle
     depends_on:
       - db
+    tty: true
+    stdin_open: true
 
   front:
     build: ./front
@@ -36,6 +38,7 @@ services:
       - front-node_modules:/front/node_modules
     depends_on:
       - api
+    tty: true
 
 volumes:
   db-volume:
