@@ -60,7 +60,6 @@ GEM
       msgpack (~> 1.0)
     builder (3.2.4)
     byebug (11.1.3)
-<<<<<<< HEAD
     coderay (1.1.3)
     concurrent-ruby (1.1.8)
     crass (1.0.6)
@@ -73,11 +72,6 @@ GEM
       railties (>= 5.0.0)
     faker (2.18.0)
       i18n (>= 1.6, < 2)
-=======
-    concurrent-ruby (1.1.8)
-    crass (1.0.6)
-    erubi (1.10.0)
->>>>>>> 311e6cbd69d6bad93d3ef4da2d84e8627cf8a18d
     ffi (1.15.1)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
@@ -100,14 +94,11 @@ GEM
     nio4r (2.5.7)
     nokogiri (1.11.5-x86_64-linux)
       racc (~> 1.4)
-<<<<<<< HEAD
     pry (0.14.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
     pry-rails (0.3.9)
       pry (>= 0.10.4)
-=======
->>>>>>> 311e6cbd69d6bad93d3ef4da2d84e8627cf8a18d
     puma (4.3.8)
       nio4r (~> 2.0)
     racc (1.5.2)
@@ -144,7 +135,6 @@ GEM
     rb-fsevent (0.11.0)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-<<<<<<< HEAD
     rspec-core (3.10.1)
       rspec-support (~> 3.10.0)
     rspec-expectations (3.10.1)
@@ -165,9 +155,6 @@ GEM
     spring (2.1.1)
     spring-commands-rspec (1.0.4)
       spring (>= 0.9.1)
-=======
-    spring (2.1.1)
->>>>>>> 311e6cbd69d6bad93d3ef4da2d84e8627cf8a18d
     spring-watcher-listen (2.0.1)
       listen (>= 2.7, < 4.0)
       spring (>= 1.2, < 3.0)
@@ -193,7 +180,6 @@ PLATFORMS
 DEPENDENCIES
   bootsnap (>= 1.4.2)
   byebug
-<<<<<<< HEAD
   factory_bot_rails
   faker
   listen (~> 3.2)
@@ -204,13 +190,6 @@ DEPENDENCIES
   rspec-rails
   spring
   spring-commands-rspec
-=======
-  listen (~> 3.2)
-  mysql2 (>= 0.4.4)
-  puma (~> 4.1)
-  rails (~> 6.0.3, >= 6.0.3.7)
-  spring
->>>>>>> 311e6cbd69d6bad93d3ef4da2d84e8627cf8a18d
   spring-watcher-listen (~> 2.0.0)
   tzinfo-data
 
