@@ -17,6 +17,7 @@ services:
       context: ./api
     environment:
       MYSQL_PASSWORD: $MYSQL_PASSWORD
+      API_DOMAIN: "localhost:8000"
     command: /bin/sh -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     ports:
       - "3000:3000"
@@ -29,7 +30,10 @@ services:
     stdin_open: true
 
   front:
-    build: ./front
+    build:
+      context: ./front
+      args:
+        API_URL: "http://localhost:3000"
     command: sh -c "yarn start"
     ports:
       - "8000:3000"
