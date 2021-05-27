@@ -35,3 +35,12 @@ module Api
     config.api_only = true
   end
 end
+
+# model作成時、rspecファイルを自動生成
+config.generators do |g|
+  g.test_framework :rspec,
+  view_specs: false,
+  helper_specs: false,
+  controller_specs: false,
+  routing_specs: false
+end
