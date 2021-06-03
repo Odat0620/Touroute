@@ -6,7 +6,7 @@ ENV WORKDIR=/front/ \
   LANG=C.UTF-8 \
   TZ=Asia/Tokyo \
   HOST=0.0.0.0 \
-  API_URL=${API_URL}
+  REACT_APP_API_URL=${API_URL}
 
 WORKDIR ${WORKDIR}
 
