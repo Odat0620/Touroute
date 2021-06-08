@@ -1,17 +1,24 @@
+import { memo, useContext, VFC } from "react";
+import { useHistory } from "react-router";
 import { Input } from "@chakra-ui/input";
 import { Box, Divider, Flex, Heading, Stack } from "@chakra-ui/layout";
-import axios from "axios";
-import { memo, useState, VFC } from "react";
+import Cookies from "js-cookie";
 
+import { LoginUserContext } from "../../../providers/LoginUserProvider";
 import { useInput } from "../../../hooks/useInput";
-import { PrimaryButton } from "../../atoms/button/PrimaryButton";
 import { useMessage } from "../../../hooks/useMessage";
-import { Redirect } from "react-router";
+import { SingUpParams } from "../../../types/api/user";
+import { signUp } from "../../../lib/api/auth";
+import { PrimaryButton } from "../../atoms/button/PrimaryButton";
 
 export const SignUp: VFC = memo(() => {
-  const [loading, setLoading] = useState(false);
+  // グローバルステートを持ってくる
+  const { loading, setLoading, setIsSignedIn, setCurrentUser } =
+    useContext(LoginUserContext);
 
+  // フック使用準備
   const { showMessage } = useMessage();
+  const history = useHistory();
 
   // 変数にカスタムフックを設定、中身はvalueとonChange
   const name = useInput("");
@@ -19,34 +26,42 @@ export const SignUp: VFC = memo(() => {
   const password = useInput("");
   const passwordConfirm = useInput("");
 
-  // 環境変数から呼び出したAPIのURLとユーザー登録ルートを繋げてサインアップURLを定義
-  const SIGNUP_URL = process.env.REACT_APP_API_URL + "/v1/auth";
-
-  // ユーザー登録を行う関数
-  const onClickSignUp = () => {
+  // ユーザー登録をする関数
+  const onClickSignUp = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     setLoading(true);
-    axios
-      .post(SIGNUP_URL, {
-        name: name.value,
-        email: email.value,
-        password: password.value,
-        password_confirmation: passwordConfirm.value,
-      })
-      .then((res) => {
-        showMessage({ title: "アカウントを作成しました。", status: "success" });
+
+    const params: SingUpParams = {
+      name: name.value,
+      email: email.value,
+      password: password.value,
+      passwordConfirmation: passwordConfirm.value,
+    };
+
+    try {
+      const res = await signUp(params);
+      console.log(res);
+
+      if (res.status === 200) {
+        // アカウント作成と同時にログイン
+        Cookies.set("_access_token", res.headers["access-token"]);
+        Cookies.set("_client", res.headers["client"]);
+        Cookies.set("_uid", res.headers["uid"]);
+
+        setIsSignedIn(true);
+        setCurrentUser(res.data.data);
+        history.push("/");
+        showMessage({ title: "アカウントを作成しました", status: "success" });
         setLoading(false);
-      })
-      .catch(({ response }) => {
-        const errorTitle: Array<string> = response.data.errors.full_messages;
-        errorTitle.forEach((t) => {
-          showMessage({
-            title: `${t}`,
-            status: "error",
-          });
-        });
+      } else {
+        showMessage({ title: "ユーザー登録に失敗しました。", status: "error" });
         setLoading(false);
-        console.log(response);
-      });
+      }
+    } catch ({ response }) {
+      const errorTitle: Array<string> = response.data.errors;
+      showMessage({ title: `${errorTitle}`, status: "error" });
+      setLoading(false);
+    }
   };
 
   // 入力欄が全て入力されたらfalse

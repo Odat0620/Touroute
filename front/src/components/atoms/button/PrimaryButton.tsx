@@ -5,7 +5,7 @@ type Props = {
   children: ReactNode;
   disabled?: boolean;
   loading?: boolean;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => Promise<void>
 };
 
 export const PrimaryButton: VFC<Props> = memo((props) => {
