@@ -1,69 +1,62 @@
+import { memo, useContext, VFC } from "react";
+import { useHistory } from "react-router";
 import { Input } from "@chakra-ui/input";
 import { Box, Divider, Flex, Heading, Stack } from "@chakra-ui/layout";
-import axios from "axios";
-import { memo, useState, VFC } from "react";
+import Cookies from "js-cookie";
 
+import { LoginUserContext } from "../../../providers/LoginUserProvider";
 import { useInput } from "../../../hooks/useInput";
-import { PrimaryButton } from "../../atoms/button/PrimaryButton";
 import { useMessage } from "../../../hooks/useMessage";
 import { SingInParams } from "../../../types/api/user";
 import { signIn } from "../../../lib/api/auth";
-import Cookies from "js-cookie";
+import { PrimaryButton } from "../../atoms/button/PrimaryButton";
 
 export const SignIn: VFC = memo(() => {
-  const [loading, setLoading] = useState(false);
+  // グローバル変数を持ってくる
+  const { loading, setLoading, setIsSignedIn, setCurrentUser } =
+    useContext(LoginUserContext);
 
+  // フック使用準備
+  const history = useHistory();
   const { showMessage } = useMessage();
 
   // 変数にカスタムフックを設定、中身はvalueとonChange
   const email = useInput("");
   const password = useInput("");
 
-  // 環境変数から呼び出したAPIのURLとログインルートを繋げてサインインURLを定義
-  const SIGNIN_URL = process.env.REACT_APP_API_URL + "/v1/auth/sign_in";
-
-  const params: SingInParams = {
-    email: email.value,
-    password: password.value,
-  };
-
-  // const onClickSignUP = () => {
-  //   try {
-  //     const res = await signIn(params)
-  //     console.log(res)
-
-  //     if (res.status === 200) {
-  //       // ログインに成功した場合はCookieに各値を格納
-  //       Cookies.set("_x_access_token", res.headers["x-access-token"])
-
-  //     }
-  //   }
-  // }
-
-  // ユーザー登録を行う関数
-  const onClickSignUp = () => {
+  // ログインする関数
+  const onClickSignIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     setLoading(true);
-    axios
-      .post(SIGNIN_URL, {
-        email: email.value,
-        password: password.value,
-      })
-      .then((res) => {
-        showMessage({ title: "アカウントを作成しました。", status: "success" });
+
+    const params: SingInParams = {
+      email: email.value,
+      password: password.value,
+    };
+
+    try {
+      const res = await signIn(params);
+      console.log(res);
+
+      if (res.status === 200) {
+        // ログインに成功した場合はCookieに各値を格納
+        Cookies.set("_access_token", res.headers["access-token"]);
+        Cookies.set("_client", res.headers["client"]);
+        Cookies.set("_uid", res.headers["uid"]);
+
+        setIsSignedIn(true);
+        setCurrentUser(res.data.data);
+        history.push("/");
+        showMessage({ title: "ログインしました。", status: "success" });
         setLoading(false);
-        console.log(res);
-      })
-      .catch(({ response }) => {
-        const errorTitle: Array<string> = response.data.errors.full_messages;
-        errorTitle.forEach((t) => {
-          showMessage({
-            title: `${t}`,
-            status: "error",
-          });
-        });
-        setLoading(false);
-        console.log(response);
-      });
+        console.log(res.headers);
+      }
+    } catch ({ response }) {
+      const errorTitle: Array<string> = response.data.errors;
+      showMessage({ title: `${errorTitle}`, status: "error" });
+      setLoading(false);
+      console.log(errorTitle);
+    }
   };
 
   // 入力欄が全て入力されたらfalse
@@ -82,9 +75,9 @@ export const SignIn: VFC = memo(() => {
           <PrimaryButton
             disabled={disableSubmit}
             loading={loading}
-            onClick={onClickSignUp}
+            onClick={onClickSignIn}
           >
-            登録
+            ログイン
           </PrimaryButton>
         </Stack>
       </Box>
