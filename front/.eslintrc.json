@@ -1,0 +1,25 @@
+{
+  "env": {
+    "es6": true,
+    "jest": true
+  },
+  // パーサー
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2018
+  },
+  // React のバージョンは自動検出に
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "rules": {
+    // TypeScirpt なので prop-types は要らない
+    "react/prop-types": "off"
+  }
+}
