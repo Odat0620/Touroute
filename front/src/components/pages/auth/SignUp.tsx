@@ -2,19 +2,17 @@ import { memo, useContext, VFC } from "react";
 import { useHistory } from "react-router";
 import { Input } from "@chakra-ui/input";
 import { Box, Divider, Flex, Heading, Stack } from "@chakra-ui/layout";
-import Cookies from "js-cookie";
 
-import { LoginUserContext } from "../../../providers/LoginUserProvider";
 import { useInput } from "../../../hooks/useInput";
 import { useMessage } from "../../../hooks/useMessage";
-import { SingUpParams } from "../../../types/api/user";
-import { signUp } from "../../../lib/api/auth";
 import { PrimaryButton } from "../../atoms/button/PrimaryButton";
+import { AuthContext } from "../../../providers/auth/AuthProvider";
+import { auth } from "../../../utils/Firebase";
+import { client } from "../../../lib/api/client";
 
 export const SignUp: VFC = memo(() => {
   // グローバルステートを持ってくる
-  const { loading, setLoading, setIsSignedIn, setCurrentUser } =
-    useContext(LoginUserContext);
+  const { user, loading } = useContext(AuthContext);
 
   // フック使用準備
   const { showMessage } = useMessage();
@@ -24,49 +22,38 @@ export const SignUp: VFC = memo(() => {
   const name = useInput("");
   const email = useInput("");
   const password = useInput("");
-  const passwordConfirm = useInput("");
 
-  // ユーザー登録をする関数
   const onClickSignUp = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setLoading(true);
-
-    const params: SingUpParams = {
-      name: name.value,
-      email: email.value,
-      password: password.value,
-      passwordConfirmation: passwordConfirm.value,
-    };
-
     try {
-      const res = await signUp(params);
-      console.log(res);
-
-      if (res.status === 200) {
-        // アカウント作成と同時にログイン
-        Cookies.set("_access_token", res.headers["access-token"]);
-        Cookies.set("_client", res.headers["client"]);
-        Cookies.set("_uid", res.headers["uid"]);
-
-        setIsSignedIn(true);
-        setCurrentUser(res.data.data);
-        history.push("/");
-        showMessage({ title: "アカウントを作成しました", status: "success" });
-        setLoading(false);
-      } else {
-        showMessage({ title: "ユーザー登録に失敗しました。", status: "error" });
-        setLoading(false);
+      await auth.createUserWithEmailAndPassword(email.value, password.value);
+      const token = await auth.currentUser?.getIdToken(true);
+      const config = { headers: { authorization: `Bearer ${token}` } };
+      try {
+        await client.post("auth", { name: name.value }, config).then((res) => {
+          showMessage({
+            title: "アカウントを作成しました。",
+            status: "success",
+          });
+          console.log(res.data);
+        });
+      } catch ({ response }) {
+        showMessage({ title: `${response.data.errors}`, status: "error" });
       }
-    } catch ({ response }) {
-      const errorTitle: Array<string> = response.data.errors;
-      showMessage({ title: `${errorTitle}`, status: "error" });
-      setLoading(false);
+      history.push("/");
+    } catch (error) {
+      showMessage({ title: "ユーザー登録に失敗しました。", status: "error" });
+      console.log(error);
     }
   };
 
+  // ユーザーが存在する場合はトップページへ遷移
+  if (user) {
+    history.push("/");
+  }
+
   // 入力欄が全て入力されたらfalse
-  const disableSubmit: boolean =
-    !name.value || !email.value || !password.value || !passwordConfirm.value;
+  const disableSubmit: boolean = !name.value || !email.value || !password.value;
 
   return (
     <Flex align="center" justify="center" height="100vh">
@@ -79,11 +66,6 @@ export const SignUp: VFC = memo(() => {
           <Input {...name} autoFocus={true} placeholder="名前" />
           <Input {...email} placeholder="メールアドレス" />
           <Input type="password" {...password} placeholder="パスワード" />
-          <Input
-            type="password"
-            {...passwordConfirm}
-            placeholder="パスワード再入力"
-          />
           <PrimaryButton
             disabled={disableSubmit}
             loading={loading}
