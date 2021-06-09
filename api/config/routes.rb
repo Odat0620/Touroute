@@ -4,6 +4,7 @@ Rails.application.routes.draw do
       registrations: 'v1/auth/registrations',
       sessions: 'v1/auth/sessions'
     }
+    get '/logged_in', to: 'logged_in#logged_in'
     resources :users
   end
 end

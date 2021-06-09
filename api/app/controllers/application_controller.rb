@@ -1,5 +1,14 @@
 class ApplicationController < ActionController::API
 	include DeviseTokenAuth::Concerns::SetUserByToken
+  include AbstractController::Helpers
+
+
+  skip_before_action :verify_authenticity_token, raise: false
+  helper_method :current_user, :user_signed_in?
+
+  # def current_user
+  #   @current_user ||= User.find(session[:user_id]) if session[:user_id]
+  # end
 
 	# before_action :split_tokens
   # prepend_after_action :join_tokens

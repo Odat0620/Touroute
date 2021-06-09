@@ -18,8 +18,8 @@ export const signOut = () => {
   return client.delete("auth/sign_out", {
     headers: {
       "access-token": Cookies.get("_access_token"),
-      "client": Cookies.get("_client"),
-      "uid": Cookies.get("_uid"),
+      client: Cookies.get("_client"),
+      uid: Cookies.get("_uid"),
     },
   });
 };
@@ -32,11 +32,11 @@ export const getCurrentUser = () => {
     !Cookies.get("_uid")
   )
     return;
-  return client.get("/auth/sessions", {
+  return client.get("logged_in", {
     headers: {
       "access-token": Cookies.get("_access_token"),
-      "client": Cookies.get("_client"),
-      "uid": Cookies.get("_uid"),
+      client: Cookies.get("_client"),
+      uid: Cookies.get("_uid"),
     },
   });
 };
