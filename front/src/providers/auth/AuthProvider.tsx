@@ -1,4 +1,11 @@
-import React, { createContext, ReactNode, useEffect, useState } from "react";
+import React, {
+  createContext,
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import firebase from "firebase/app";
 import { useAuthState } from "react-firebase-hooks/auth";
 
@@ -6,6 +13,7 @@ import { auth } from "../../utils/Firebase";
 
 type AuthContextType = {
   currentUser: firebase.User | null | undefined;
+  setCurrentUser: Dispatch<SetStateAction<firebase.User | null | undefined>>;
   user: firebase.User | null | undefined;
   loading: boolean;
   error: firebase.auth.Error | undefined;
@@ -29,7 +37,9 @@ export const AuthProvider = (props: { children: ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ currentUser, user, loading, error }}>
+    <AuthContext.Provider
+      value={{ currentUser, setCurrentUser, user, loading, error }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -8,19 +8,22 @@ import { Home } from "../components/pages/Home";
 import { Page404 } from "../components/pages/Page404";
 import { HeaderLayout } from "../components/templates/HeaderLayout";
 import { User } from "../components/pages/users/User";
+import { AuthProvider } from "../providers/auth/AuthProvider";
 
 export const Router: VFC = memo(() => {
   return (
-    <LoginUserProvider>
-      <HeaderLayout>
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route exact path="/mypage" component={User} />
-          <Route exact path="/signup" component={SignUp} />
-          <Route exact path="/signin" component={SignIn} />
-          <Route path="*" component={Page404} />
-        </Switch>
-      </HeaderLayout>
-    </LoginUserProvider>
+    <AuthProvider>
+      <LoginUserProvider>
+        <HeaderLayout>
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route exact path="/mypage" component={User} />
+            <Route exact path="/signup" component={SignUp} />
+            <Route exact path="/signin" component={SignIn} />
+            <Route path="*" component={Page404} />
+          </Switch>
+        </HeaderLayout>
+      </LoginUserProvider>
+    </AuthProvider>
   );
 });

@@ -4,16 +4,15 @@ import { useHistory } from "react-router";
 import { Box, Flex, Heading, Spacer } from "@chakra-ui/layout";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { Button } from "@chakra-ui/button";
-import Cookies from "js-cookie";
 
 import { MenuIconButton } from "../../atoms/button/MenuIconButton";
 import { MenuDrawer } from "../../molecules/MenuDrawer";
-import { LoginUserContext } from "../../../providers/LoginUserProvider";
-import { signOut } from "../../../lib/api/auth";
 import { useMessage } from "../../../hooks/useMessage";
+import { AuthContext } from "../../../providers/auth/AuthProvider";
+import { auth } from "../../../utils/Firebase";
 
 export const Header: VFC = memo(() => {
-  const { loading, isSignedIn, setIsSignedIn } = useContext(LoginUserContext);
+  const { user, currentUser, setCurrentUser } = useContext(AuthContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { showMessage } = useMessage();
   const history = useHistory();
@@ -23,75 +22,62 @@ export const Header: VFC = memo(() => {
   const onClickSignUp = useCallback(() => history.push("/signup"), []);
   const onClickSignIn = useCallback(() => history.push("/signin"), []);
 
-  const onClickSignOut = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const onClickSignOut = async () => {
     try {
-      const res = await signOut();
-
-      if (res.data.success === true) {
-        // サインアウト時にはCookieを削除
-        Cookies.remove("_access_token");
-        Cookies.remove("_client");
-        Cookies.remove("_uid");
-
-        setIsSignedIn(false);
-        history.push("/signin");
-        showMessage({ title: "ログアウトしました。", status: "success" });
-      } else {
-        console.log("Failed in sign out");
-      }
-    } catch ({ response }) {
-      console.log(response);
+      await auth.signOut();
+      // ログアウト時currentUserをundefinedにする
+      setCurrentUser(undefined);
+      history.push("/");
+    } catch (error) {
+      showMessage({ title: "ログアウトできませんでした", status: "error" });
+      console.log(error);
     }
   };
 
   const AuthButtons = () => {
     // 認証完了後はサインアウト用のボタンを表示
     // 未認証時は認証用のボタンを表示
-    if (!loading) {
-      if (isSignedIn) {
-        return (
-          <>
-            <Flex flexGrow={2} display={{ base: "none", md: "flex" }}>
-              <Spacer />
-              <Box pr={2}>
-                <Button mr={4} color="blue.500" onClick={onClickMypage}>
-                  マイページ
-                </Button>
-                <Button color="blue.500" onClick={onClickSignOut}>
-                  ログアウト
-                </Button>
-              </Box>
-            </Flex>
-          </>
-        );
-      } else {
-        return (
-          <>
-            <Flex flexGrow={2} display={{ base: "none", md: "flex" }}>
-              <Spacer />
-              <Box pr={2}>
-                <Button
-                  mr={4}
-                  color="blue.500"
-                  _hover={{ opacity: 0.8 }}
-                  onClick={onClickSignUp}
-                >
-                  アカウント登録
-                </Button>
-                <Button
-                  color="blue.500"
-                  _hover={{ opacity: 0.8 }}
-                  onClick={onClickSignIn}
-                >
-                  ログイン
-                </Button>
-              </Box>
-            </Flex>
-          </>
-        );
-      }
+    if (currentUser) {
+      return (
+        <>
+          <Flex flexGrow={2} display={{ base: "none", md: "flex" }}>
+            <Spacer />
+            <Box pr={2}>
+              <Button mr={4} color="blue.500" onClick={onClickMypage}>
+                マイページ
+              </Button>
+              <Button onClick={onClickSignOut} color="blue.500">
+                ログアウト
+              </Button>
+            </Box>
+          </Flex>
+        </>
+      );
     } else {
-      return <></>;
+      return (
+        <>
+          <Flex flexGrow={2} display={{ base: "none", md: "flex" }}>
+            <Spacer />
+            <Box pr={2}>
+              <Button
+                mr={4}
+                color="blue.500"
+                _hover={{ opacity: 0.8 }}
+                onClick={onClickSignUp}
+              >
+                アカウント登録
+              </Button>
+              <Button
+                color="blue.500"
+                _hover={{ opacity: 0.8 }}
+                onClick={onClickSignIn}
+              >
+                ログイン
+              </Button>
+            </Box>
+          </Flex>
+        </>
+      );
     }
   };
 
