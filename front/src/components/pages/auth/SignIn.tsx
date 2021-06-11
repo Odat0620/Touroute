@@ -2,19 +2,18 @@ import { memo, useContext, VFC } from "react";
 import { useHistory } from "react-router";
 import { Input } from "@chakra-ui/input";
 import { Box, Divider, Flex, Heading, Stack } from "@chakra-ui/layout";
-import Cookies from "js-cookie";
 
 import { LoginUserContext } from "../../../providers/LoginUserProvider";
 import { useInput } from "../../../hooks/useInput";
 import { useMessage } from "../../../hooks/useMessage";
-import { SingInParams } from "../../../types/api/user";
-import { signIn } from "../../../lib/api/auth";
 import { PrimaryButton } from "../../atoms/button/PrimaryButton";
+import { auth } from "../../../utils/Firebase";
+import { AuthContext } from "../../../providers/auth/AuthProvider";
 
 export const SignIn: VFC = memo(() => {
   // グローバル変数を持ってくる
-  const { loading, setLoading, setIsSignedIn, setCurrentUser } =
-    useContext(LoginUserContext);
+  const { loading, setLoading } = useContext(LoginUserContext);
+  const { user } = useContext(AuthContext);
 
   // フック使用準備
   const history = useHistory();
@@ -24,42 +23,25 @@ export const SignIn: VFC = memo(() => {
   const email = useInput("");
   const password = useInput("");
 
-  // ログインする関数
   const onClickSignIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setLoading(true);
-
-    const params: SingInParams = {
-      email: email.value,
-      password: password.value,
-    };
-
     try {
-      const res = await signIn(params);
-      console.log(res);
-
-      if (res.status === 200) {
-        // ログインに成功した場合はCookieに各値を格納
-        Cookies.set("_access_token", res.headers["access-token"]);
-        Cookies.set("_client", res.headers["client"]);
-        Cookies.set("_uid", res.headers["uid"]);
-
-        setIsSignedIn(true);
-        setCurrentUser(res.data.data);
-        history.push("/");
-        showMessage({ title: "ログインしました。", status: "success" });
-        setLoading(false);
-        console.log(res.headers);
-      }
-    } catch ({ response }) {
-      const errorTitle: Array<string> = response.data.errors;
-      showMessage({ title: `${errorTitle}`, status: "error" });
-      setLoading(false);
-      console.log(errorTitle);
+      await auth.signInWithEmailAndPassword(email.value, password.value);
+      history.push("/");
+      showMessage({ title: "ログインしました。", status: "success" });
+    } catch (error) {
+      showMessage({ title: "ログインに失敗しました。", status: "error" });
+      console.log(error);
     }
+    setLoading(false);
   };
 
-  // 入力欄が全て入力されたらfalse
+  if (user) {
+    history.push("/");
+  }
+
+  // 入力欄が全て入力されたらfalse(ログインボタンが押せるようになる)
   const disableSubmit: boolean = !email.value || !password.value;
 
   return (
