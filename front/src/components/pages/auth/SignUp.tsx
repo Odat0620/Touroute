@@ -9,10 +9,12 @@ import { PrimaryButton } from "../../atoms/button/PrimaryButton";
 import { AuthContext } from "../../../providers/auth/AuthProvider";
 import { auth } from "../../../utils/Firebase";
 import { client } from "../../../lib/api/client";
+import { LoginUserContext } from "../../../providers/LoginUserProvider";
 
 export const SignUp: VFC = memo(() => {
   // グローバルステートを持ってくる
-  const { user, loading } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
+  const { loading, setLoading } = useContext(LoginUserContext);
 
   // フック使用準備
   const { showMessage } = useMessage();
@@ -25,6 +27,7 @@ export const SignUp: VFC = memo(() => {
 
   const onClickSignUp = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    setLoading(true);
     try {
       await auth.createUserWithEmailAndPassword(email.value, password.value);
       const token = await auth.currentUser?.getIdToken(true);
@@ -47,6 +50,7 @@ export const SignUp: VFC = memo(() => {
       showMessage({ title: "ユーザー登録に失敗しました。", status: "error" });
       console.log(error);
     }
+    setLoading(false);
   };
 
   // ユーザーが存在する場合はトップページへ遷移

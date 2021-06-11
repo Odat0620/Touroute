@@ -12,7 +12,8 @@ import { AuthContext } from "../../../providers/auth/AuthProvider";
 import { auth } from "../../../utils/Firebase";
 
 export const Header: VFC = memo(() => {
-  const { user, currentUser, setCurrentUser } = useContext(AuthContext);
+  const { currentUser, setCurrentUser } = useContext(AuthContext);
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { showMessage } = useMessage();
   const history = useHistory();
@@ -28,6 +29,7 @@ export const Header: VFC = memo(() => {
       // ログアウト時currentUserをundefinedにする
       setCurrentUser(undefined);
       history.push("/");
+      showMessage({ title: "ログアウトしました。", status: "success" });
     } catch (error) {
       showMessage({ title: "ログアウトできませんでした", status: "error" });
       console.log(error);
