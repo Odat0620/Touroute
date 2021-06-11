@@ -29,8 +29,9 @@ export const SignUp: VFC = memo(() => {
       await auth.createUserWithEmailAndPassword(email.value, password.value);
       const token = await auth.currentUser?.getIdToken(true);
       const config = { headers: { authorization: `Bearer ${token}` } };
+      const user = { name: name.value, email: email.value };
       try {
-        await client.post("auth", { name: name.value }, config).then((res) => {
+        await client.post("users", user, config).then((res) => {
           showMessage({
             title: "アカウントを作成しました。",
             status: "success",
@@ -39,6 +40,7 @@ export const SignUp: VFC = memo(() => {
         });
       } catch ({ response }) {
         showMessage({ title: `${response.data.errors}`, status: "error" });
+        console.log(response);
       }
       history.push("/");
     } catch (error) {
