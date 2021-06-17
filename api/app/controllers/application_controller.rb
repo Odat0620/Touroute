@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::API
+  include Firebase::Auth::Authenticable
+
 
 
   # def current_user
