@@ -12,14 +12,14 @@ import { AuthContext } from "../../../providers/auth/AuthProvider";
 import { auth } from "../../../utils/Firebase";
 
 export const Header: VFC = memo(() => {
-  const { currentUser, setCurrentUser } = useContext(AuthContext);
+  const { currentUser, setCurrentUser, user } = useContext(AuthContext);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { showMessage } = useMessage();
   const history = useHistory();
 
   const onClickHome = useCallback(() => history.push("/"), []);
-  const onClickMypage = useCallback(() => history.push("/mypage"), []);
+  const onClickMypage = useCallback((id) => history.push(`/users/${id}`), []);
   const onClickSignUp = useCallback(() => history.push("/signup"), []);
   const onClickSignIn = useCallback(() => history.push("/signin"), []);
 
@@ -39,13 +39,17 @@ export const Header: VFC = memo(() => {
   const AuthButtons = () => {
     // 認証完了後はサインアウト用のボタンを表示
     // 未認証時は認証用のボタンを表示
-    if (currentUser) {
+    if (user) {
       return (
         <>
           <Flex flexGrow={2} display={{ base: "none", md: "flex" }}>
             <Spacer />
             <Box pr={2}>
-              <Button mr={4} color="blue.500" onClick={onClickMypage}>
+              <Button
+                mr={4}
+                color="blue.500"
+                onClick={() => onClickMypage(currentUser?.id)}
+              >
                 マイページ
               </Button>
               <Button onClick={onClickSignOut} color="blue.500">
