@@ -1,9 +1,8 @@
-import { memo, useContext, VFC } from "react";
-import { useHistory } from "react-router";
+import { memo, useContext, useState, VFC } from "react";
+import { Redirect, useHistory } from "react-router";
 import { Input } from "@chakra-ui/input";
 import { Box, Divider, Flex, Heading, Stack } from "@chakra-ui/layout";
 
-import { LoginUserContext } from "../../../providers/LoginUserProvider";
 import { useInput } from "../../../hooks/useInput";
 import { useMessage } from "../../../hooks/useMessage";
 import { PrimaryButton } from "../../atoms/button/PrimaryButton";
@@ -12,8 +11,9 @@ import { AuthContext } from "../../../providers/auth/AuthProvider";
 
 export const SignIn: VFC = memo(() => {
   // グローバル変数を持ってくる
-  const { loading, setLoading } = useContext(LoginUserContext);
   const { user } = useContext(AuthContext);
+
+  const [loading, setLoading] = useState<boolean>(false);
 
   // フック使用準備
   const history = useHistory();
@@ -28,8 +28,8 @@ export const SignIn: VFC = memo(() => {
     setLoading(true);
     try {
       await auth.signInWithEmailAndPassword(email.value, password.value);
-      history.push("/");
       showMessage({ title: "ログインしました。", status: "success" });
+      <Redirect to="/" />;
     } catch (error) {
       showMessage({ title: "ログインに失敗しました。", status: "error" });
       console.log(error);

@@ -1,5 +1,5 @@
-import { memo, useContext, VFC } from "react";
-import { useHistory } from "react-router";
+import { memo, useContext, useState, VFC } from "react";
+import { Redirect, useHistory } from "react-router";
 import { Input } from "@chakra-ui/input";
 import { Box, Divider, Flex, Heading, Stack } from "@chakra-ui/layout";
 
@@ -9,12 +9,13 @@ import { PrimaryButton } from "../../atoms/button/PrimaryButton";
 import { AuthContext } from "../../../providers/auth/AuthProvider";
 import { auth } from "../../../utils/Firebase";
 import { client } from "../../../lib/api/client";
-import { LoginUserContext } from "../../../providers/LoginUserProvider";
 
 export const SignUp: VFC = memo(() => {
   // グローバルステートを持ってくる
   const { user } = useContext(AuthContext);
-  const { loading, setLoading } = useContext(LoginUserContext);
+
+  const [loading, setLoading] = useState<boolean>(false);
+
 
   // フック使用準備
   const { showMessage } = useMessage();
@@ -32,22 +33,29 @@ export const SignUp: VFC = memo(() => {
       await auth.createUserWithEmailAndPassword(email.value, password.value);
       const token = await auth.currentUser?.getIdToken(true);
       const config = { headers: { authorization: `Bearer ${token}` } };
-      const user = { name: name.value, email: email.value };
+      const user_data = { name: name.value, email: email.value };
       try {
-        await client.post("users", user, config).then((res) => {
+        await client.post("users", user_data, config).then(({ data }) => {
           showMessage({
-            title: "アカウントを作成しました。",
+            title: `${data.message}`,
             status: "success",
           });
-          console.log(res.data);
+          <Redirect to="/" />;
+          console.log(data);
         });
-      } catch ({ response }) {
-        showMessage({ title: `${response.data.errors}`, status: "error" });
-        console.log(response);
+      } catch ({ data }) {
+        showMessage({ title: `${data.errors}`, status: "error" });
+        console.log(data);
       }
-      history.push("/");
     } catch (error) {
-      showMessage({ title: "ユーザー登録に失敗しました。", status: "error" });
+      if (error.code === "auth/email-already-in-use") {
+        showMessage({
+          title: "そのメールアドレスはすでに使われています。",
+          status: "error",
+        });
+      } else {
+        showMessage({ title: "ユーザー登録に失敗しました。", status: "error" });
+      }
       console.log(error);
     }
     setLoading(false);
