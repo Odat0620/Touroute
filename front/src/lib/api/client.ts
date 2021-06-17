@@ -1,5 +1,5 @@
-import applyCaseMiddleware from "axios-case-converter"
-import axios from "axios"
+import applyCaseMiddleware from "axios-case-converter";
+import axios from "axios";
 
 // applyCaseMiddleware:
 // axiosで受け取ったレスポンスの値をスネークケース→キャメルケースに変換
@@ -7,9 +7,12 @@ import axios from "axios"
 
 // ヘッダーに関してはケバブケースのままで良いので適用を無視するオプションを追加
 const options = {
-  ignoreHeaders: true
-}
+  ignoreHeaders: true,
+};
 
-export const client = applyCaseMiddleware(axios.create({
-  baseURL: process.env.REACT_APP_API_URL + "/v1"
-}), options)
+export const client = applyCaseMiddleware(
+  axios.create({
+    baseURL: process.env.REACT_APP_API_URL + "/v1",
+  }),
+  options
+);
