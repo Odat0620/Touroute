@@ -1,22 +1,38 @@
-import { memo, useState, VFC } from "react";
-import { Heading } from "@chakra-ui/layout";
+import { memo, useContext, useState, VFC, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { Input } from "@chakra-ui/input";
 import { Textarea } from "@chakra-ui/textarea";
-import { Flex, Box, Stack, Button } from "@chakra-ui/react";
+import { Flex, Box, Stack, Button, Heading } from "@chakra-ui/react";
 
 import { useInput } from "../../../hooks/useInput";
 import { useTextarea } from "../../../hooks/useTextarea";
 import { RouteCreate } from "../../organisms/posts/RouteCreate";
 import { latLngType } from "../../../types/latLngType";
+import { AuthContext } from "../../../providers/auth/AuthProvider";
+import { useMessage } from "../../../hooks/useMessage";
 
 export const CreatePost: VFC = memo(() => {
+  const { currentUser } = useContext(AuthContext);
+
   const [origin, setOrigin] = useState<latLngType | null>(null);
   const [destination, setDestination] = useState<latLngType | null>(null);
 
   const title = useInput("");
   const text = useTextarea("");
 
+  const history = useHistory();
+  const { showMessage } = useMessage();
+
   const onClickPost = (e: React.MouseEvent<HTMLButtonElement>) => {};
+
+  // ログインしていない場合ログインページへ移動
+  useEffect(() => {
+    if (!currentUser) {
+      console.log("log");
+      history.push("/signin");
+      showMessage({ title: "ログインしてください。", status: "error" });
+    }
+  });
 
   return (
     <>
