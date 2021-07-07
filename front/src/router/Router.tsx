@@ -9,6 +9,7 @@ import { HeaderLayout } from "../components/templates/HeaderLayout";
 import { User } from "../components/pages/users/User";
 import { AuthProvider } from "../providers/auth/AuthProvider";
 import { CreatePost } from "../components/pages/posts/CreatePost";
+import { Post } from "../components/pages/posts/Post";
 
 export const Router: VFC = memo(() => {
   return (
@@ -20,6 +21,7 @@ export const Router: VFC = memo(() => {
           <Route exact path="/signup" component={SignUp} />
           <Route exact path="/signin" component={SignIn} />
           <Route exact path="/createpost" component={CreatePost} />
+          <Route exact path="/posts/:id" component={Post} />
           <Route path="*" component={Page404} />
         </Switch>
       </HeaderLayout>
