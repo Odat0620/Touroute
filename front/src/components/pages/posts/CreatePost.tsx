@@ -10,29 +10,65 @@ import { RouteCreate } from "../../organisms/posts/RouteCreate";
 import { latLngType } from "../../../types/latLngType";
 import { AuthContext } from "../../../providers/auth/AuthProvider";
 import { useMessage } from "../../../hooks/useMessage";
+import { client } from "../../../lib/api/client";
 
 export const CreatePost: VFC = memo(() => {
   const { currentUser } = useContext(AuthContext);
 
+  // stateを定義
   const [origin, setOrigin] = useState<latLngType | null>(null);
   const [destination, setDestination] = useState<latLngType | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isDone, setIsDone] = useState<boolean>(false);
 
+  // 変数にカスタムフックを設定、中身はvalueとonChange
   const title = useInput("");
   const text = useTextarea("");
 
+  // フックの読み込み
   const history = useHistory();
   const { showMessage } = useMessage();
 
-  const onClickPost = (e: React.MouseEvent<HTMLButtonElement>) => {};
-
-  // ログインしていない場合ログインページへ移動
-  useEffect(() => {
-    if (!currentUser) {
-      console.log("log");
-      history.push("/signin");
-      showMessage({ title: "ログインしてください。", status: "error" });
+  // 投稿作成の処理
+  const onClickPost = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    const post_data = {
+      title: title.value,
+      text: text.value,
+      user_id: currentUser?.id,
+      route: { origin, destination },
+    };
+    try {
+      await client
+        .post("posts", post_data)
+        .then((res) => {
+          showMessage({
+            title: "投稿しました。",
+            status: "success",
+          });
+          setIsDone(true);
+          console.log(res);
+        })
+        .catch(({ response }) => {
+          showMessage({
+            title: `タイトル${response.data.title}`,
+            status: "error",
+          });
+          console.log(response);
+        });
+    } catch (res) {
+      showMessage({ title: "投稿できませんでした。", status: "error" });
+      console.log(res);
     }
-  });
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (isDone) {
+      history.push("/");
+    }
+  }, [history, isDone]);
 
   return (
     <>
@@ -42,7 +78,11 @@ export const CreatePost: VFC = memo(() => {
             <Heading color="gray.600" textAlign="center">
               ツーリング記録を作成
             </Heading>
-            <Input {...title} autoFocus={true} placeholder="タイトル" />
+            <Input
+              {...title}
+              autoFocus={true}
+              placeholder="タイトル（必須、20文字以内）"
+            />
             <Textarea h={200} {...text} placeholder="本文" />
             <RouteCreate
               origin={origin}
@@ -56,6 +96,8 @@ export const CreatePost: VFC = memo(() => {
               w="50%"
               _hover={{ opacity: 0.8 }}
               onClick={onClickPost}
+              disabled={loading || !currentUser}
+              isLoading={loading}
             >
               投稿
             </Button>
