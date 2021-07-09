@@ -33,9 +33,8 @@ services:
   front:
     build:
       context: ./front
-      args:
-        API_URL: $API_URL
     environment:
+      REACT_APP_API_URL: $API_URL
       REACT_APP_FIREBASE_API_KEY: $FIREBASE_API_KEY
       REACT_APP_FIREBASE_AUTH_DOMAIN: $FIREBASE_AUTH_DOMAIN
       REACT_APP_FIREBASE_PROJECT_ID: $FIREBASE_PROJECT_ID

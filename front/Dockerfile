@@ -5,8 +5,7 @@ ARG API_URL
 ENV WORKDIR=/front/ \
   LANG=C.UTF-8 \
   TZ=Asia/Tokyo \
-  HOST=0.0.0.0 \
-  REACT_APP_API_URL=${API_URL}
+  HOST=0.0.0.0
 
 WORKDIR ${WORKDIR}
 
