@@ -10,21 +10,24 @@ import { User } from "../components/pages/users/User";
 import { AuthProvider } from "../providers/auth/AuthProvider";
 import { CreatePost } from "../components/pages/posts/CreatePost";
 import { Post } from "../components/pages/posts/Post";
+import { UtilProvider } from "../providers/UtilProvider";
 
 export const Router: VFC = memo(() => {
   return (
     <AuthProvider>
-      <HeaderLayout>
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route exact path="/users/:id" component={User} />
-          <Route exact path="/signup" component={SignUp} />
-          <Route exact path="/signin" component={SignIn} />
-          <Route exact path="/createpost" component={CreatePost} />
-          <Route exact path="/posts/:id" component={Post} />
-          <Route path="*" component={Page404} />
-        </Switch>
-      </HeaderLayout>
+      <UtilProvider>
+        <HeaderLayout>
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route exact path="/users/:id" component={User} />
+            <Route exact path="/signup" component={SignUp} />
+            <Route exact path="/signin" component={SignIn} />
+            <Route exact path="/createpost" component={CreatePost} />
+            <Route exact path="/posts/:id" component={Post} />
+            <Route path="*" component={Page404} />
+          </Switch>
+        </HeaderLayout>
+      </UtilProvider>
     </AuthProvider>
   );
 });
