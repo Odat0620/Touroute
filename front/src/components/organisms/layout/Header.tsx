@@ -103,7 +103,7 @@ export const Header: VFC = memo(() => {
           _hover={{ cursor: "pointer" }}
           onClick={onClickHome}
         >
-          <Heading as="h1" fontSize={{ base: "lg", md: 30 }}>
+          <Heading as="h1" fontSize={{ base: "lg", md: 30 }} ml={4}>
             Touroute
           </Heading>
         </Flex>
@@ -111,7 +111,15 @@ export const Header: VFC = memo(() => {
         <AuthButtons />
         <MenuIconButton onOpen={onOpen} />
       </Flex>
-      <MenuDrawer isOpen={isOpen} onClose={onClose} onClickHome={onClickHome} />
+      <MenuDrawer
+        isOpen={isOpen}
+        onClose={onClose}
+        currentUser={currentUser}
+        onClickSignUp={onClickSignUp}
+        onClickSignIn={onClickSignIn}
+        onClickSignOut={onClickSignOut}
+        onClickMypage={() => onClickMypage(currentUser?.id)}
+      />
     </>
   );
 });
