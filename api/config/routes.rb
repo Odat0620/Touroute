@@ -4,6 +4,7 @@ Rails.application.routes.draw do
       get :fetch_user_id_and_name, on: :collection
     end
     resources :posts do
+      resources :comments, only: [:create, :destroy]
     end
   end
 end

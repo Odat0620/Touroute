@@ -6,7 +6,8 @@ class V1::PostsController < ApplicationController
   end
 
   def show
-    render json: @post.as_json(include: { user: { only: :name } })
+    render json: @post.as_json(include: [{user: {only: :name } },
+      {comments: {include: {user: {only: [:id, :name]}}}}])
   end
 
   def create
