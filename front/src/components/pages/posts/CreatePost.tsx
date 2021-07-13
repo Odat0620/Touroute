@@ -7,7 +7,7 @@ import { Flex, Box, Stack, Button, Heading } from "@chakra-ui/react";
 import { useInput } from "../../../hooks/useInput";
 import { useTextarea } from "../../../hooks/useTextarea";
 import { RouteCreate } from "../../organisms/posts/RouteCreate";
-import { latLngType } from "../../../types/latLngType";
+import { latLngType } from "../../../types/api/posts/latLngType";
 import { AuthContext } from "../../../providers/auth/AuthProvider";
 import { useMessage } from "../../../hooks/useMessage";
 import { client } from "../../../lib/api/client";
@@ -18,7 +18,7 @@ export const CreatePost: VFC = memo(() => {
   // stateを定義
   const [origin, setOrigin] = useState<latLngType | null>(null);
   const [destination, setDestination] = useState<latLngType | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loadingButton, setLoadingButton] = useState<boolean>(false);
   const [isDone, setIsDone] = useState<boolean>(false);
 
   // 変数にカスタムフックを設定、中身はvalueとonChange
@@ -32,7 +32,7 @@ export const CreatePost: VFC = memo(() => {
   // 投稿作成の処理
   const onClickPost = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setLoading(true);
+    setLoadingButton(true);
     const post_data = {
       title: title.value,
       text: text.value,
@@ -61,7 +61,7 @@ export const CreatePost: VFC = memo(() => {
       showMessage({ title: "投稿できませんでした。", status: "error" });
       console.log(res);
     }
-    setLoading(false);
+    setLoadingButton(false);
   };
 
   useEffect(() => {
@@ -96,8 +96,8 @@ export const CreatePost: VFC = memo(() => {
               w="50%"
               _hover={{ opacity: 0.8 }}
               onClick={onClickPost}
-              disabled={loading || !currentUser}
-              isLoading={loading}
+              disabled={loadingButton || !currentUser}
+              isLoading={loadingButton}
             >
               投稿
             </Button>
