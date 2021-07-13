@@ -1,3 +1,5 @@
+import { CommentType } from "./CommentType";
+
 export type PostType = {
   id: number;
   title: string;
@@ -10,4 +12,5 @@ export type PostType = {
   createdAt: Date;
   updatedAt: Date;
   user: { name: string };
+  comments?: Array<CommentType>;
 };
