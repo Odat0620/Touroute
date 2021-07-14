@@ -1,4 +1,4 @@
-import { memo, useEffect, useState, VFC, useContext } from "react";
+import { memo, useEffect, useState, VFC, useContext, useRef } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import {
   Flex,
@@ -9,7 +9,10 @@ import {
   WrapItem,
   Wrap,
   Divider,
+  IconButton,
 } from "@chakra-ui/react";
+import { EditIcon, DeleteIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/menu";
 import { Heading } from "@chakra-ui/layout";
 import { useDisclosure } from "@chakra-ui/hooks";
 import moment from "moment";
@@ -24,11 +27,14 @@ import { CreateComment } from "../../organisms/comments/CreateComment";
 import { PrimaryButton } from "../../atoms/button/PrimaryButton";
 import { ShowComment } from "../../organisms/comments/ShowComment";
 import { LoadingSpinner } from "../../molecules/LoadingSpinner";
+import { DeletePostAlert } from "../../organisms/posts/DeletePostAlert";
 
 export const Post: VFC = memo(() => {
   const { currentUser } = useContext(AuthContext);
 
   const [post, setPost] = useState<PostType>();
+  const [isOpenDialog, setIsOpenDialog] = useState<boolean>(false);
+  const cancelRef = useRef<HTMLElement>(null);
 
   const { id } = useParams<{ id: string }>();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -40,6 +46,23 @@ export const Post: VFC = memo(() => {
 
   const onClickUser = () => {
     history.push(`/users/${post?.userId}`);
+  };
+
+  const onClickEdit = () => {
+    history.push(`/posts/${id}/edit`);
+  };
+
+  const onClickDelete = async () => {
+    await client
+      .delete(`/posts/${id}`, { data: { userId: currentUser?.id } })
+      .then((res) => {
+        showMessage({ title: "削除しました。", status: "success" });
+        console.log(res);
+        history.push("/");
+      })
+      .catch(() => {
+        showMessage({ title: "削除に失敗しました。", status: "error" });
+      });
   };
 
   const onClickCreateComment = async () => {
@@ -86,11 +109,32 @@ export const Post: VFC = memo(() => {
           <Box my={8} bg="white" p={8} borderRadius={6} shadow="md" w="70%">
             <Stack justify="center" align="center" spacing={5}>
               <Heading color="gray.700">{post?.title}</Heading>
-              <Flex align="center">
+              <Flex align="center" justify="flex-end">
                 <Text mr={6} color="gray.500">
                   {moment(post?.createdAt).format("YYYY年MM月DD日 h:mm")}
                 </Text>
                 <Button onClick={onClickUser}>{post?.user.name}</Button>
+                {post.userId === currentUser?.id && (
+                  <Menu>
+                    <MenuButton
+                      as={IconButton}
+                      icon={<ChevronDownIcon />}
+                      variant="outline"
+                    />
+                    <MenuList minW={100}>
+                      <MenuItem icon={<EditIcon />} onClick={onClickEdit}>
+                        編集
+                      </MenuItem>
+                      <MenuItem
+                        icon={<DeleteIcon />}
+                        color="red"
+                        onClick={() => setIsOpenDialog(true)}
+                      >
+                        削除
+                      </MenuItem>
+                    </MenuList>
+                  </Menu>
+                )}
               </Flex>
               <Divider />
               <Box w="full">
@@ -148,6 +192,13 @@ export const Post: VFC = memo(() => {
         onClose={onClose}
         {...comment}
         onClick={onClickCreateComment}
+      />
+
+      <DeletePostAlert
+        isOpen={isOpenDialog}
+        cancelRef={cancelRef}
+        onClose={() => setIsOpenDialog(false)}
+        onClickDelete={onClickDelete}
       />
     </>
   );
