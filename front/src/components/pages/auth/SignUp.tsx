@@ -1,4 +1,4 @@
-import { memo, useContext, useState, VFC } from "react";
+import { memo, useState, VFC } from "react";
 import { Redirect, useHistory } from "react-router";
 import { Input } from "@chakra-ui/input";
 import { Box, Divider, Flex, Heading, Stack } from "@chakra-ui/layout";
@@ -6,16 +6,14 @@ import { Box, Divider, Flex, Heading, Stack } from "@chakra-ui/layout";
 import { useInput } from "../../../hooks/useInput";
 import { useMessage } from "../../../hooks/useMessage";
 import { PrimaryButton } from "../../atoms/button/PrimaryButton";
-import { AuthContext } from "../../../providers/auth/AuthProvider";
 import { auth } from "../../../utils/Firebase";
 import { client } from "../../../lib/api/client";
+import { useAuthR } from '../../../hooks/useAuthR';
 
 export const SignUp: VFC = memo(() => {
-  // グローバルステートを持ってくる
-  const { user } = useContext(AuthContext);
+  const currentUser = useAuthR()
 
   const [loading, setLoading] = useState<boolean>(false);
-
 
   // フック使用準備
   const { showMessage } = useMessage();
@@ -41,7 +39,6 @@ export const SignUp: VFC = memo(() => {
             status: "success",
           });
           <Redirect to="/" />;
-          console.log(data);
         });
       } catch ({ data }) {
         showMessage({ title: `${data.errors}`, status: "error" });
@@ -62,7 +59,7 @@ export const SignUp: VFC = memo(() => {
   };
 
   // ユーザーが存在する場合はトップページへ遷移
-  if (user) {
+  if (currentUser) {
     history.push("/");
   }
 
@@ -70,15 +67,15 @@ export const SignUp: VFC = memo(() => {
   const disableSubmit: boolean = !name.value || !email.value || !password.value;
 
   return (
-    <Flex align="center" justify="center" height="100vh">
+    <Flex align="center" justify="center" height="80vh">
       <Box bg="white" w="sm" p={4} borderRadius="md" shadow="md">
         <Heading as="h1" size="lg" textAlign="center">
           ユーザー登録
         </Heading>
         <Divider my={4} />
         <Stack spacing={6} py={4} px={10}>
-          <Input {...name} autoFocus={true} placeholder="名前" />
-          <Input {...email} placeholder="メールアドレス" />
+          <Input {...name} autoFocus placeholder="名前" />
+          <Input type="email" {...email} placeholder="メールアドレス" />
           <Input type="password" {...password} placeholder="パスワード" />
           <PrimaryButton
             disabled={disableSubmit}

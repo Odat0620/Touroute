@@ -1,4 +1,4 @@
-import { memo, useContext, useState, VFC } from "react";
+import { memo, useState, VFC, useEffect } from "react";
 import { Redirect, useHistory } from "react-router";
 import { Input } from "@chakra-ui/input";
 import { Box, Divider, Flex, Heading, Stack } from "@chakra-ui/layout";
@@ -7,11 +7,10 @@ import { useInput } from "../../../hooks/useInput";
 import { useMessage } from "../../../hooks/useMessage";
 import { PrimaryButton } from "../../atoms/button/PrimaryButton";
 import { auth } from "../../../utils/Firebase";
-import { AuthContext } from "../../../providers/auth/AuthProvider";
+import { useAuthR } from "../../../hooks/useAuthR";
 
 export const SignIn: VFC = memo(() => {
-  // グローバル変数を持ってくる
-  const { user } = useContext(AuthContext);
+  const currentUser = useAuthR();
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -37,22 +36,30 @@ export const SignIn: VFC = memo(() => {
     setLoading(false);
   };
 
-  if (user) {
-    history.push("/");
-  }
+  // ログインしている場合トップページへ
+  useEffect(() => {
+    if (currentUser) {
+      history.push("/");
+    }
+  });
 
   // 入力欄が全て入力されたらfalse(ログインボタンが押せるようになる)
   const disableSubmit: boolean = !email.value || !password.value;
 
   return (
-    <Flex align="center" justify="center" height="100vh">
+    <Flex align="center" justify="center" height="80vh">
       <Box bg="white" w="sm" p={4} borderRadius="md" shadow="md">
         <Heading as="h1" size="lg" textAlign="center">
           ログイン
         </Heading>
         <Divider my={4} />
         <Stack spacing={6} py={4} px={10}>
-          <Input {...email} placeholder="メールアドレス" />
+          <Input
+            type="email"
+            {...email}
+            autoFocus
+            placeholder="メールアドレス"
+          />
           <Input type="password" {...password} placeholder="パスワード" />
           <PrimaryButton
             disabled={disableSubmit}

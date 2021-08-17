@@ -1,18 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { memo, useCallback, useContext, VFC } from "react";
+import { memo, useCallback, VFC } from "react";
 import { useHistory } from "react-router";
 import { Box, Flex, Heading, Spacer } from "@chakra-ui/layout";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { Button } from "@chakra-ui/button";
+import { Menu } from "@chakra-ui/menu";
+import { IconButton, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { HamburgerIcon } from "@chakra-ui/icons";
 
 import { MenuIconButton } from "../../atoms/button/MenuIconButton";
 import { MenuDrawer } from "../../molecules/MenuDrawer";
 import { useMessage } from "../../../hooks/useMessage";
-import { AuthContext } from "../../../providers/auth/AuthProvider";
 import { auth } from "../../../utils/Firebase";
+import { useAuthR } from "../../../hooks/useAuthR";
 
 export const Header: VFC = memo(() => {
-  const { currentUser, setCurrentUser, user } = useContext(AuthContext);
+  const currentUser = useAuthR();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { showMessage } = useMessage();
@@ -22,12 +25,13 @@ export const Header: VFC = memo(() => {
   const onClickMypage = useCallback((id) => history.push(`/users/${id}`), []);
   const onClickSignUp = useCallback(() => history.push("/signup"), []);
   const onClickSignIn = useCallback(() => history.push("/signin"), []);
+  const onClickUserEdit = useCallback((id) => {
+    history.push(`/users/edit/${id}`);
+  }, []);
 
   const onClickSignOut = async () => {
     try {
       await auth.signOut();
-      // ログアウト時currentUserをundefinedにする
-      setCurrentUser(undefined);
       history.push("/");
       showMessage({ title: "ログアウトしました。", status: "success" });
     } catch (error) {
@@ -39,23 +43,36 @@ export const Header: VFC = memo(() => {
   const AuthButtons = () => {
     // 認証完了後はサインアウト用のボタンを表示
     // 未認証時は認証用のボタンを表示
-    if (user) {
+    if (currentUser) {
       return (
         <>
           <Flex flexGrow={2} display={{ base: "none", md: "flex" }}>
             <Spacer />
-            <Box pr={2}>
-              <Button
-                mr={4}
-                color="blue.500"
-                onClick={() => onClickMypage(currentUser?.id)}
-              >
-                マイページ
-              </Button>
-              <Button onClick={onClickSignOut} color="blue.500">
-                ログアウト
-              </Button>
-            </Box>
+            <Menu>
+              <MenuButton
+                as={IconButton}
+                icon={<HamburgerIcon />}
+                variant="outline"
+                _hover={{ bg: "gray.400", opacity: 0.8 }}
+              />
+              <MenuList minW={100}>
+                <MenuItem
+                  color="gray.600"
+                  onClick={() => onClickMypage(currentUser.id)}
+                >
+                  マイページ
+                </MenuItem>
+                <MenuItem
+                  color="gray.600"
+                  onClick={() => onClickUserEdit(currentUser.id)}
+                >
+                  プロフィール設定
+                </MenuItem>
+                <MenuItem color="red" onClick={onClickSignOut}>
+                  ログアウト
+                </MenuItem>
+              </MenuList>
+            </Menu>
           </Flex>
         </>
       );
@@ -67,14 +84,14 @@ export const Header: VFC = memo(() => {
             <Box pr={2}>
               <Button
                 mr={4}
-                color="blue.500"
+                color="blue.800"
                 _hover={{ opacity: 0.8 }}
                 onClick={onClickSignUp}
               >
                 アカウント登録
               </Button>
               <Button
-                color="blue.500"
+                color="blue.800"
                 _hover={{ opacity: 0.8 }}
                 onClick={onClickSignIn}
               >
@@ -91,11 +108,12 @@ export const Header: VFC = memo(() => {
     <>
       <Flex
         as="nav"
-        bg="blue.500"
+        bg="blue.800"
         color="gray.50"
         align="center"
         justify="space-between"
         padding={{ base: 2, md: 2 }}
+        shadow="md"
       >
         <Flex
           align="center"
