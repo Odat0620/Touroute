@@ -1,5 +1,7 @@
 export type currentUserType = {
-  id: number;
+  id: number | null;
+  email: string | null;
   name: string;
-  email: string;
+  profile: string;
+  uid: string;
 };

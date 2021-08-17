@@ -7,27 +7,23 @@ import { Home } from "../components/pages/Home";
 import { Page404 } from "../components/pages/Page404";
 import { HeaderLayout } from "../components/templates/HeaderLayout";
 import { User } from "../components/pages/users/User";
-import { AuthProvider } from "../providers/auth/AuthProvider";
 import { CreatePost } from "../components/pages/posts/CreatePost";
+import { EditUser } from "../components/pages/users/EditUser";
 import { Post } from "../components/pages/posts/Post";
-import { UtilProvider } from "../providers/UtilProvider";
 
 export const Router: VFC = memo(() => {
   return (
-    <AuthProvider>
-      <UtilProvider>
-        <HeaderLayout>
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/users/:id" component={User} />
-            <Route exact path="/signup" component={SignUp} />
-            <Route exact path="/signin" component={SignIn} />
-            <Route exact path="/createpost" component={CreatePost} />
-            <Route exact path="/posts/:id" component={Post} />
-            <Route path="*" component={Page404} />
-          </Switch>
-        </HeaderLayout>
-      </UtilProvider>
-    </AuthProvider>
+    <HeaderLayout>
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route exact path="/users/:id" component={User} />
+        <Route exact path="/users/edit/:id" component={EditUser} />
+        <Route exact path="/signup" component={SignUp} />
+        <Route exact path="/signin" component={SignIn} />
+        <Route exact path="/createpost" component={CreatePost} />
+        <Route exact path="/posts/:id" component={Post} />
+        <Route path="*" component={Page404} />
+      </Switch>
+    </HeaderLayout>
   );
 });
