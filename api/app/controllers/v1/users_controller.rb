@@ -1,20 +1,14 @@
 class V1::UsersController < ApplicationController
   include FirebaseAuthConcern
-  before_action :set_auth_user, only: [:create, :update, :destory, :fetch_user_id_and_name]
+  before_action :set_auth_user, only: [:create, :fetch_user_data]
+  before_action :set_user, only: [:update]
 
-  # ユーザーのidとnameを取得するメソッド
-  def fetch_user_id_and_name
+  # ユーザーデータを取得するメソッド
+  def fetch_user_data
     # IDトークンの検証を走らせ、そのデコードの後のデータを元に該当ユーザーのレコードを取得
     get_user(@auth_user)
 
-    # user.id と nameのみ返却するように新たにオブジェクトを作成
-    user = {
-      id: @user[:id],
-      name: @user[:name],
-      email: @user[:email]
-    }
-
-    render json: user
+    render json: @user
   end
 
   def index
@@ -23,19 +17,26 @@ class V1::UsersController < ApplicationController
   end
 
   def show
-    user = User.find(params[:id])
+    user = User.includes({posts: [:comments, :liked_users]}).find(params[:id])
 
-    user_without_uid = {
-      id: user.id,
-      name: user.name,
-      profile: user.profile
-    }
-
-    render json: user_without_uid
+    render json: user.as_json(include: [
+      {posts: {include: [{comments: {only: :id.length}},
+                         {likes:    {only: :id.length}}
+    ]}}], except: [:uid] )
   end
 
   def create
     create_user(@auth_user)
+  end
+
+  def update
+    return if @user.uid != user_params[:uid]
+
+    if @user.update(user_params.except(:uid, :email))
+      render json: @user, status: :ok
+    else
+      render json: @user, status: :unprocessable_entity
+    end
   end
 
   def destroy
@@ -56,6 +57,10 @@ class V1::UsersController < ApplicationController
     render json: auth_user, status: :unauthorized and return unless auth_user[:data]
     uid = auth_user[:data][:uid]
     @user = User.find_by(uid: uid)
+  end
+
+  def set_user
+    @user = User.find(params[:id])
   end
 
   def create_user(auth_user)

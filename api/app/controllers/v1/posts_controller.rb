@@ -1,13 +1,24 @@
 class V1::PostsController < ApplicationController
-  before_action :set_post, only: [:show, :update, :destroy]
+  before_action :set_post, only: [:update, :destroy]
   def index
-    @posts = Post.all
-    render json: @posts
+    @posts = Post.includes(:user, :liked_users, :comments).all
+
+    render json: @posts.as_json(include: [
+      {user:     {only: :name}},
+      {comments: {only: :id.length}},
+      {likes:    {only: :id.length}}
+    ])
   end
 
   def show
-    render json: @post.as_json(include: [{user: {only: :name } },
-      {comments: {include: {user: {only: [:id, :name]}}}}])
+    @post = Post.includes(:user, :liked_users, {comments: :user}).find(params[:id])
+
+    render json: @post.as_json(include: [
+      {user:     {only: :name } },
+      {comments: {include: {user: {only: [:id, :name]}}}},
+      {likes:    {include: {user: {only: [:id]}}}}
+      ])
+
   end
 
   def create
