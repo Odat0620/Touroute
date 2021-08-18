@@ -1,10 +1,14 @@
 class V1::UsersController < ApplicationController
   include FirebaseAuthConcern
+  
   before_action :set_auth_user, only: [:create, :fetch_user_data]
   before_action :set_user, only: [:update]
 
   # ユーザーデータを取得するメソッド
   def fetch_user_data
+    # dbにユーザーが存在しなければ処理を終了
+    return unless User.find_by(uid: @auth_user[:data][:uid])
+
     # IDトークンの検証を走らせ、そのデコードの後のデータを元に該当ユーザーのレコードを取得
     get_user(@auth_user)
 
@@ -46,7 +50,7 @@ class V1::UsersController < ApplicationController
 
   private
   def user_params
-    params.require(:user).permit(:uid, :name, :email, :profile)
+    params.permit(:id, :uid, :name, :email, :profile, :avatar)
   end
 
   def set_auth_user

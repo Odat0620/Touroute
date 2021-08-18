@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  mount_uploader :avatar, AvatarUploader
+
   # アソシエーション
   has_many :posts, dependent: :destroy
   has_many :comments, dependent: :destroy
