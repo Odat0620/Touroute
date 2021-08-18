@@ -4,5 +4,6 @@ export type UserType = {
   id: number;
   name: string;
   profile?: string;
+  avatar?: { url: string };
   posts?: Array<PostType>;
 };
