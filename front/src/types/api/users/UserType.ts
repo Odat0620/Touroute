@@ -6,4 +6,6 @@ export type UserType = {
   profile?: string;
   avatar?: { url: string };
   posts?: Array<PostType>;
+  following?: Array<any>;
+  followers?: Array<any>;
 };
