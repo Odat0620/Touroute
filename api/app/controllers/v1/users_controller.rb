@@ -1,6 +1,5 @@
 class V1::UsersController < ApplicationController
   include FirebaseAuthConcern
-  
   before_action :set_auth_user, only: [:create, :fetch_user_data]
   before_action :set_user, only: [:update]
 
@@ -21,12 +20,14 @@ class V1::UsersController < ApplicationController
   end
 
   def show
-    user = User.includes({posts: [:comments, :liked_users]}).find(params[:id])
+    user = User.includes({posts: [:comments, :liked_users]}, :following, :followers).find(params[:id])
 
     render json: user.as_json(include: [
-      {posts: {include: [{comments: {only: :id.length}},
-                         {likes:    {only: :id.length}}
-    ]}}], except: [:uid] )
+        {posts: {include: [{comments: {only: :id.length}},
+                           {likes:    {only: :id.length}}
+    ]}},:following,
+        :followers
+    ], except: [:uid] )
   end
 
   def create

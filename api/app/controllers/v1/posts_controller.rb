@@ -14,7 +14,7 @@ class V1::PostsController < ApplicationController
     @post = Post.includes(:user, :liked_users, {comments: :user}).find(params[:id])
 
     render json: @post.as_json(include: [
-      {user:     {only: :name } },
+      {user:     {only: [:name, :uid] } },
       {comments: {include: {user: {only: [:id, :name]}}}},
       {likes:    {include: {user: {only: [:id]}}}}
       ])

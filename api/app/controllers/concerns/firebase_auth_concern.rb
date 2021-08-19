@@ -82,7 +82,7 @@ module FirebaseAuthConcern
 
     puts "2回目の デコード（decode_jwtメソッド） 開始（最悪この下の verify_iat を false にすれば`iat`の問題は対応可）" # 削除予定
     # 作成した証明書を使って再度JWTトークンのデコードを実行する
-    decoded_token = decode_jwt(token, true, { algorithm: ALGORITHM, verify_iat: true }, certificate.public_key)
+    decoded_token = decode_jwt(token, true, { algorithm: ALGORITHM, verify_iat: false }, certificate.public_key)
     puts "2回目の デコード（decode_jwtメソッド） 終了" # 削除予定
 
 
