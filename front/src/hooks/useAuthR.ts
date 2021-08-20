@@ -1,7 +1,7 @@
+import { useEffect } from "react";
 import { useRecoilState, useResetRecoilState } from "recoil";
 
 import { signInUserState } from "../recoil/auth";
-import { useEffect } from "react";
 import { auth } from "../utils/Firebase";
 import { fetchUserData } from "../lib/api/user";
 
@@ -19,6 +19,7 @@ export const useAuthR = () => {
             name: userData.name,
             profile: userData.profile,
             uid: authUser.uid,
+            avatar: userData.avatar,
           });
         });
       } else {
