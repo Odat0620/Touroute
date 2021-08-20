@@ -1,7 +1,7 @@
 class V1::UsersController < ApplicationController
   include FirebaseAuthConcern
   before_action :set_auth_user, only: [:create, :fetch_user_data]
-  before_action :set_user, only: [:update]
+  before_action :set_user, only: [:update, :destroy]
 
   # ユーザーデータを取得するメソッド
   def fetch_user_data
@@ -45,8 +45,11 @@ class V1::UsersController < ApplicationController
   end
 
   def destroy
-    return if @user.email != params[:email]
-    @user.destroy
+    return if @user.uid != user_params[:uid]
+
+    if @user.destroy
+      render status: :ok
+    end
   end
 
   private
