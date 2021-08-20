@@ -1,10 +1,9 @@
 import { Box, Button, Center, Divider, Text } from "@chakra-ui/react";
-import { useState, VFC } from "react";
+import { useState, VFC, useEffect } from "react";
 
 import { useAuthR } from "../../../hooks/useAuthR";
 import { client } from "../../../lib/api/client";
 import { UserType } from "../../../types/api/users/UserType";
-import { useEffect } from "react";
 
 type Props = {
   user: UserType;
@@ -15,7 +14,6 @@ export const Relationship: VFC<Props> = (props) => {
   const { user, id } = props;
   const currentUser = useAuthR();
   const [isFollow, setIsFollow] = useState<boolean>(false);
-  const [following, setFollowing] = useState<number>(0);
   const [followers, setFollowers] = useState<number>(0);
 
   const onClickCreateFollow = async () => {
@@ -45,7 +43,6 @@ export const Relationship: VFC<Props> = (props) => {
   };
 
   useEffect(() => {
-    setFollowing(user.following!.length);
     setFollowers(user.followers!.length);
     if (!isFollow) {
       user.followers!.forEach((f) => {
@@ -62,7 +59,7 @@ export const Relationship: VFC<Props> = (props) => {
       <Center height="50px" p={3} w="lg" borderWidth="0px" borderRadius={6}>
         <Box align="center">
           <Text>フォロー</Text>
-          <Text>{following}</Text>
+          <Text>{user.following!.length}</Text>
         </Box>
         <Divider h="40px" mx={6} orientation="vertical" />
         <Box align="center" mr={6}>
@@ -70,17 +67,19 @@ export const Relationship: VFC<Props> = (props) => {
           <Text>{followers}</Text>
         </Box>
 
-        <Button
-          borderRadius="100"
-          bg={isFollow ? "blue.400" : "white"}
-          color={isFollow ? "white" : "blue.400"}
-          borderColor={isFollow ? "blue.400" : "blue.400"}
-          borderWidth="2px"
-          _hover={{ opacity: 0.8 }}
-          onClick={isFollow ? onClickDeleteFollow : onClickCreateFollow}
-        >
-          {isFollow ? "フォロー中" : "フォロー"}
-        </Button>
+        {user.id === currentUser.id || (
+          <Button
+            borderRadius="100"
+            bg={isFollow ? "blue.400" : "white"}
+            color={isFollow ? "white" : "blue.400"}
+            borderColor={isFollow ? "blue.400" : "blue.400"}
+            borderWidth="2px"
+            _hover={{ opacity: 0.8 }}
+            onClick={isFollow ? onClickDeleteFollow : onClickCreateFollow}
+          >
+            {isFollow ? "フォロー中" : "フォロー"}
+          </Button>
+        )}
       </Center>
     </>
   );
