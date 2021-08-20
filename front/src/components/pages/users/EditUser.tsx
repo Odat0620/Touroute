@@ -8,6 +8,7 @@ import {
   Stack,
   Text,
   Textarea,
+  Button,
 } from "@chakra-ui/react";
 import React, { useState, VFC, useCallback } from "react";
 import { useParams } from "react-router";
@@ -19,6 +20,9 @@ import { useAuthR } from "../../../hooks/useAuthR";
 import { PrimaryButton } from "../../atoms/button/PrimaryButton";
 import { useMessage } from "../../../hooks/useMessage";
 import { useHistory } from "react-router-dom";
+import { auth } from "../../../utils/Firebase";
+import { DeleteAlert } from "../../organisms/DeleteAlert";
+import { useEffect } from "react";
 
 export const EditUser: VFC = () => {
   const { id } = useParams<{ id: string }>();
@@ -26,9 +30,11 @@ export const EditUser: VFC = () => {
 
   const [avatar, setAvatar] = useState<File>();
   const [preview, setPreview] = useState<string>("");
-
   const userName = useInput(currentUser.name);
   const profile = useTextarea(currentUser.profile || "");
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const { showMessage } = useMessage();
   const history = useHistory();
 
@@ -60,6 +66,7 @@ export const EditUser: VFC = () => {
 
   const onClickUpdate = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    setLoading(true);
 
     const data = createFormData();
     const config = { headers: { "Content-Type": "multipart/form-data" } };
@@ -70,12 +77,62 @@ export const EditUser: VFC = () => {
         console.log(res);
         showMessage({ title: "保存しました。", status: "success" });
         history.push(`/users/${id}`);
+        setLoading(false);
       })
       .catch((error) => {
         console.log(error);
         showMessage({ title: "保存に失敗しました。", status: "error" });
+        setLoading(false);
       });
   };
+
+  const onClickDeleteUser = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    const user = auth.currentUser;
+
+    user
+      ?.delete()
+      .then(() => {
+        client
+          .delete(`users/${id}`, {
+            params: {
+              uid: currentUser.uid,
+            },
+          })
+          .then(() => {
+            setLoading(false);
+            showMessage({
+              title: "アカウントを削除しました。",
+              status: "success",
+            });
+          })
+          .catch((error) => {
+            setLoading(false);
+            showMessage({
+              title: "アカウントを削除に失敗しました。",
+              status: "error",
+            });
+            console.log(error);
+          });
+      })
+      .catch((error) => {
+        setLoading(false);
+        showMessage({
+          title: "アカウントを削除に失敗しました。",
+          status: "error",
+        });
+        console.log(error);
+      });
+    setIsOpen(false);
+  };
+
+  useEffect(() => {
+    if (!currentUser.uid) {
+      history.push("/");
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser.uid]);
 
   return (
     <>
@@ -117,10 +174,24 @@ export const EditUser: VFC = () => {
               </Stack>
             </Box>
 
-            <PrimaryButton onClick={onClickUpdate}>保存</PrimaryButton>
+            <PrimaryButton loading={loading} onClick={onClickUpdate}>
+              保存
+            </PrimaryButton>
+
+            <Button colorScheme="red" onClick={() => setIsOpen(true)}>
+              アカウント削除
+            </Button>
           </Stack>
         </Box>
       </Flex>
+
+      <DeleteAlert
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        onClickDelete={onClickDeleteUser}
+      >
+        アカウントの削除
+      </DeleteAlert>
     </>
   );
 };
