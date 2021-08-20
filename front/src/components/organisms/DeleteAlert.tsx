@@ -1,4 +1,4 @@
-import { VFC } from "react";
+import { ReactNode, useRef, VFC } from "react";
 import {
   AlertDialog,
   AlertDialogOverlay,
@@ -8,17 +8,19 @@ import {
   AlertDialogFooter,
 } from "@chakra-ui/modal";
 import { Button } from "@chakra-ui/button";
-import { FocusableElement } from "@chakra-ui/utils";
 
 type Props = {
   isOpen: boolean;
-  cancelRef: React.RefObject<FocusableElement> | undefined;
   onClose: () => void;
-  onClickDelete: () => Promise<void>;
+  onClickDelete: (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => void | Promise<void>;
+  children: ReactNode;
 };
 
-export const DeletePostAlert: VFC<Props> = (props) => {
-  const { isOpen, cancelRef, onClose, onClickDelete } = props;
+export const DeleteAlert: VFC<Props> = (props) => {
+  const { isOpen, onClose, onClickDelete, children } = props;
+  const cancelRef = useRef<HTMLElement>(null);
 
   return (
     <AlertDialog
@@ -29,7 +31,7 @@ export const DeletePostAlert: VFC<Props> = (props) => {
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogHeader textAlign="center" fontSize="lg" fontWeight="bold">
-            投稿を削除
+            {children}
           </AlertDialogHeader>
           <AlertDialogBody textAlign="center">
             本当に削除しますか？
