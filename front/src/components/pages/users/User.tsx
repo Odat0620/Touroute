@@ -10,20 +10,15 @@ import {
   Wrap,
   WrapItem,
   Text,
+  Avatar,
 } from "@chakra-ui/react";
 
 import { client } from "../../../lib/api/client";
 import { LoadingSpinner } from "../../molecules/LoadingSpinner";
-import { PostType } from "../../../types/api/posts/PostType";
 import { PostCard } from "../../organisms/posts/PostCard";
 import { useHistory } from "react-router-dom";
-
-type UserType = {
-  id: number;
-  name: string;
-  profile: string;
-  posts: Array<PostType>;
-};
+import { UserType } from "../../../types/api/users/UserType";
+import { Relationship } from "../../organisms/users/Relationship";
 
 export const User: VFC = memo(() => {
   const [user, setUser] = useState<UserType | undefined>(undefined);
@@ -41,7 +36,7 @@ export const User: VFC = memo(() => {
   useEffect(() => {
     client.get(`users/${id}`).then(({ data }) => {
       setUser(data);
-      console.log(data);
+      console.log(data.followers);
     });
   }, [id]);
 
@@ -53,10 +48,18 @@ export const User: VFC = memo(() => {
         <Flex align="center" justify="center" direction="column">
           <Box my={8} bg="white" p={8} borderRadius={6} shadow="md" w="70%">
             <Stack justify="center" align="center" spacing={5}>
-              <Heading color="gray.700">{user?.name}</Heading>
-              <Box p={3} w="lg" borderWidth="1px" borderRadius={6}>
-                <Text>{user?.profile}</Text>
+              <Box align="center">
+                <Avatar size="xl" src={user.avatar?.url} />
+                <Heading color="gray.700">{user?.name}</Heading>
               </Box>
+
+              <Relationship user={user} id={id} />
+
+              {user.profile && (
+                <Box p={3} w="max-auto" borderWidth="1px" borderRadius={6}>
+                  <Text>{user?.profile}</Text>
+                </Box>
+              )}
 
               <Divider />
 
