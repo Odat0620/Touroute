@@ -5,8 +5,13 @@ import { Box, Flex, Heading, Spacer } from "@chakra-ui/layout";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { Button } from "@chakra-ui/button";
 import { Menu } from "@chakra-ui/menu";
-import { IconButton, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
-import { HamburgerIcon } from "@chakra-ui/icons";
+import {
+  Avatar,
+  Divider,
+  MenuButton,
+  MenuItem,
+  MenuList,
+} from "@chakra-ui/react";
 
 import { MenuIconButton } from "../../atoms/button/MenuIconButton";
 import { MenuDrawer } from "../../molecules/MenuDrawer";
@@ -43,15 +48,25 @@ export const Header: VFC = memo(() => {
   const AuthButtons = () => {
     // 認証完了後はサインアウト用のボタンを表示
     // 未認証時は認証用のボタンを表示
-    if (currentUser) {
+    if (currentUser.uid) {
       return (
         <>
           <Flex flexGrow={2} display={{ base: "none", md: "flex" }}>
             <Spacer />
             <Menu>
               <MenuButton
-                as={IconButton}
-                icon={<HamburgerIcon />}
+                h="40px"
+                w="40px"
+                mr={6}
+                cursor="pointer"
+                as={Avatar}
+                icon={
+                  <Avatar
+                    src={currentUser.avatar?.url}
+                    showBorder
+                    size="full"
+                  />
+                }
                 variant="outline"
                 _hover={{ bg: "gray.400", opacity: 0.8 }}
               />
@@ -68,6 +83,7 @@ export const Header: VFC = memo(() => {
                 >
                   プロフィール設定
                 </MenuItem>
+                <Divider />
                 <MenuItem color="red" onClick={onClickSignOut}>
                   ログアウト
                 </MenuItem>
@@ -114,6 +130,10 @@ export const Header: VFC = memo(() => {
         justify="space-between"
         padding={{ base: 2, md: 2 }}
         shadow="md"
+        pos="sticky"
+        top="0"
+        zIndex="1000"
+        w="100%"
       >
         <Flex
           align="center"
@@ -136,7 +156,7 @@ export const Header: VFC = memo(() => {
         onClickSignUp={onClickSignUp}
         onClickSignIn={onClickSignIn}
         onClickSignOut={onClickSignOut}
-        onClickMypage={() => onClickMypage(currentUser?.id)}
+        onClickMypage={() => onClickMypage(currentUser.id)}
       />
     </>
   );
