@@ -11,7 +11,7 @@ export type PostType = {
   userId: number;
   createdAt: Date;
   updatedAt: Date;
-  user: { name: string; uid: string };
+  user: { name: string; uid: string; avatar: { url?: string } };
   comments?: Array<CommentType>;
   likes?: Array<any>;
 };

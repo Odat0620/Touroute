@@ -45,7 +45,6 @@ export const Likes: VFC<Props> = (props) => {
     setLikedCount(likes!.length);
     if (!isLiked) {
       likes?.forEach((like) => {
-        console.log(like);
         if (like.userId === currentUser.id) {
           setIsLiked(true);
         }
@@ -64,17 +63,17 @@ export const Likes: VFC<Props> = (props) => {
               onClick={isLiked ? onClickDeleteLike : onClickCreatekLike}
             >
               <Icon
-                mr="2.5"
+                mr="3px"
                 fontSize="22px"
                 as={isLiked ? AiFillHeart : AiOutlineHeart}
-                color={isLiked ? "red" : ""}
+                color={isLiked ? "red" : "gray.500"}
               />
             </Text>
-            <Text>{likedCount}</Text>
+            <Text color="gray.600">{likedCount}</Text>
           </Flex>
         ) : (
           <Flex mr={3}>
-            <Icon mr="2.5" fontSize="22px" as={AiOutlineHeart} />
+            <Icon mr="1" fontSize="22px" color="gray.500" as={AiOutlineHeart} />
             <Text>{likedCount}</Text>
           </Flex>
         )}
