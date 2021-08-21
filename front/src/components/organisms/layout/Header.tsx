@@ -1,9 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { memo, useCallback, VFC } from "react";
 import { useHistory } from "react-router";
-import { Box, Flex, Heading, Spacer } from "@chakra-ui/layout";
+import { Flex, Heading, Spacer } from "@chakra-ui/layout";
 import { useDisclosure } from "@chakra-ui/hooks";
-import { Button } from "@chakra-ui/button";
 import { Menu } from "@chakra-ui/menu";
 import {
   Avatar,
@@ -11,6 +10,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Text,
 } from "@chakra-ui/react";
 
 import { MenuIconButton } from "../../atoms/button/MenuIconButton";
@@ -18,6 +18,7 @@ import { MenuDrawer } from "../../molecules/MenuDrawer";
 import { useMessage } from "../../../hooks/useMessage";
 import { auth } from "../../../utils/Firebase";
 import { useAuthR } from "../../../hooks/useAuthR";
+import { PrimaryButton } from "../../atoms/button/PrimaryButton";
 
 export const Header: VFC = memo(() => {
   const currentUser = useAuthR();
@@ -97,23 +98,13 @@ export const Header: VFC = memo(() => {
         <>
           <Flex flexGrow={2} display={{ base: "none", md: "flex" }}>
             <Spacer />
-            <Box pr={2}>
-              <Button
-                mr={4}
-                color="blue.800"
-                _hover={{ opacity: 0.8 }}
-                onClick={onClickSignUp}
-              >
+            <Flex pr={2} align="center">
+              <PrimaryButton onClick={onClickSignUp}>
                 アカウント登録
-              </Button>
-              <Button
-                color="blue.800"
-                _hover={{ opacity: 0.8 }}
-                onClick={onClickSignIn}
-              >
-                ログイン
-              </Button>
-            </Box>
+              </PrimaryButton>
+              <Text mx="6px">or</Text>
+              <PrimaryButton onClick={onClickSignIn}>ログイン</PrimaryButton>
+            </Flex>
           </Flex>
         </>
       );
@@ -141,7 +132,12 @@ export const Header: VFC = memo(() => {
           _hover={{ cursor: "pointer" }}
           onClick={onClickHome}
         >
-          <Heading as="h1" fontSize={{ base: "lg", md: 30 }} ml={4}>
+          <Heading
+            as="h1"
+            fontSize={{ base: "lg", md: 30 }}
+            ml={4}
+            _hover={{ textShadow: "0px 0px 10px #aaa" }}
+          >
             Touroute
           </Heading>
         </Flex>
