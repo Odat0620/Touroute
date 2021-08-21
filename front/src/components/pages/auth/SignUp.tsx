@@ -1,5 +1,5 @@
-import { memo, useState, VFC } from "react";
-import { Redirect, useHistory } from "react-router";
+import { memo, useState, VFC, useEffect } from "react";
+import { useHistory } from "react-router";
 import { Input } from "@chakra-ui/input";
 import { Box, Divider, Flex, Heading, Stack } from "@chakra-ui/layout";
 
@@ -8,10 +8,10 @@ import { useMessage } from "../../../hooks/useMessage";
 import { PrimaryButton } from "../../atoms/button/PrimaryButton";
 import { auth } from "../../../utils/Firebase";
 import { client } from "../../../lib/api/client";
-import { useAuthR } from '../../../hooks/useAuthR';
+import { useAuthR } from "../../../hooks/useAuthR";
 
 export const SignUp: VFC = memo(() => {
-  const currentUser = useAuthR()
+  const currentUser = useAuthR();
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -38,7 +38,7 @@ export const SignUp: VFC = memo(() => {
             title: `${data.message}`,
             status: "success",
           });
-          <Redirect to="/" />;
+          history.push("/");
         });
       } catch ({ data }) {
         showMessage({ title: `${data.errors}`, status: "error" });
@@ -58,10 +58,11 @@ export const SignUp: VFC = memo(() => {
     setLoading(false);
   };
 
-  // ユーザーが存在する場合はトップページへ遷移
-  if (currentUser) {
-    history.push("/");
-  }
+  useEffect(() => {
+    if (currentUser.uid) {
+      history.push("/");
+    }
+  }, [currentUser.uid, history]);
 
   // 入力欄が全て入力されたらfalse
   const disableSubmit: boolean = !name.value || !email.value || !password.value;
@@ -74,9 +75,19 @@ export const SignUp: VFC = memo(() => {
         </Heading>
         <Divider my={4} />
         <Stack spacing={6} py={4} px={10}>
-          <Input {...name} autoFocus placeholder="名前" />
-          <Input type="email" {...email} placeholder="メールアドレス" />
-          <Input type="password" {...password} placeholder="パスワード" />
+          <Input {...name} autoFocus placeholder="名前" borderRadius="50" />
+          <Input
+            type="email"
+            {...email}
+            placeholder="メールアドレス"
+            borderRadius="50"
+          />
+          <Input
+            type="password"
+            {...password}
+            placeholder="パスワード"
+            borderRadius="50"
+          />
           <PrimaryButton
             disabled={disableSubmit}
             loading={loading}

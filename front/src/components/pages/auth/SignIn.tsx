@@ -1,5 +1,5 @@
 import { memo, useState, VFC, useEffect } from "react";
-import { Redirect, useHistory } from "react-router";
+import { useHistory } from "react-router";
 import { Input } from "@chakra-ui/input";
 import { Box, Divider, Flex, Heading, Stack } from "@chakra-ui/layout";
 
@@ -28,7 +28,7 @@ export const SignIn: VFC = memo(() => {
     try {
       await auth.signInWithEmailAndPassword(email.value, password.value);
       showMessage({ title: "ログインしました。", status: "success" });
-      <Redirect to="/" />;
+      history.push("/");
     } catch (error) {
       showMessage({ title: "ログインに失敗しました。", status: "error" });
       console.log(error);
@@ -38,7 +38,7 @@ export const SignIn: VFC = memo(() => {
 
   // ログインしている場合トップページへ
   useEffect(() => {
-    if (currentUser) {
+    if (currentUser.uid) {
       history.push("/");
     }
   });
@@ -59,8 +59,14 @@ export const SignIn: VFC = memo(() => {
             {...email}
             autoFocus
             placeholder="メールアドレス"
+            borderRadius="50"
           />
-          <Input type="password" {...password} placeholder="パスワード" />
+          <Input
+            type="password"
+            {...password}
+            placeholder="パスワード"
+            borderRadius="50"
+          />
           <PrimaryButton
             disabled={disableSubmit}
             loading={loading}
