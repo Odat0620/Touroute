@@ -13,5 +13,5 @@ export type PostType = {
   updatedAt: Date;
   user: { name: string; uid: string; avatar: { url?: string } };
   comments?: Array<CommentType>;
-  likes?: Array<any>;
+  likes?: Array<{ userId: number }>;
 };

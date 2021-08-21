@@ -1,4 +1,4 @@
-import { memo, useEffect, useState, VFC, useRef } from "react";
+import { memo, useEffect, useState, VFC } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import {
   Flex,
@@ -9,17 +9,10 @@ import {
   Wrap,
   Divider,
   IconButton,
-  Avatar,
-  Icon,
   Tooltip,
 } from "@chakra-ui/react";
-import {
-  EditIcon,
-  DeleteIcon,
-  ChevronDownIcon,
-  TimeIcon,
-} from "@chakra-ui/icons";
-import { BiCommentDetail } from "react-icons/bi";
+import { EditIcon, DeleteIcon, TimeIcon } from "@chakra-ui/icons";
+import { VscEllipsis } from "react-icons/vsc";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/menu";
 import { Heading } from "@chakra-ui/layout";
 import { useDisclosure } from "@chakra-ui/hooks";
@@ -33,16 +26,16 @@ import { useMessage } from "../../../hooks/useMessage";
 import { CreateComment } from "../../organisms/comments/CreateComment";
 import { PrimaryButton } from "../../atoms/button/PrimaryButton";
 import { ShowComment } from "../../organisms/comments/ShowComment";
-import { DeletePostAlert } from "../../organisms/posts/DeletePostAlert";
+import { DeleteAlert } from "../../organisms/DeleteAlert";
 import { useAuthR } from "../../../hooks/useAuthR";
-import { Likes } from "../../organisms/posts/Likes";
 import { LoadingSpinner } from "../../molecules/LoadingSpinner";
+import { AvatarAndName } from "../../molecules/AvatarAndName";
+import { LikesAndCommtnts } from "../../organisms/posts/LikesAndCommtnts";
 
 export const Post: VFC = memo(() => {
   const currentUser = useAuthR();
   const [post, setPost] = useState<PostType>();
   const [isOpenDialog, setIsOpenDialog] = useState<boolean>(false);
-  const cancelRef = useRef<HTMLElement>(null);
 
   const { id } = useParams<{ id: string }>();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -122,37 +115,32 @@ export const Post: VFC = memo(() => {
                   <Flex align="center">
                     <TimeIcon mr={1} color="gray.500" />
                     <Text mr={6} color="gray.500">
-                      {moment(post?.createdAt).format("YYYY年MM月DD日 h:mm")}
+                      {moment(post?.createdAt).format("YYYY年MM月DD日 H:mm")}
                     </Text>
                   </Flex>
                 </Tooltip>
 
-                <Likes likes={post?.likes} id={id} />
+                <LikesAndCommtnts
+                  id={id}
+                  likes={post.likes}
+                  commentsCount={post.comments?.length}
+                />
 
-                <Tooltip label="コメント" bg="gray.400" fontSize="11px">
-                  <Flex align="center" mr="10px">
-                    <Icon
-                      mr="3px"
-                      fontSize="22px"
-                      color="gray.500"
-                      as={BiCommentDetail}
-                    />
-                    <Text color="gray.600">{post.comments?.length}</Text>
-                  </Flex>
-                </Tooltip>
+                <AvatarAndName
+                  name={post.user.name}
+                  avatarUrl={post.user.avatar.url}
+                  onClick={onClickUser}
+                />
 
-                <Flex align="center" cursor="pointer" onClick={onClickUser}>
-                  <Avatar src={post.user.avatar.url} />
-                  <Text fontWeight="bold" mx={2}>
-                    {post?.user.name}
-                  </Text>
-                </Flex>
                 {post.user.uid === currentUser.uid && (
                   <Menu>
                     <MenuButton
                       as={IconButton}
-                      icon={<ChevronDownIcon />}
+                      icon={<VscEllipsis />}
                       variant="outline"
+                      ml="10px"
+                      h="30px"
+                      borderRadius="50"
                     />
                     <MenuList minW={100}>
                       <MenuItem icon={<EditIcon />} onClick={onClickEdit}>
@@ -201,7 +189,9 @@ export const Post: VFC = memo(() => {
             <Divider my={5} />
 
             {post?.comments?.length === 0 && (
-              <Text color="gray.500">コメントはありません。</Text>
+              <Text color="gray.500" py="20px">
+                コメントはありません。
+              </Text>
             )}
             <Wrap direction="column">
               {post?.comments?.map((comment) => (
@@ -227,12 +217,13 @@ export const Post: VFC = memo(() => {
         onClick={onClickCreateComment}
       />
 
-      <DeletePostAlert
+      <DeleteAlert
         isOpen={isOpenDialog}
-        cancelRef={cancelRef}
         onClose={() => setIsOpenDialog(false)}
         onClickDelete={onClickDelete}
-      />
+      >
+        投稿を削除
+      </DeleteAlert>
     </>
   );
 });
