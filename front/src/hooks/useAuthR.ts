@@ -12,22 +12,24 @@ export const useAuthR = () => {
   useEffect(() => {
     const unSub = auth.onAuthStateChanged((authUser) => {
       if (authUser) {
-        fetchUserData(authUser).then((userData) => {
-          setCurrentUser({
-            id: userData.id,
-            email: authUser.email,
-            name: userData.name,
-            profile: userData.profile,
-            uid: authUser.uid,
-            avatar: userData.avatar,
+        if (!currentUser.uid) {
+          fetchUserData(authUser).then((userData) => {
+            setCurrentUser({
+              id: userData.id,
+              email: authUser.email,
+              name: userData.name,
+              profile: userData.profile,
+              uid: authUser.uid,
+              avatar: userData.avatar,
+            });
           });
-        });
+        }
       } else {
         resetStatus();
       }
     });
     return () => unSub();
-  }, [setCurrentUser, resetStatus]);
+  }, [setCurrentUser, resetStatus, currentUser.uid]);
 
   return currentUser;
 };
