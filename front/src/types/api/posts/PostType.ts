@@ -4,6 +4,7 @@ export type PostType = {
   id: number;
   title: string;
   text: string;
+  image: { url?: string; thumb?: { url?: string } };
   route: {
     origin: { lat: number; lng: number };
     destination: { lat: number; lng: number };
@@ -11,7 +12,7 @@ export type PostType = {
   userId: number;
   createdAt: Date;
   updatedAt: Date;
-  user: { name: string; uid: string; avatar: { url?: string } };
-  comments?: Array<CommentType>;
-  likes?: Array<{ userId: number }>;
+  user: { name: string; uid?: string; avatar: { url?: string } };
+  comments: Array<CommentType>;
+  likes: Array<{ userId: number }>;
 };

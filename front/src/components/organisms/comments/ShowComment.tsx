@@ -1,12 +1,14 @@
 import { memo, VFC } from "react";
 import { useHistory } from "react-router-dom";
-import { Box, Button, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import moment from "moment";
+
+import { AvatarAndName } from "../../molecules/AvatarAndName";
 
 type Props = {
   text: string;
   createdAt: Date;
-  user: { id: number; name: string };
+  user: { id: number; name: string; avatar: { url?: string } };
 };
 
 export const ShowComment: VFC<Props> = memo((props) => {
@@ -27,7 +29,11 @@ export const ShowComment: VFC<Props> = memo((props) => {
         <Text mr={6} color="gray.500">
           {moment(createdAt).format("YYYY年MM月DD日 H:mm")}
         </Text>
-        <Button onClick={onClickUser}>{user.name}</Button>
+        <AvatarAndName
+          name={user.name}
+          avatarUrl={user.avatar.url}
+          onClick={onClickUser}
+        />
       </Flex>
     </Box>
   );
