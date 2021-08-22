@@ -9,14 +9,12 @@ import {
   Wrap,
   Divider,
   IconButton,
-  Tooltip,
 } from "@chakra-ui/react";
-import { EditIcon, DeleteIcon, TimeIcon } from "@chakra-ui/icons";
+import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { VscEllipsis } from "react-icons/vsc";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/menu";
 import { Heading } from "@chakra-ui/layout";
 import { useDisclosure } from "@chakra-ui/hooks";
-import moment from "moment";
 
 import { client } from "../../../lib/api/client";
 import { PostType } from "../../../types/api/posts/PostType";
@@ -31,13 +29,14 @@ import { useAuthR } from "../../../hooks/useAuthR";
 import { LoadingSpinner } from "../../molecules/LoadingSpinner";
 import { AvatarAndName } from "../../molecules/AvatarAndName";
 import { LikesAndCommtnts } from "../../organisms/posts/LikesAndCommtnts";
+import { CreatedAtArea } from "../../atoms/posts/CreatedAtArea";
 
 export const Post: VFC = memo(() => {
   const currentUser = useAuthR();
   const [post, setPost] = useState<PostType>();
-  const [isOpenDialog, setIsOpenDialog] = useState<boolean>(false);
-
   const { id } = useParams<{ id: string }>();
+
+  const [isOpenDialog, setIsOpenDialog] = useState<boolean>(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const history = useHistory();
   const comment = useTextarea("");
@@ -80,7 +79,11 @@ export const Post: VFC = memo(() => {
         const postCopy = { ...post! };
         const newData = {
           ...data,
-          user: { id: currentUser.id, name: currentUser.name },
+          user: {
+            id: currentUser.id,
+            name: currentUser.name,
+            avatar: currentUser?.avatar,
+          },
         };
         postCopy!.comments!.push(newData);
         setPost(postCopy);
@@ -96,6 +99,7 @@ export const Post: VFC = memo(() => {
       });
   };
 
+  console.log(route?.origin);
   useEffect(() => {
     client.get(`posts/${id}`).then(({ data }) => {
       setPost(data);
@@ -111,19 +115,12 @@ export const Post: VFC = memo(() => {
             <Stack justify="center" align="center" spacing={5}>
               <Heading color="gray.700">{post?.title}</Heading>
               <Flex align="center" justify="flex-end">
-                <Tooltip label="投稿日時" bg="gray.400" fontSize="11px">
-                  <Flex align="center">
-                    <TimeIcon mr={1} color="gray.500" />
-                    <Text mr={6} color="gray.500">
-                      {moment(post?.createdAt).format("YYYY年MM月DD日 H:mm")}
-                    </Text>
-                  </Flex>
-                </Tooltip>
+                <CreatedAtArea createdAt={post.createdAt} />
 
                 <LikesAndCommtnts
                   id={id}
                   likes={post.likes}
-                  commentsCount={post.comments?.length}
+                  commentsCount={post.comments.length}
                 />
 
                 <AvatarAndName
