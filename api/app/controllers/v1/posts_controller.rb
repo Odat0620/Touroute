@@ -4,19 +4,20 @@ class V1::PostsController < ApplicationController
     @posts = Post.includes(:user, :liked_users, :comments).all
 
     render json: @posts.as_json(include: [
-      {user:     {only: :name}},
+      {user:     {only: [:name, :avatar]}},
       {comments: {only: :id.length}},
-      {likes:    {only: :id.length}}
-    ])
+      {likes:    {only: :user_id}}
+    ] )
   end
 
   def show
     @post = Post.includes(:user, :liked_users, {comments: :user}).find(params[:id])
 
+    puts @post
     render json: @post.as_json(include: [
-      {user:     {only: [:name, :uid] } },
-      {comments: {include: {user: {only: [:id, :name]}}}},
-      {likes:    {include: {user: {only: [:id]}}}}
+      {user:     {only: [:name, :uid, :avatar] } },
+      {comments: {include: {user: {only: [:id, :name, :avatar]}}}},
+      {likes:    {only: :user_id}}
       ])
 
   end
@@ -24,7 +25,14 @@ class V1::PostsController < ApplicationController
   def create
     return if !User.find(post_params[:user_id])
 
-    @post = Post.new(post_params)
+    route = JSON.parse(post_params[:route])
+    data = {title:   post_params[:title],
+            text:    post_params[:text],
+            user_id: post_params[:user_id],
+            image:   post_params[:image],
+            route:   route}
+
+    @post = Post.new(data)
     if @post.save
       render json: @post, status: :created
     else
@@ -54,6 +62,6 @@ class V1::PostsController < ApplicationController
     end
 
     def post_params
-      params.require(:post).permit(:title, :text, :user_id, route: {})
+      params.permit(:title, :text, :user_id,  :image, :route)
     end
 end
