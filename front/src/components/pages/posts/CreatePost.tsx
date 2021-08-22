@@ -1,47 +1,89 @@
-import { memo, useContext, useState, VFC, useEffect } from "react";
+import { memo, useState, VFC, useEffect, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import { Input } from "@chakra-ui/input";
 import { Textarea } from "@chakra-ui/textarea";
-import { Flex, Box, Stack, Button, Heading } from "@chakra-ui/react";
+import {
+  Flex,
+  Box,
+  Stack,
+  Button,
+  Heading,
+  CloseButton,
+  Image,
+  Divider,
+} from "@chakra-ui/react";
 
 import { useInput } from "../../../hooks/useInput";
 import { useTextarea } from "../../../hooks/useTextarea";
 import { RouteCreate } from "../../organisms/posts/RouteCreate";
 import { latLngType } from "../../../types/api/posts/latLngType";
-import { AuthContext } from "../../../providers/auth/AuthProvider";
 import { useMessage } from "../../../hooks/useMessage";
 import { client } from "../../../lib/api/client";
+import { useAuthR } from "../../../hooks/useAuthR";
 
 export const CreatePost: VFC = memo(() => {
-  const { currentUser } = useContext(AuthContext);
+  const currentUser = useAuthR();
 
   // stateを定義
   const [origin, setOrigin] = useState<latLngType | null>(null);
   const [destination, setDestination] = useState<latLngType | null>(null);
   const [loadingButton, setLoadingButton] = useState<boolean>(false);
+  const [image, setImage] = useState<File>();
+  const [preview, setPreview] = useState<string>("");
   const [isDone, setIsDone] = useState<boolean>(false);
 
   // 変数にカスタムフックを設定、中身はvalueとonChange
   const title = useInput("");
   const text = useTextarea("");
 
+  // 写真の追加とプレビューの処理
+  const uploadImage = useCallback((e) => {
+    const file = e.target.files[0];
+    setImage(file);
+  }, []);
+  const previewImage = useCallback((e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setPreview(window.URL.createObjectURL(file));
+    } else {
+      setPreview("");
+    }
+  }, []);
+
   // フックの読み込み
   const history = useHistory();
   const { showMessage } = useMessage();
+
+  const createFormData = () => {
+    const formData = new FormData();
+
+    formData.append("title", title.value);
+    if (text.value) formData.append("text", text.value);
+    if (image) formData.append("image", image);
+    formData.append("user_id", JSON.stringify(currentUser.id));
+    formData.append("route", JSON.stringify({ origin, destination }));
+    console.log(formData);
+
+    return formData;
+  };
 
   // 投稿作成の処理
   const onClickPost = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setLoadingButton(true);
-    const post_data = {
-      title: title.value,
-      text: text.value,
-      user_id: currentUser?.id,
-      route: { origin, destination },
+
+    const data = createFormData();
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     };
+
+    console.log(data);
+
     try {
       await client
-        .post("posts", post_data)
+        .post("posts", data, config)
         .then((res) => {
           showMessage({
             title: "投稿しました。",
@@ -84,6 +126,26 @@ export const CreatePost: VFC = memo(() => {
               placeholder="タイトル（必須、20文字以内）"
             />
             <Textarea h={200} {...text} placeholder="本文" />
+
+            <Divider />
+            <Heading as="h2" fontSize="x-large" color="gray.600" mb={3}>
+              画像を追加
+            </Heading>
+            <Input
+              accept="image/*"
+              type="file"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                uploadImage(e);
+                previewImage(e);
+              }}
+            />
+            {preview ? (
+              <Box>
+                <CloseButton onClick={() => setPreview("")} />
+                <Image maxH="md" maxw="md" src={preview} alt="preview img" />
+              </Box>
+            ) : null}
+
             <RouteCreate
               origin={origin}
               setOrigin={setOrigin}

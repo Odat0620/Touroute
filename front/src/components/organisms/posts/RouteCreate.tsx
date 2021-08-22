@@ -9,7 +9,7 @@ import {
 import { Box, Button, Flex, Heading } from "@chakra-ui/react";
 
 import { mapStyles } from "../../../theme/mapStyles";
-import { latLngType } from "../../../types/latLngType";
+import { latLngType } from "../../../types/api/posts/latLngType";
 
 const mapContainerStyle = {
   height: "60vh",
@@ -33,6 +33,7 @@ const defaultLatLng = {
 export const RouteCreate: VFC<Props> = memo((props) => {
   const { origin, setOrigin, destination, setDestination } = props;
 
+  const [currentDirection, setCurrentDirection] = useState<any>(null);
   const [center, setCenter] = useState<latLngType>(defaultLatLng);
   const [placeStart, setPlaceStart] = useState<boolean>(false);
   const [placeGoal, setPlaceGoal] = useState<boolean>(false);
@@ -45,8 +46,6 @@ export const RouteCreate: VFC<Props> = memo((props) => {
   const onMapLoad = useCallback((map) => {
     mapRef.current = map;
   }, []);
-
-  const [currentDirection, setCurrentDirection] = useState<any>(null);
 
   const directionsCallback = useCallback(
     (googleResponse) => {
@@ -78,16 +77,12 @@ export const RouteCreate: VFC<Props> = memo((props) => {
 
   const onClickMap = (e: any) => {
     if (placeStart || placeGoal) {
-      const lat = e.latLng.lat();
-      const lng = e.latLng.lng();
-      const latLng = { lat, lng };
+      const latLng = { lat: e.latLng.lat(), lng: e.latLng.lng() };
       if (placeStart) {
-        console.log(latLng);
         setOrigin(latLng);
         setCenter(latLng);
         setPlaceStart(false);
       } else if (placeGoal) {
-        console.log(latLng);
         setDestination(latLng);
         setCenter(latLng);
         setPlaceGoal(false);
@@ -117,6 +112,9 @@ export const RouteCreate: VFC<Props> = memo((props) => {
             <Heading as="h2" fontSize="x-large" color="gray.600" mb={3}>
               ルートの設定
             </Heading>
+            {/* <Button onClick={() => console.log(origin, destination)}>
+              cons
+            </Button> */}
             <Box pb={1} w="100%" align="center">
               <Button
                 bg="green.400"
@@ -164,11 +162,7 @@ export const RouteCreate: VFC<Props> = memo((props) => {
 
               {origin && destination && (
                 <DirectionsService
-                  options={{
-                    origin,
-                    destination,
-                    travelMode: "DRIVING",
-                  }}
+                  options={{ origin, destination, travelMode: "DRIVING" }}
                   callback={directionsCallback}
                 />
               )}
