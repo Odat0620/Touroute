@@ -19,7 +19,7 @@ export const AvatarAndName: VFC<Props> = (props) => {
         showBorder
         borderColor="gray.300"
       />
-      <Text mx={2} fontWeight="bold" color="gray.600">
+      <Text ml={2} fontWeight="bold" color="gray.600">
         {name}
       </Text>
     </Flex>

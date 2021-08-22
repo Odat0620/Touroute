@@ -1,34 +1,72 @@
 import { memo, VFC } from "react";
 import { Box, Stack, Text } from "@chakra-ui/layout";
+import { AspectRatio, Image } from "@chakra-ui/react";
+import { CreatedAtArea } from "../../atoms/posts/CreatedAtArea";
+import { LikesAndCommtnts } from "./LikesAndCommtnts";
+import { AvatarAndName } from "../../molecules/AvatarAndName";
+import { useHistory } from "react-router-dom";
 
 type Props = {
   id: number;
   title: string;
-  text: string;
+  image: string | undefined;
+  createdAt: Date;
+  commentsCount: number;
+  likes: Array<{ userId: number }>;
+  name: string;
+  userId: number;
+  avatarUrl?: string;
   onClick: (id: number) => void;
 };
 
 export const PostCard: VFC<Props> = memo((props) => {
-  const { id, title, text, onClick } = props;
+  const {
+    id,
+    title,
+    image,
+    createdAt,
+    name,
+    commentsCount,
+    likes,
+    userId,
+    avatarUrl,
+    onClick,
+  } = props;
+
+  const history = useHistory();
 
   return (
     <Box
-      w="260px"
-      h="260px"
+      w="280px"
+      h="360px"
       bg="white"
-      borderRadius="10px"
       shadow="md"
-      p={4}
+      border="1px solid #aaa"
+      borderRadius="12px"
       _hover={{ cursor: "pointer", opacity: "0.8" }}
       onClick={() => onClick(id)}
     >
-      <Stack textAlign="center">
-        <Text fontSize="lg" fontWeight="bold">
+      <AspectRatio ratio={16 / 10}>
+        <Image
+          w="280px"
+          h="180px"
+          borderRadius="10px 10px 0px 0px"
+          src={image}
+          alt="post image"
+        />
+      </AspectRatio>
+
+      <Stack align="center" spacing="10px">
+        <Text py="6px" fontSize="x-large" fontWeight="bold">
           {title}
         </Text>
-        <Text fontSize="sm" color="gray">
-          {text}
-        </Text>
+        <CreatedAtArea createdAt={createdAt} />
+        <LikesAndCommtnts likes={likes} commentsCount={commentsCount} id={id} />
+        <AvatarAndName
+          name={name}
+          avatarUrl={avatarUrl}
+          onClick={() => history.push(`/users/${userId}`)}
+        />
       </Stack>
     </Box>
   );

@@ -1,3 +1,4 @@
+import { Flex } from "@chakra-ui/react";
 import { useEffect, useState, VFC } from "react";
 
 import { useAuthR } from "../../../hooks/useAuthR";
@@ -6,9 +7,9 @@ import { CommentsCount } from "../../molecules/CommentsCount";
 import { Likes } from "../../molecules/Likes";
 
 type Props = {
-  id: string;
-  likes?: Array<{ userId: number }>;
-  commentsCount?: number;
+  id: string | number;
+  likes: Array<{ userId: number }>;
+  commentsCount: number;
 };
 
 export const LikesAndCommtnts: VFC<Props> = (props) => {
@@ -57,13 +58,15 @@ export const LikesAndCommtnts: VFC<Props> = (props) => {
 
   return (
     <>
-      <Likes
-        likedCount={likedCount}
-        isLiked={isLiked}
-        onClickCreateLike={onClickCreateLike}
-        onClickDeleteLike={onClickDeleteLike}
-      />
-      <CommentsCount commentsCount={commentsCount} />
+      <Flex>
+        <Likes
+          likedCount={likedCount}
+          isLiked={isLiked}
+          onClickCreateLike={onClickCreateLike}
+          onClickDeleteLike={onClickDeleteLike}
+        />
+        <CommentsCount commentsCount={commentsCount} />
+      </Flex>
     </>
   );
 };

@@ -47,7 +47,7 @@ export const Home: VFC = memo(() => {
           as="h1"
           pt="30px"
           fontSize="50px"
-          textShadow="0px 0px 8px #fff"
+          textShadow="0px 2px 8px #fff"
         >
           Touroute
         </Heading>
@@ -61,9 +61,11 @@ export const Home: VFC = memo(() => {
         )}
       </Box>
       <Box w="80%">
-        <Heading as="h1" my="10px">
-          投稿一覧
-        </Heading>
+        <Box bg="orange.200" w="220px" py="1px" my="10px" borderRadius="50">
+          <Heading as="h1" color="gray.600" my="10px">
+            投稿一覧
+          </Heading>
+        </Box>
         <Divider />
         {!posts ? (
           <LoadingSpinner />
@@ -74,11 +76,13 @@ export const Home: VFC = memo(() => {
                 <PostCard
                   id={post.id}
                   title={post.title}
-                  text={post.text}
+                  image={post.image?.url}
                   createdAt={post.createdAt}
                   name={post.user.name}
                   commentsCount={post.comments!.length}
-                  likesCount={post.likes!.length}
+                  likes={post.likes!}
+                  userId={post.userId}
+                  avatarUrl={post.user.avatar?.url}
                   onClick={() => onClickShowPost(post.id)}
                 />
               </WrapItem>

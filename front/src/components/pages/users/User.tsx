@@ -49,8 +49,13 @@ export const User: VFC = memo(() => {
           <Box my={8} bg="white" p={8} borderRadius={6} shadow="md" w="70%">
             <Stack justify="center" align="center" spacing={5}>
               <Box align="center">
-                <Avatar size="xl" src={user.avatar?.url} />
-                <Heading color="gray.700">{user?.name}</Heading>
+                <Avatar
+                  size="xl"
+                  src={user.avatar?.url}
+                  showBorder
+                  borderColor="gray.300"
+                />
+                <Heading color="gray.600">{user?.name}</Heading>
               </Box>
 
               <Relationship user={user} id={id} />
@@ -63,21 +68,26 @@ export const User: VFC = memo(() => {
 
               <Divider />
 
-              <Heading color="gray.700" fontSize={25}>
+              <Heading color="gray.600" fontSize={25}>
                 ツーリング記録
               </Heading>
 
+              {user.posts?.length === 0 && (
+                <Text color="gray.500">投稿はありません</Text>
+              )}
               <Wrap p={{ base: 4, md: 10 }} justify="center">
-                {user?.posts?.map((post) => (
+                {user.posts?.map((post) => (
                   <WrapItem key={post.id}>
                     <PostCard
                       id={post.id}
                       title={post.title}
-                      text={post.text}
+                      image={post.image?.url}
                       createdAt={post.createdAt}
-                      name={user.name}
                       commentsCount={post.comments!.length}
-                      likesCount={post.likes!.length}
+                      likes={post.likes!}
+                      name={user.name}
+                      userId={user.id}
+                      avatarUrl={user.avatar?.url}
                       onClick={() => onClickShowPost(post.id)}
                     />
                   </WrapItem>
