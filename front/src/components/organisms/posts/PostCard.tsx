@@ -1,10 +1,12 @@
 import { memo, VFC } from "react";
+import { useHistory } from "react-router-dom";
 import { Box, Stack, Text } from "@chakra-ui/layout";
 import { AspectRatio, Image } from "@chakra-ui/react";
+
 import { CreatedAtArea } from "../../atoms/posts/CreatedAtArea";
 import { LikesAndCommtnts } from "./LikesAndCommtnts";
 import { AvatarAndName } from "../../molecules/AvatarAndName";
-import { useHistory } from "react-router-dom";
+import DefaultImage from "../../../img/PostDefaultImg.jpg";
 
 type Props = {
   id: number;
@@ -51,7 +53,7 @@ export const PostCard: VFC<Props> = memo((props) => {
           w="280px"
           h="180px"
           borderRadius="10px 10px 0px 0px"
-          src={image}
+          src={image || DefaultImage}
           alt="post image"
         />
       </AspectRatio>
