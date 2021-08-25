@@ -30,9 +30,10 @@ import { LoadingSpinner } from "../../molecules/LoadingSpinner";
 import { AvatarAndName } from "../../molecules/AvatarAndName";
 import { LikesAndCommtnts } from "../../organisms/posts/LikesAndCommtnts";
 import { CreatedAtArea } from "../../atoms/posts/CreatedAtArea";
+import { ShowPostImage } from "../../molecules/posts/ShowPostImage";
 
 export const Post: VFC = memo(() => {
-  const currentUser = useAuthR();
+  const { currentUser } = useAuthR();
   const [post, setPost] = useState<PostType>();
   const { id } = useParams<{ id: string }>();
 
@@ -160,6 +161,14 @@ export const Post: VFC = memo(() => {
                   {post?.text}
                 </Text>
               </Box>
+
+              {post.image && (
+                <ShowPostImage
+                  thumbUrl={post.image.thumb!.url}
+                  imageUrl={post.image.url!}
+                />
+              )}
+
               {route?.origin && (
                 <RouteShow
                   origin={route?.origin}
