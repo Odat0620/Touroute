@@ -2,19 +2,18 @@
 import { memo, useState, VFC, useEffect, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import { Box, Heading } from "@chakra-ui/layout";
-import { Divider, Text, Wrap, WrapItem } from "@chakra-ui/react";
+import { Divider, Text } from "@chakra-ui/react";
 
 import { client } from "../../lib/api/client";
 import { useMessage } from "../../hooks/useMessage";
 import { PostType } from "../../types/api/posts/PostType";
-import { PostCard } from "../organisms/posts/PostCard";
 import { LoadingSpinner } from "../molecules/LoadingSpinner";
 import { useAuthR } from "../../hooks/useAuthR";
 import { PrimaryButton } from "../atoms/button/PrimaryButton";
+import { PostsContainer } from "../organisms/posts/PostsContainer";
 
 export const Home: VFC = memo(() => {
-  const currentUser = useAuthR();
-
+  const { currentUser } = useAuthR();
   const [posts, setPosts] = useState<Array<PostType> | null>(null);
 
   // フックス準備
@@ -27,8 +26,8 @@ export const Home: VFC = memo(() => {
     const getPosts = async () => {
       await client
         .get<Array<PostType> | null>("posts")
-        .then((res) => {
-          setPosts(res.data);
+        .then(({ data }) => {
+          setPosts(data);
         })
         .catch(() => {
           showMessage({
@@ -60,8 +59,16 @@ export const Home: VFC = memo(() => {
           </>
         )}
       </Box>
+
       <Box w="80%">
-        <Box bg="orange.200" w="220px" py="1px" my="10px" borderRadius="50">
+        <Box
+          bg="orange.200"
+          w="220px"
+          py="1px"
+          my="10px"
+          borderRadius="50"
+          shadow="md"
+        >
           <Heading as="h1" color="gray.600" my="10px">
             投稿一覧
           </Heading>
@@ -70,24 +77,7 @@ export const Home: VFC = memo(() => {
         {!posts ? (
           <LoadingSpinner />
         ) : (
-          <Wrap p={{ base: 4, md: 10 }} justify="center">
-            {posts?.map((post) => (
-              <WrapItem key={post.id}>
-                <PostCard
-                  id={post.id}
-                  title={post.title}
-                  image={post.image?.url}
-                  createdAt={post.createdAt}
-                  name={post.user.name}
-                  commentsCount={post.comments!.length}
-                  likes={post.likes!}
-                  userId={post.userId}
-                  avatarUrl={post.user.avatar?.url}
-                  onClick={() => onClickShowPost(post.id)}
-                />
-              </WrapItem>
-            ))}
-          </Wrap>
+          <PostsContainer posts={posts} onClick={onClickShowPost} />
         )}
       </Box>
     </Box>
