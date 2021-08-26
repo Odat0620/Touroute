@@ -24,9 +24,9 @@ class V1::UsersController < ApplicationController
 
     render json: user.as_json(include: [
         {posts: {include: [{comments: {only: :id.length}},
-                           {likes:    {only: :id.length}}
-    ]}},:following,
-        :followers
+                           {likes:    {only: :id.length}}]}},
+        {following: {except: [:uid, :email, :updated_at]}},
+        {followers: {except: [:uid, :email, :updated_at]}}
     ], except: [:uid] )
   end
 
