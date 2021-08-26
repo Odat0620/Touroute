@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Box, Button, Center, Divider, Text } from "@chakra-ui/react";
 import { useState, VFC, useEffect } from "react";
 
@@ -5,14 +6,8 @@ import { useAuthR } from "../../../hooks/useAuthR";
 import { client } from "../../../lib/api/client";
 import { UserType } from "../../../types/api/users/UserType";
 
-type Props = {
-  user: UserType;
-  id: string;
-};
-
-export const Relationship: VFC<Props> = (props) => {
-  const { user, id } = props;
-  const currentUser = useAuthR();
+export const Relationship: VFC<{ user: UserType }> = ({ user }) => {
+  const { currentUser } = useAuthR();
   const [isFollow, setIsFollow] = useState<boolean>(false);
   const [followers, setFollowers] = useState<number>(0);
 
@@ -20,7 +15,7 @@ export const Relationship: VFC<Props> = (props) => {
     await client
       .post("/relationships", {
         uid: currentUser.uid,
-        other_user_id: id,
+        other_user_id: user.id,
       })
       .then((res) => {
         setIsFollow(true);
@@ -30,10 +25,10 @@ export const Relationship: VFC<Props> = (props) => {
   };
   const onClickDeleteFollow = async () => {
     await client
-      .delete(`/relationships/${id}`, {
+      .delete(`/relationships/${user.id}`, {
         data: {
           uid: currentUser.uid,
-          other_user_id: id,
+          other_user_id: user.id,
         },
       })
       .then(() => {
@@ -51,7 +46,6 @@ export const Relationship: VFC<Props> = (props) => {
         }
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
   return (
@@ -67,12 +61,12 @@ export const Relationship: VFC<Props> = (props) => {
           <Text>{followers}</Text>
         </Box>
 
-        {user.id === currentUser.id || (
+        {!currentUser.uid || user.id === currentUser.id || (
           <Button
             borderRadius="100"
-            bg={isFollow ? "blue.400" : "white"}
-            color={isFollow ? "white" : "blue.400"}
-            borderColor={isFollow ? "blue.400" : "blue.400"}
+            bg={isFollow ? "orange.300" : "white"}
+            color={isFollow ? "white" : "orange.300"}
+            borderColor={"orange.300"}
             borderWidth="2px"
             _hover={{ opacity: 0.8 }}
             onClick={isFollow ? onClickDeleteFollow : onClickCreateFollow}
