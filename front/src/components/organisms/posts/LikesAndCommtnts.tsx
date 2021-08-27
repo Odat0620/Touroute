@@ -1,10 +1,10 @@
 import { Flex } from "@chakra-ui/react";
 import { useEffect, useState, VFC } from "react";
 
-import { useAuthR } from "../../../hooks/useAuthR";
+import { useAuthR } from "../../../hooks/api/useAuthR";
 import { client } from "../../../lib/api/client";
-import { CommentsCount } from "../../molecules/CommentsCount";
-import { Likes } from "../../molecules/Likes";
+import { CommentsCount } from "../../molecules/posts/CommentsCount";
+import { Likes } from "../../molecules/posts/Likes";
 
 type Props = {
   id: string | number;
@@ -14,7 +14,7 @@ type Props = {
 
 export const LikesAndCommtnts: VFC<Props> = (props) => {
   const { id, likes, commentsCount } = props;
-  const currentUser = useAuthR();
+  const { currentUser } = useAuthR();
 
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [likedCount, setLikedCount] = useState<number>(0);

@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import moment from "moment";
 
-import { AvatarAndName } from "../../molecules/AvatarAndName";
+import { AvatarAndName } from "../../molecules/users/AvatarAndName";
 
 type Props = {
   text: string;

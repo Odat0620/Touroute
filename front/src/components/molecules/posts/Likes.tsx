@@ -2,7 +2,7 @@ import { VFC } from "react";
 import { Text, Icon, Flex, Tooltip } from "@chakra-ui/react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 
-import { useAuthR } from "../../hooks/useAuthR";
+import { useAuthR } from "../../../hooks/api/useAuthR";
 
 type Props = {
   likedCount: number;
@@ -13,7 +13,7 @@ type Props = {
 
 export const Likes: VFC<Props> = (props) => {
   const { likedCount, isLiked, onClickCreateLike, onClickDeleteLike } = props;
-  const currentUser = useAuthR();
+  const { currentUser } = useAuthR();
 
   return (
     <>

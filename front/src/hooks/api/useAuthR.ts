@@ -1,9 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
 import { useRecoilState, useResetRecoilState } from "recoil";
 
-import { signInUserState } from "../recoil/auth";
-import { auth } from "../utils/Firebase";
-import { fetchUserData } from "../lib/api/user";
+import { signInUserState } from "../../recoil/auth";
+import { auth } from "../../utils/Firebase";
+import { fetchUserData } from "../../lib/api/user";
 
 export const useAuthR = () => {
   const [currentUser, setCurrentUser] = useRecoilState(signInUserState);
@@ -12,7 +13,7 @@ export const useAuthR = () => {
   useEffect(() => {
     const unSub = auth.onAuthStateChanged((authUser) => {
       if (authUser) {
-        if (!currentUser.uid) {
+        if (!currentUser.id) {
           fetchUserData(authUser).then((userData) => {
             setCurrentUser({
               id: userData.id,
@@ -22,6 +23,7 @@ export const useAuthR = () => {
               uid: authUser.uid,
               avatar: userData.avatar,
             });
+            console.log("auth");
           });
         }
       } else {
@@ -29,7 +31,7 @@ export const useAuthR = () => {
       }
     });
     return () => unSub();
-  }, [setCurrentUser, resetStatus, currentUser.uid]);
+  }, [currentUser.id]);
 
-  return currentUser;
+  return { currentUser, setCurrentUser };
 };
