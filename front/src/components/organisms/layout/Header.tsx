@@ -17,11 +17,11 @@ import { MenuIconButton } from "../../atoms/button/MenuIconButton";
 import { MenuDrawer } from "../../molecules/MenuDrawer";
 import { useMessage } from "../../../hooks/useMessage";
 import { auth } from "../../../utils/Firebase";
-import { useAuthR } from "../../../hooks/useAuthR";
+import { useAuthR } from "../../../hooks/api/useAuthR";
 import { PrimaryButton } from "../../atoms/button/PrimaryButton";
 
 export const Header: VFC = memo(() => {
-  const currentUser = useAuthR();
+  const { currentUser } = useAuthR();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { showMessage } = useMessage();
@@ -136,6 +136,7 @@ export const Header: VFC = memo(() => {
             as="h1"
             fontSize={{ base: "lg", md: 30 }}
             ml={4}
+            transition="all 0.3s"
             _hover={{ textShadow: "0px 0px 10px #aaa" }}
           >
             Touroute
