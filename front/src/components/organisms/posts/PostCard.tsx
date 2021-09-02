@@ -1,11 +1,10 @@
 import { memo, VFC } from "react";
-import { useHistory } from "react-router-dom";
 import { Box, Stack, Text } from "@chakra-ui/layout";
 import { AspectRatio, Image } from "@chakra-ui/react";
 
 import { CreatedAtArea } from "../../atoms/posts/CreatedAtArea";
 import { LikesAndCommtnts } from "./LikesAndCommtnts";
-import { AvatarAndName } from "../../molecules/AvatarAndName";
+import { AvatarAndName } from "../../molecules/users/AvatarAndName";
 import DefaultImage from "../../../img/PostDefaultImg.jpg";
 
 type Props = {
@@ -30,12 +29,9 @@ export const PostCard: VFC<Props> = memo((props) => {
     name,
     commentsCount,
     likes,
-    userId,
     avatarUrl,
     onClick,
   } = props;
-
-  const history = useHistory();
 
   return (
     <Box
@@ -43,7 +39,7 @@ export const PostCard: VFC<Props> = memo((props) => {
       h="360px"
       bg="white"
       shadow="md"
-      border="1px solid #aaa"
+      border="1px solid #ccc"
       borderRadius="12px"
       _hover={{ cursor: "pointer", opacity: "0.8" }}
       onClick={() => onClick(id)}
@@ -64,11 +60,7 @@ export const PostCard: VFC<Props> = memo((props) => {
         </Text>
         <CreatedAtArea createdAt={createdAt} />
         <LikesAndCommtnts likes={likes} commentsCount={commentsCount} id={id} />
-        <AvatarAndName
-          name={name}
-          avatarUrl={avatarUrl}
-          onClick={() => history.push(`/users/${userId}`)}
-        />
+        <AvatarAndName name={name} avatarUrl={avatarUrl} />
       </Stack>
     </Box>
   );
