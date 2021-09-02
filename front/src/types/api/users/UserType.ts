@@ -1,14 +1,14 @@
 import { PostType } from "../posts/PostType";
 
-type Follow = {
+export type FollowType = {
   id: number;
   name: string;
-  profile: string;
-  created_at: Date;
+  profile: string | undefined;
+  created_at?: Date;
   avatar: {
-    url: string;
+    url: string | undefined;
     thumb: {
-      url: string;
+      url: string | undefined;
     };
   };
 };
@@ -19,6 +19,6 @@ export type UserType = {
   profile?: string;
   avatar?: { url: string; thumb: { url: string } };
   posts?: Array<PostType>;
-  following?: Array<Follow>;
-  followers?: Array<Follow>;
+  following?: Array<FollowType>;
+  followers?: Array<FollowType>;
 };
