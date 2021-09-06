@@ -42,6 +42,7 @@ export const useRelationship = (user: UserType) => {
       user.followers!.forEach((f) => {
         if (f.id === currentUser.id) {
           setIsFollow(true);
+          return;
         }
       });
     }
