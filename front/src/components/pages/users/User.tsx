@@ -2,7 +2,7 @@
 import { memo, useEffect, VFC, useState, useCallback } from "react";
 import { useParams } from "react-router";
 import { useHistory } from "react-router-dom";
-import { Flex, Stack } from "@chakra-ui/react";
+import { Button, Flex, Stack } from "@chakra-ui/react";
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/tabs";
 
 import { client } from "../../../lib/api/client";
@@ -26,7 +26,6 @@ export const User: VFC = memo(() => {
   useEffect(() => {
     client.get(`users/${id}`).then(({ data }) => {
       setUser(data);
-      console.log("t");
     });
   }, [id]);
 
@@ -46,12 +45,12 @@ export const User: VFC = memo(() => {
               my={8}
               mr={8}
               borderRadius={6}
-              borderTopRadius={20}
+              borderTopRadius={40}
               shadow="md"
               flex="1"
               colorScheme="cyan"
             >
-              <TabList mb="1em" bg="gray.200" borderRadius="20">
+              <TabList mb="1em" bg="gray.200" borderRadius="50">
                 <Tab>ツーリング記録</Tab>
                 <Tab>フォロー</Tab>
                 <Tab>フォロワー</Tab>
@@ -83,7 +82,10 @@ export const User: VFC = memo(() => {
                   </Stack>{" "}
                 </TabPanel>
                 <TabPanel>
-                  <p>いいね</p>
+                  <PostsContainer
+                    posts={user.likedPosts}
+                    onClick={onClickShowPost}
+                  />
                 </TabPanel>
               </TabPanels>
             </Tabs>
