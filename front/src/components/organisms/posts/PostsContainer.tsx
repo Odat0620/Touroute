@@ -2,10 +2,10 @@ import { memo, VFC } from "react";
 import { Text, Wrap, WrapItem } from "@chakra-ui/react";
 
 import { PostCard } from "./PostCard";
-import { PostType } from "../../../types/api/posts/PostType";
+import { PostCardType } from '../../../types/api/posts/PostType';
 
 export const PostsContainer: VFC<{
-  posts?: Array<PostType>;
+  posts?: Array<PostCardType>;
   userName?: string;
   avatarUrl?: string;
   onClick: (id: number) => void;

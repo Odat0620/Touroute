@@ -1,4 +1,4 @@
-import { PostType } from "../posts/PostType";
+import { PostCardType } from "../posts/PostType";
 
 export type FollowType = {
   id: number;
@@ -18,7 +18,8 @@ export type UserType = {
   name: string;
   profile?: string;
   avatar?: { url: string; thumb: { url: string } };
-  posts?: Array<PostType>;
+  posts?: Array<PostCardType>;
   following?: Array<FollowType>;
   followers?: Array<FollowType>;
+  likedPosts?: Array<PostCardType>;
 };
