@@ -20,13 +20,21 @@ class V1::UsersController < ApplicationController
   end
 
   def show
-    user = User.includes({posts: [:comments, :liked_users]}, :following, :followers).find(params[:id])
+    user = User.includes({posts: [:comments, :liked_users]},
+                         {liked_posts: [:user, :comments, :liked_users]},
+                         :following,
+                         :followers).find(params[:id])
 
     render json: user.as_json(include: [
         {posts: {include: [{comments: {only: :id.length}},
-                           {likes:    {only: :id.length}}]}},
-        {following: {except: [:uid, :email, :updated_at]}},
-        {followers: {except: [:uid, :email, :updated_at]}}
+                           {likes:    {only: :user_id}}],
+                except:   [:text, :route]}},
+        {liked_posts: {include: [user:    {only: [:id, :name, :avatar]},
+                                comments: {only: :id.length},
+                                likes:    {only: :user_id}],
+                        except: [:text, :route]}},
+        {following:   {except: [:uid, :email, :updated_at]}},
+        {followers:   {except: [:uid, :email, :updated_at]}}
     ], except: [:uid] )
   end
 
