@@ -9,6 +9,7 @@ export const signInUserState = atom<currentUserType>({
     email: "",
     name: "",
     profile: "",
+    location: "",
     uid: "",
   },
 });

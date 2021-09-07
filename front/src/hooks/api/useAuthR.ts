@@ -20,6 +20,7 @@ export const useAuthR = () => {
               email: authUser.email,
               name: userData.name,
               profile: userData.profile,
+              location: userData.location,
               uid: authUser.uid,
               avatar: userData.avatar,
             });

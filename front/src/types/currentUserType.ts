@@ -3,6 +3,7 @@ export type currentUserType = {
   email: string | null;
   name: string;
   profile: string;
+  location: string;
   avatar?: { url: string };
   uid: string;
 };
