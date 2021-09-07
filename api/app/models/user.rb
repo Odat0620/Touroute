@@ -15,6 +15,7 @@ class User < ApplicationRecord
   # バリデーション
   validates :name,  presence: true, length: { maximum: 20 }
   validates :email, presence: true, length: { maximum: 255 }, uniqueness: { case_sensitive: false }
+  validates :location, length: { maximum: 20 }
 
   # フォロー関係のメソッド
   def follow(other_user)

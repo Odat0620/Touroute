@@ -62,7 +62,7 @@ class V1::UsersController < ApplicationController
 
   private
   def user_params
-    params.permit(:id, :uid, :name, :email, :profile, :avatar)
+    params.permit(:id, :uid, :name, :email, :profile, :avatar, :location)
   end
 
   def set_auth_user
