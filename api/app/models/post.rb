@@ -1,5 +1,6 @@
 class Post < ApplicationRecord
   mount_uploader :image, PostImageUploader
+  serialize :prefecture
 
   # アソシエーション
   belongs_to :user

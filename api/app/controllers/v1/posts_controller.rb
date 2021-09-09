@@ -26,11 +26,12 @@ class V1::PostsController < ApplicationController
     return if !User.find(post_params[:user_id])
 
     route = JSON.parse(post_params[:route])
-    data = {title:   post_params[:title],
-            text:    post_params[:text],
-            user_id: post_params[:user_id],
-            image:   post_params[:image],
-            route:   route}
+    data = {title:      post_params[:title],
+            text:       post_params[:text],
+            user_id:    post_params[:user_id],
+            image:      post_params[:image],
+            prefecture: post_params[:prefecture],
+            route:      route}
 
     @post = Post.new(data)
     if @post.save
@@ -62,6 +63,6 @@ class V1::PostsController < ApplicationController
     end
 
     def post_params
-      params.permit(:title, :text, :user_id,  :image, :route)
+      params.permit(:title, :text, :user_id,  :image, :route, :prefecture)
     end
 end
