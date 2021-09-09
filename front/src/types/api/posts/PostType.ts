@@ -11,6 +11,7 @@ export type PostType = {
   userId: number;
   createdAt: Date;
   updatedAt: Date;
+  prefecture: Array<number> | undefined;
   image: { url?: string; thumb?: { url?: string } };
   user: {
     name: string;
