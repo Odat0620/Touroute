@@ -26,11 +26,12 @@ class V1::PostsController < ApplicationController
     return if !User.find(post_params[:user_id])
 
     route = JSON.parse(post_params[:route])
+    prefecture = post_params[:prefecture].map{|n| n.to_i}
     data = {title:      post_params[:title],
             text:       post_params[:text],
             user_id:    post_params[:user_id],
             image:      post_params[:image],
-            prefecture: post_params[:prefecture],
+            prefecture: prefecture,
             route:      route}
 
     @post = Post.new(data)
@@ -63,6 +64,6 @@ class V1::PostsController < ApplicationController
     end
 
     def post_params
-      params.permit(:title, :text, :user_id,  :image, :route, :prefecture)
+      params.permit(:title, :text, :user_id,  :image, :route, prefecture: [])
     end
 end
