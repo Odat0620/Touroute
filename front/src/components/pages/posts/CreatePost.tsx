@@ -6,11 +6,9 @@ import {
   Flex,
   Box,
   Stack,
-  Button,
   Heading,
   CloseButton,
   Image,
-  Divider,
 } from "@chakra-ui/react";
 
 import { useInput } from "../../../hooks/useInput";
@@ -19,16 +17,19 @@ import { RouteCreate } from "../../organisms/posts/RouteCreate";
 import { latLngType } from "../../../types/api/posts/latLngType";
 import { useMessage } from "../../../hooks/useMessage";
 import { client } from "../../../lib/api/client";
-import { useAuthR } from "../../../hooks/useAuthR";
+import { useAuthR } from "../../../hooks/api/useAuthR";
+import { PrimaryButton } from "../../atoms/button/PrimaryButton";
+import { SelectPrefecture } from "../../organisms/posts/SelectPrefecture";
 
 export const CreatePost: VFC = memo(() => {
-  const currentUser = useAuthR();
+  const { currentUser } = useAuthR();
 
   // stateを定義
   const [origin, setOrigin] = useState<latLngType | null>(null);
   const [destination, setDestination] = useState<latLngType | null>(null);
   const [loadingButton, setLoadingButton] = useState<boolean>(false);
   const [image, setImage] = useState<File>();
+  const [checkedPrefecture, setCheckedPrefecture] = useState<Array<number>>([]);
   const [preview, setPreview] = useState<string>("");
   const [isDone, setIsDone] = useState<boolean>(false);
 
@@ -36,7 +37,7 @@ export const CreatePost: VFC = memo(() => {
   const title = useInput("");
   const text = useTextarea("");
 
-  // 写真の追加とプレビューの処理
+  // 画像の追加とプレビューの処理
   const uploadImage = useCallback((e) => {
     const file = e.target.files[0];
     setImage(file);
@@ -60,9 +61,15 @@ export const CreatePost: VFC = memo(() => {
     formData.append("title", title.value);
     if (text.value) formData.append("text", text.value);
     if (image) formData.append("image", image);
+    if (checkedPrefecture) {
+      checkedPrefecture.forEach((id) => {
+        // eslint-disable-next-line no-useless-concat
+        formData.append("prefecture" + "[]", JSON.stringify(id));
+      });
+    }
+
     formData.append("user_id", JSON.stringify(currentUser.id));
     formData.append("route", JSON.stringify({ origin, destination }));
-    console.log(formData);
 
     return formData;
   };
@@ -76,10 +83,9 @@ export const CreatePost: VFC = memo(() => {
     const config = {
       headers: {
         "Content-Type": "multipart/form-data",
+        Accept: "application/json",
       },
     };
-
-    console.log(data);
 
     try {
       await client
@@ -115,9 +121,9 @@ export const CreatePost: VFC = memo(() => {
   return (
     <>
       <Flex align="center" justify="center">
-        <Box bg="white" p={8} shadow="md">
+        <Box bg="white" p={8} shadow="md" my="8" borderRadius={6}>
           <Stack justify="center" align="center" spacing={5}>
-            <Heading color="gray.600" textAlign="center">
+            <Heading color="gray.600" textAlign="center" mb="8">
               ツーリング記録を作成
             </Heading>
             <Input
@@ -127,8 +133,25 @@ export const CreatePost: VFC = memo(() => {
             />
             <Textarea h={200} {...text} placeholder="本文" />
 
-            <Divider />
-            <Heading as="h2" fontSize="x-large" color="gray.600" mb={3}>
+            {/* <Heading
+              as="h2"
+              fontSize="x-large"
+              color="gray.600"
+              textAlign="center"
+            >
+              エリア選択
+            </Heading> */}
+            <SelectPrefecture
+              checkedPrefecture={checkedPrefecture}
+              setCheckedPrefecture={setCheckedPrefecture}
+            />
+
+            <Heading
+              as="h2"
+              fontSize="x-large"
+              color="gray.600"
+              textAlign="center"
+            >
               画像を追加
             </Heading>
             <Input
@@ -152,17 +175,14 @@ export const CreatePost: VFC = memo(() => {
               destination={destination}
               setDestination={setDestination}
             />
-            <Button
-              bg="blue.500"
-              color="white"
-              w="50%"
-              _hover={{ opacity: 0.8 }}
+
+            <PrimaryButton
               onClick={onClickPost}
-              disabled={loadingButton || !currentUser}
-              isLoading={loadingButton}
+              disabled={loadingButton || !currentUser.uid}
+              loading={loadingButton}
             >
               投稿
-            </Button>
+            </PrimaryButton>
           </Stack>
         </Box>
       </Flex>
