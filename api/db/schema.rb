@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 2021_09_09_081743) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "image"
-    t.text "Prefecture"
+    t.text "prefecture"
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
