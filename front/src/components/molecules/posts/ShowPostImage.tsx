@@ -31,7 +31,7 @@ export const ShowPostImage: VFC<Props> = memo((props) => {
         />
       </Flex>
 
-      <Modal isOpen={isOpen} onClose={onClose} size="full">
+      <Modal isOpen={isOpen} onClose={onClose} size="4xl">
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton

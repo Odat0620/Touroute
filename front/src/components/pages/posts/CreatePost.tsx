@@ -183,6 +183,11 @@ export const CreatePost: VFC = memo(() => {
             >
               投稿
             </PrimaryButton>
+            <PrimaryButton
+              onClick={() => console.log(process.env.REACT_APP_GMAP_API_KEY)}
+            >
+              投稿
+            </PrimaryButton>
           </Stack>
         </Box>
       </Flex>

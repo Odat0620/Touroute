@@ -93,10 +93,12 @@ export const RouteCreate: VFC<Props> = memo((props) => {
   // 地点設定を開始する関数
   const onClickPlaceStart = () => {
     setPlaceGoal(false);
+    setOrigin(null);
     setPlaceStart(true);
   };
   const onClickPlaceGoal = () => {
     setPlaceStart(false);
+    setDestination(null);
     setPlaceGoal(true);
   };
 

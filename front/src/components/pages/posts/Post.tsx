@@ -25,9 +25,9 @@ import { CreateComment } from "../../organisms/comments/CreateComment";
 import { PrimaryButton } from "../../atoms/button/PrimaryButton";
 import { ShowComment } from "../../organisms/comments/ShowComment";
 import { DeleteAlert } from "../../organisms/DeleteAlert";
-import { useAuthR } from "../../../hooks/useAuthR";
+import { useAuthR } from "../../../hooks/api/useAuthR";
 import { LoadingSpinner } from "../../molecules/LoadingSpinner";
-import { AvatarAndName } from "../../molecules/AvatarAndName";
+import { AvatarAndName } from "../../molecules/users/AvatarAndName";
 import { LikesAndCommtnts } from "../../organisms/posts/LikesAndCommtnts";
 import { CreatedAtArea } from "../../atoms/posts/CreatedAtArea";
 import { ShowPostImage } from "../../molecules/posts/ShowPostImage";
@@ -180,6 +180,7 @@ export const Post: VFC = memo(() => {
 
           <Box
             p={6}
+            mb={8}
             borderRadius={6}
             align="center"
             bg="white"

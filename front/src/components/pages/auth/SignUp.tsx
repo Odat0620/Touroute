@@ -8,10 +8,10 @@ import { useMessage } from "../../../hooks/useMessage";
 import { PrimaryButton } from "../../atoms/button/PrimaryButton";
 import { auth } from "../../../utils/Firebase";
 import { client } from "../../../lib/api/client";
-import { useAuthR } from "../../../hooks/useAuthR";
+import { useAuthR } from "../../../hooks/api/useAuthR";
 
 export const SignUp: VFC = memo(() => {
-  const currentUser = useAuthR();
+  const { currentUser } = useAuthR();
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -35,9 +35,10 @@ export const SignUp: VFC = memo(() => {
       try {
         await client.post("users", user_data, config).then(({ data }) => {
           showMessage({
-            title: `${data.message}`,
+            title: "アカウントを作成しました。",
             status: "success",
           });
+          console.log(data);
           history.push("/");
         });
       } catch ({ data }) {

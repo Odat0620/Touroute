@@ -8,7 +8,7 @@ import {
 import { Flex, Heading } from "@chakra-ui/react";
 
 import { mapStyles } from "../../../theme/mapStyles";
-import { latLngType } from "../../../types/latLngType";
+import { latLngType } from "../../../types/api/posts/latLngType";
 
 const mapContainerStyle = {
   height: "60vh",
@@ -72,7 +72,7 @@ export const RouteShow: VFC<Props> = memo((props) => {
       ) : (
         <>
           <Flex my={8} py={8} align="center" flexDirection="column">
-            <Heading as="h2" fontSize="x-large" color="gray.600" mb={3}>
+            <Heading as="h2" fontSize="x-large" color="gray.700" mb={3}>
               ルート
             </Heading>
 

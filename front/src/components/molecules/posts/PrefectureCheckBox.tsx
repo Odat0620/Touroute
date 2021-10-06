@@ -33,6 +33,7 @@ export const PrefectureCheckBox: VFC<{
               </Box>
               <AccordionIcon />
             </AccordionButton>
+
             <AccordionPanel>
               {PrefectureArray.map(
                 (prefecture) =>

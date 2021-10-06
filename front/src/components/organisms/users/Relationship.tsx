@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { VFC } from "react";
+import { VFC, memo } from "react";
 import { Box, Center, Divider, Text } from "@chakra-ui/react";
 
 import { useAuthR } from "../../../hooks/api/useAuthR";
@@ -9,7 +9,7 @@ import { useRelationship } from "../../../hooks/api/useRelationship";
 
 export const Relationship: VFC<{
   user: UserType;
-}> = ({ user }) => {
+}> = memo(({ user }) => {
   const { currentUser } = useAuthR();
   const { isFollow, followersCount, onClickCreateFollow, onClickDeleteFollow } =
     useRelationship(user);
@@ -37,4 +37,4 @@ export const Relationship: VFC<{
       </Center>
     </>
   );
-};
+});

@@ -8,7 +8,7 @@ import { client } from "../../lib/api/client";
 import { useMessage } from "../../hooks/useMessage";
 import { PostType } from "../../types/api/posts/PostType";
 import { LoadingSpinner } from "../molecules/LoadingSpinner";
-import { useAuthR } from "../../hooks/useAuthR";
+import { useAuthR } from "../../hooks/api/useAuthR";
 import { PrimaryButton } from "../atoms/button/PrimaryButton";
 import { PostsContainer } from "../organisms/posts/PostsContainer";
 
@@ -41,16 +41,19 @@ export const Home: VFC = memo(() => {
 
   return (
     <Box align="center">
-      <Box bg="#5ac" w="full" h="200px" align="center" justify="center">
+      <Box bg="#00a3c4" w="full" h="200px" align="center" justify="center">
         <Heading
           as="h1"
           pt="30px"
           fontSize="50px"
-          textShadow="0px 2px 8px #fff"
+          color="white"
+          textShadow="0px 0px 10px rgba(50, 100, 150, 20)"
         >
           Touroute
         </Heading>
-        <Text mb="20px">ツーリングルートの共有アプリです。</Text>
+        <Text mb="20px" color="whiteAlpha.900" fontWeight="bold">
+          ツーリングルートの共有アプリです。
+        </Text>
         {currentUser.uid && (
           <>
             <PrimaryButton onClick={() => history.push("/createpost")}>

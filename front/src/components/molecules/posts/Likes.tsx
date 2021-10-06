@@ -1,4 +1,4 @@
-import { VFC } from "react";
+import { VFC, memo } from "react";
 import { Text, Icon, Flex, Tooltip } from "@chakra-ui/react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 
@@ -11,7 +11,7 @@ type Props = {
   onClickDeleteLike: () => Promise<void>;
 };
 
-export const Likes: VFC<Props> = (props) => {
+export const Likes: VFC<Props> = memo((props) => {
   const { likedCount, isLiked, onClickCreateLike, onClickDeleteLike } = props;
   const { currentUser } = useAuthR();
 
@@ -42,4 +42,4 @@ export const Likes: VFC<Props> = (props) => {
       </Tooltip>
     </>
   );
-};
+});

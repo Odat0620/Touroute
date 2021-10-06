@@ -2,7 +2,7 @@
 import { memo, useEffect, VFC, useState, useCallback } from "react";
 import { useParams } from "react-router";
 import { useHistory } from "react-router-dom";
-import { Button, Flex, Stack } from "@chakra-ui/react";
+import { Flex, Stack } from "@chakra-ui/react";
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/tabs";
 
 import { client } from "../../../lib/api/client";

@@ -1,4 +1,5 @@
 import { Flex } from "@chakra-ui/react";
+import { memo } from "react";
 import { useEffect, useState, VFC } from "react";
 
 import { useAuthR } from "../../../hooks/api/useAuthR";
@@ -12,7 +13,7 @@ type Props = {
   commentsCount: number;
 };
 
-export const LikesAndCommtnts: VFC<Props> = (props) => {
+export const LikesAndCommtnts: VFC<Props> = memo((props) => {
   const { id, likes, commentsCount } = props;
   const { currentUser } = useAuthR();
 
@@ -69,4 +70,4 @@ export const LikesAndCommtnts: VFC<Props> = (props) => {
       </Flex>
     </>
   );
-};
+});

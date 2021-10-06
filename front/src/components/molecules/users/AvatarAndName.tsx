@@ -1,5 +1,5 @@
 import { Avatar, Flex, Text } from "@chakra-ui/react";
-import { VFC } from "react";
+import { VFC, memo } from "react";
 
 type Props = {
   name: string;
@@ -8,7 +8,7 @@ type Props = {
   large?: true | undefined;
 };
 
-export const AvatarAndName: VFC<Props> = (props) => {
+export const AvatarAndName: VFC<Props> = memo((props) => {
   const { name, avatarUrl, onClick, large } = props;
 
   return (
@@ -30,4 +30,4 @@ export const AvatarAndName: VFC<Props> = (props) => {
       </Text>
     </Flex>
   );
-};
+});

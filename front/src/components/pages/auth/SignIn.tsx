@@ -7,10 +7,10 @@ import { useInput } from "../../../hooks/useInput";
 import { useMessage } from "../../../hooks/useMessage";
 import { PrimaryButton } from "../../atoms/button/PrimaryButton";
 import { auth } from "../../../utils/Firebase";
-import { useAuthR } from "../../../hooks/useAuthR";
+import { useAuthR } from "../../../hooks/api/useAuthR";
 
 export const SignIn: VFC = memo(() => {
-  const currentUser = useAuthR();
+  const { currentUser } = useAuthR();
 
   const [loading, setLoading] = useState<boolean>(false);
 
