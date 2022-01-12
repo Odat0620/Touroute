@@ -14,7 +14,7 @@ default: &default
   encoding: utf8mb4
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: root
-  password: <%= ENV["MYSQL_PASSWORD"] %>
+  password: <%= ENV["DB_PASSWORD"] %>
   host: db
 
 development:
@@ -49,6 +49,7 @@ test:
 #
 production:
   <<: *default
-  database: api_production
-  username: api
-  password: <%= ENV['API_DATABASE_PASSWORD'] %>
+  database: <%= ENV['DB_NAME'] %>
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
+  url: <%= ENV['DB_URL'] %>

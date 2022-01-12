@@ -87,7 +87,7 @@ class V1::UsersController < ApplicationController
 
     user = User.new(uid: uid, name: params[:name], email: params[:email])
     if user.save
-      render json: { message: "アカウントを作成しました。" }
+      render json: user ,status: :created
     else
       render json: user.errors.messages, status: :unprocessable_entity
     end
