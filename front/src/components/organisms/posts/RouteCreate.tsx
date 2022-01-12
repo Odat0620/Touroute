@@ -114,9 +114,6 @@ export const RouteCreate: VFC<Props> = memo((props) => {
             <Heading as="h2" fontSize="x-large" color="gray.600" mb={3}>
               ルートの設定
             </Heading>
-            {/* <Button onClick={() => console.log(origin, destination)}>
-              cons
-            </Button> */}
             <Box pb={1} w="100%" align="center">
               <Button
                 bg="green.400"
