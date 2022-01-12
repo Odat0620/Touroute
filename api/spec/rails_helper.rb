@@ -64,5 +64,5 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   # テストコード内でFactoryBotのメソッドを使用する際にクラス名を省略できる
-  confiig.include FactoryBot::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
 end

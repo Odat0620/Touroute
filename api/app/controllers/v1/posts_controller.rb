@@ -26,7 +26,10 @@ class V1::PostsController < ApplicationController
     return if !User.find(post_params[:user_id])
 
     route = JSON.parse(post_params[:route])
-    prefecture = post_params[:prefecture].map{|n| n.to_i}
+    if post_params[:prefecture]
+      prefecture = post_params[:prefecture].map{|n| n.to_i}
+    end
+
     data = {title:      post_params[:title],
             text:       post_params[:text],
             user_id:    post_params[:user_id],

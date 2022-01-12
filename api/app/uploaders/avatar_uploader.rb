@@ -13,9 +13,9 @@ class AvatarUploader < CarrierWave::Uploader::Base
   #画像サイズの上限を400x400にする
   process :resize_to_limit => [400, 400]
 
-  #サムネイル画像を50x50で生成する
+  #サムネイル画像を100x100で生成する
   version :thumb do
-    process :create_square => [50]
+    process :create_square => [100]
   end
 
   #画像を正方形でくり抜くメソッド
@@ -69,7 +69,7 @@ class AvatarUploader < CarrierWave::Uploader::Base
   # Override the filename of the uploaded files:
   # Avoid using model.id or version_name here, see uploader/store.rb for details.
   def filename
-    "#{secure_token}.#{file.extension}" + '.jpg' if original_filename.present?
+    "#{secure_token}.jpg" if original_filename.present?
   end
 
   protected
