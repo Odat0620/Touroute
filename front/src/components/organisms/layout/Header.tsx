@@ -46,9 +46,9 @@ export const Header: VFC = memo(() => {
     }
   };
 
+  // 認証完了後はサインアウト用のボタンを表示
+  // 未認証時は認証用のボタンを表示
   const AuthButtons = memo(() => {
-    // 認証完了後はサインアウト用のボタンを表示
-    // 未認証時は認証用のボタンを表示
     if (currentUser.uid) {
       return (
         <>

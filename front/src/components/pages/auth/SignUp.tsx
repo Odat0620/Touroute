@@ -41,11 +41,11 @@ export const SignUp: VFC = memo(() => {
           console.log(data);
           history.push("/");
         });
-      } catch ({ data }) {
-        showMessage({ title: `${data.errors}`, status: "error" });
+      } catch (data: any) {
+        showMessage({ title: `${data.data.errors}`, status: "error" });
         console.log(data);
       }
-    } catch (error) {
+    } catch (error: any) {
       if (error.code === "auth/email-already-in-use") {
         showMessage({
           title: "そのメールアドレスはすでに使われています。",

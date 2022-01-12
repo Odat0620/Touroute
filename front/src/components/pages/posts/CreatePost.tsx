@@ -133,14 +133,6 @@ export const CreatePost: VFC = memo(() => {
             />
             <Textarea h={200} {...text} placeholder="本文" />
 
-            {/* <Heading
-              as="h2"
-              fontSize="x-large"
-              color="gray.600"
-              textAlign="center"
-            >
-              エリア選択
-            </Heading> */}
             <SelectPrefecture
               checkedPrefecture={checkedPrefecture}
               setCheckedPrefecture={setCheckedPrefecture}
@@ -180,11 +172,6 @@ export const CreatePost: VFC = memo(() => {
               onClick={onClickPost}
               disabled={loadingButton || !currentUser.uid}
               loading={loadingButton}
-            >
-              投稿
-            </PrimaryButton>
-            <PrimaryButton
-              onClick={() => console.log(process.env.REACT_APP_GMAP_API_KEY)}
             >
               投稿
             </PrimaryButton>
