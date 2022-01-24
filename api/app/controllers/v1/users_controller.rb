@@ -23,7 +23,7 @@ class V1::UsersController < ApplicationController
     user = User.includes({posts: [:comments, :liked_users]},
                          {liked_posts: [:user, :comments, :liked_users]},
                          :following,
-                         :followers).find(params[:id])
+                         :followers).order("posts.created_at DESC").find(params[:id])
 
     render json: user.as_json(include: [
         {posts: {include: [{comments: {only: :id.length}},

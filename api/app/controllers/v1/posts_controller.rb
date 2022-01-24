@@ -1,7 +1,7 @@
 class V1::PostsController < ApplicationController
   before_action :set_post, only: [:update, :destroy]
   def index
-    @posts = Post.includes(:user, :liked_users, :comments).all
+    @posts = Post.includes(:user, :liked_users, :comments).all.order(created_at: "DESC")
 
     render json: @posts.as_json(include: [
       {user:     {only: [:name, :avatar]}},
