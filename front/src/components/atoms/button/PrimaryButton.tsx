@@ -16,7 +16,7 @@ export const PrimaryButton: VFC<Props> = memo((props) => {
       bg="#fD9946"
       color="white"
       shadow="md"
-      borderRadius="50"
+      borderRadius="8px"
       transitio="all 0.3s"
       _hover={{ opacity: 0.8 }}
       _active={{

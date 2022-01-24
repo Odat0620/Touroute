@@ -75,25 +75,15 @@ export const SignUp: VFC = memo(() => {
           ユーザー登録
         </Heading>
         <Divider my={4} />
+
         <Stack spacing={6} py={4} px={10}>
-          <Input {...name} autoFocus placeholder="名前" borderRadius="50" />
-          <Input
-            type="email"
-            {...email}
-            placeholder="メールアドレス"
-            borderRadius="50"
-          />
-          <Input
-            type="password"
-            {...password}
-            placeholder="パスワード"
-            borderRadius="50"
-          />
-          <PrimaryButton
-            disabled={disableSubmit}
-            loading={loading}
-            onClick={onClickSignUp}
-          >
+          <Input {...name} autoFocus placeholder="名前" borderRadius="8px" />
+
+          <Input type="email" {...email} placeholder="メールアドレス" borderRadius="8px" />
+
+          <Input type="password" {...password} placeholder="パスワード" borderRadius="8px" />
+
+          <PrimaryButton disabled={disableSubmit} loading={loading} onClick={onClickSignUp}>
             登録
           </PrimaryButton>
         </Stack>

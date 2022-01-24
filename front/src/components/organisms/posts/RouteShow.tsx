@@ -12,7 +12,8 @@ import { latLngType } from "../../../types/api/posts/latLngType";
 
 const mapContainerStyle = {
   height: "60vh",
-  width: "70vw",
+  width: "100%",
+  borderRadius: "8px",
 };
 
 // propsの型定義
@@ -71,7 +72,7 @@ export const RouteShow: VFC<Props> = memo((props) => {
         <h1>Loading...</h1>
       ) : (
         <>
-          <Flex my={8} py={8} align="center" flexDirection="column">
+          <Flex my={8} py={8} w="full" align="center" flexDirection="column">
             <Heading as="h2" fontSize="x-large" color="gray.700" mb={3}>
               ルート
             </Heading>

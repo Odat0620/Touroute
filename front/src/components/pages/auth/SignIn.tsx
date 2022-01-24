@@ -59,19 +59,10 @@ export const SignIn: VFC = memo(() => {
             {...email}
             autoFocus
             placeholder="メールアドレス"
-            borderRadius="50"
+            borderRadius="8px"
           />
-          <Input
-            type="password"
-            {...password}
-            placeholder="パスワード"
-            borderRadius="50"
-          />
-          <PrimaryButton
-            disabled={disableSubmit}
-            loading={loading}
-            onClick={onClickSignIn}
-          >
+          <Input type="password" {...password} placeholder="パスワード" borderRadius="8px" />
+          <PrimaryButton disabled={disableSubmit} loading={loading} onClick={onClickSignIn}>
             ログイン
           </PrimaryButton>
         </Stack>

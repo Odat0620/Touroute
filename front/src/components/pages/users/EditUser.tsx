@@ -153,16 +153,16 @@ export const EditUser: VFC = memo(() => {
           <Heading textAlign="center" mb={8}>
             プロフィール編集
           </Heading>
-          <Stack justify="center" align="center" spacing={5}>
-            <Box w="2xl" p={3} borderWidth="1px" borderRadius={6}>
+          <Stack justify="center" align="center" spacing="4rem">
+            <Box w="2xl">
               <Stack>
-                <Text>ユーザーネーム</Text>
+                <Text fontWeight="bold">ユーザーネーム</Text>
                 <Input {...userName} />
               </Stack>
             </Box>
-            <Box w="2xl" p={3} borderWidth="1px" borderRadius={6}>
+            <Box w="2xl">
               <Stack>
-                <Text>アバター</Text>
+                <Text fontWeight="bold">アバター</Text>
                 <Input
                   accept="image/*"
                   type="file"
@@ -174,25 +174,20 @@ export const EditUser: VFC = memo(() => {
                 {preview ? (
                   <Box>
                     <CloseButton onClick={() => setPreview("")} />
-                    <Image
-                      src={preview}
-                      maxH="md"
-                      maxw="md"
-                      alt="preview img"
-                    />
+                    <Image src={preview} maxH="sm" maxw="sm" alt="preview img" />
                   </Box>
                 ) : null}
               </Stack>
             </Box>
-            <Box w="2xl" p={3} borderWidth="1px" borderRadius={6}>
+            <Box w="2xl">
               <Stack>
-                <Text>プロフィール</Text>
+                <Text fontWeight="bold">プロフィール</Text>
                 <Textarea {...profile} autoFocus />
               </Stack>
             </Box>
-            <Box w="2xl" p={3} borderWidth="1px" borderRadius={6}>
+            <Box w="2xl">
               <Stack>
-                <Text>活動地域</Text>
+                <Text fontWeight="bold">活動地域</Text>
                 <Input {...location} />
               </Stack>
             </Box>
