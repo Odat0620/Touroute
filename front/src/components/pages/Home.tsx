@@ -1,8 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { memo, useState, VFC, useEffect, useCallback } from "react";
 import { useHistory } from "react-router-dom";
-import { Box, Heading } from "@chakra-ui/layout";
-import { Divider, Text } from "@chakra-ui/react";
+import { Box, Divider, Flex, Heading } from "@chakra-ui/layout";
+import { Text } from "@chakra-ui/react";
+import { MdFiberNew } from "react-icons/md";
+import { AiFillHeart } from "react-icons/ai";
 
 import { client } from "../../lib/api/client";
 import { useMessage } from "../../hooks/useMessage";
@@ -11,6 +13,7 @@ import { LoadingSpinner } from "../molecules/LoadingSpinner";
 import { useAuthR } from "../../hooks/api/useAuthR";
 import { PrimaryButton } from "../atoms/button/PrimaryButton";
 import { PostsContainer } from "../organisms/posts/PostsContainer";
+import { DashBoardButton } from "../atoms/button/DashBoardButton";
 
 export const Home: VFC = memo(() => {
   const { currentUser } = useAuthR();
@@ -21,6 +24,44 @@ export const Home: VFC = memo(() => {
   const { showMessage } = useMessage();
 
   const onClickShowPost = useCallback((id) => history.push(`/posts/${id}`), []);
+
+  const sortByCreatedAt = () => {
+    if (!posts) return;
+    let c_posts = posts.slice();
+    const compare = (a: PostType, b: PostType) => {
+      const creA = a.createdAt;
+      const creB = b.createdAt;
+      let comparison = 0;
+      if (creA > creB) {
+        comparison = 1;
+      } else if (creA < creB) {
+        comparison = -1;
+      }
+      return comparison * -1;
+    };
+
+    c_posts.sort(compare);
+    setPosts(c_posts);
+  };
+
+  const sortByLikeCounts = () => {
+    if (!posts) return;
+    let c_posts = posts.slice();
+    const compare = (a: PostType, b: PostType) => {
+      const likeA = a.likes.length;
+      const likeB = b.likes.length;
+      let comparison = 0;
+      if (likeA > likeB) {
+        comparison = 1;
+      } else if (likeA < likeB) {
+        comparison = -1;
+      }
+      return comparison * -1;
+    };
+
+    c_posts.sort(compare);
+    setPosts(c_posts);
+  };
 
   useEffect(() => {
     const getPosts = async () => {
@@ -38,10 +79,11 @@ export const Home: VFC = memo(() => {
     };
     getPosts();
   }, []);
+  console.log(posts);
 
   return (
     <Box align="center">
-      <Box bg="#00a3c4" w="full" h="200px" align="center" justify="center">
+      <Box bg="#00a3c4" w="full" mb="1rem" h="200px" align="center" justify="center">
         <Heading
           as="h1"
           pt="30px"
@@ -56,33 +98,29 @@ export const Home: VFC = memo(() => {
         </Text>
         {currentUser.uid && (
           <>
-            <PrimaryButton onClick={() => history.push("/createpost")}>
-              投稿する
-            </PrimaryButton>
+            <PrimaryButton onClick={() => history.push("/createpost")}>投稿する</PrimaryButton>
           </>
         )}
       </Box>
-
-      <Box w="80%">
-        <Box
-          bg="orange.200"
-          w="220px"
-          py="1px"
-          my="10px"
-          borderRadius="50"
-          shadow="md"
-        >
-          <Heading as="h1" color="gray.600" my="10px">
-            投稿一覧
-          </Heading>
+      <Flex>
+        <Box w="20%" h="300px" m="0.5rem" borderRadius="8px" bg="white" shadow="md">
+          <DashBoardButton
+            borderTopRadius="8px"
+            icon={<MdFiberNew />}
+            onClick={() => sortByCreatedAt()}
+          >
+            新着
+          </DashBoardButton>
+          <Divider />
+          <DashBoardButton icon={<AiFillHeart />} onClick={() => sortByLikeCounts()}>
+            いいね数
+          </DashBoardButton>
         </Box>
-        <Divider />
-        {!posts ? (
-          <LoadingSpinner />
-        ) : (
-          <PostsContainer posts={posts} onClick={onClickShowPost} />
-        )}
-      </Box>
+
+        <Box w="80%">
+          {!posts ? <LoadingSpinner /> : <PostsContainer posts={posts} onClick={onClickShowPost} />}
+        </Box>
+      </Flex>
     </Box>
   );
 });
