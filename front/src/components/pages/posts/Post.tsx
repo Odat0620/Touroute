@@ -1,15 +1,6 @@
 import { memo, useEffect, useState, VFC } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import {
-  Flex,
-  Box,
-  Stack,
-  Text,
-  WrapItem,
-  Wrap,
-  Divider,
-  IconButton,
-} from "@chakra-ui/react";
+import { Flex, Box, Stack, Text, WrapItem, Wrap, Divider, IconButton } from "@chakra-ui/react";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { VscEllipsis } from "react-icons/vsc";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/menu";
@@ -31,6 +22,7 @@ import { AvatarAndName } from "../../molecules/users/AvatarAndName";
 import { LikesAndCommtnts } from "../../organisms/posts/LikesAndCommtnts";
 import { CreatedAtArea } from "../../atoms/posts/CreatedAtArea";
 import { ShowPostImage } from "../../molecules/posts/ShowPostImage";
+import { PrefectureShow } from "../../molecules/posts/PrefectureShow";
 
 export const Post: VFC = memo(() => {
   const { currentUser } = useAuthR();
@@ -118,11 +110,7 @@ export const Post: VFC = memo(() => {
               <Flex align="center" justify="flex-end">
                 <CreatedAtArea createdAt={post.createdAt} />
 
-                <LikesAndCommtnts
-                  id={id}
-                  likes={post.likes}
-                  commentsCount={post.comments.length}
-                />
+                <LikesAndCommtnts id={id} likes={post.likes} commentsCount={post.comments.length} />
 
                 <AvatarAndName
                   name={post.user.name}
@@ -155,6 +143,8 @@ export const Post: VFC = memo(() => {
                   </Menu>
                 )}
               </Flex>
+              {post.prefecture && <PrefectureShow prefectures={post.prefecture} />}
+
               <Divider />
               <Box w="full">
                 <Text textAlign="left" color="gray.700">
@@ -163,36 +153,20 @@ export const Post: VFC = memo(() => {
               </Box>
 
               {post.image && (
-                <ShowPostImage
-                  thumbUrl={post.image.thumb!.url}
-                  imageUrl={post.image.url!}
-                />
+                <ShowPostImage thumbUrl={post.image.thumb!.url} imageUrl={post.image.url!} />
               )}
 
               {route?.origin && (
-                <RouteShow
-                  origin={route?.origin}
-                  destination={route?.destination}
-                />
+                <RouteShow origin={route?.origin} destination={route?.destination} />
               )}
             </Stack>
           </Box>
 
-          <Box
-            p={6}
-            mb={8}
-            borderRadius={6}
-            align="center"
-            bg="white"
-            shadow="md"
-            w="70%"
-          >
+          <Box p={6} mb={8} borderRadius={6} align="center" bg="white" shadow="md" w="70%">
             <Heading mb={3} as="h3" fontSize="x-large">
               コメント一覧
             </Heading>
-            {currentUser.uid && (
-              <PrimaryButton onClick={onOpen}>コメントする</PrimaryButton>
-            )}
+            {currentUser.uid && <PrimaryButton onClick={onOpen}>コメントする</PrimaryButton>}
             <Divider my={5} />
 
             {post?.comments?.length === 0 && (
