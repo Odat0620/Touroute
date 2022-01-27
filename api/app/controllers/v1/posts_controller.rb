@@ -46,9 +46,29 @@ class V1::PostsController < ApplicationController
   end
 
   def update
-    return if @post.user_id != post_params[:user_id]
+    return if @post.user_id != post_params[:user_id].to_i
 
-    if @post.update(post_params)
+    route = JSON.parse(post_params[:route])
+    if post_params[:prefecture]
+      prefecture = post_params[:prefecture].map{|n| n.to_i}
+    end
+
+    if post_params[:image]
+        data = {title:      post_params[:title],
+          text:       post_params[:text],
+          user_id:    post_params[:user_id],
+          image:      post_params[:image],
+          prefecture: prefecture,
+          route:      route}
+      else
+        data = {title:      post_params[:title],
+          text:       post_params[:text],
+          user_id:    post_params[:user_id],
+          prefecture: prefecture,
+          route:      route}
+    end
+
+    if @post.update(data)
       render json: @post, status: :ok
     else
       render json: @post.errors, status: :unprocessable_entity
@@ -67,6 +87,6 @@ class V1::PostsController < ApplicationController
     end
 
     def post_params
-      params.permit(:title, :text, :user_id,  :image, :route, prefecture: [])
+      params.permit(:id, :title, :text, :user_id,  :image, :route, prefecture: [])
     end
 end
