@@ -10,6 +10,7 @@ import { User } from "../components/pages/users/User";
 import { CreatePost } from "../components/pages/posts/CreatePost";
 import { EditUser } from "../components/pages/users/EditUser";
 import { Post } from "../components/pages/posts/Post";
+import { EditPost } from "../components/pages/posts/EditPost";
 
 export const Router: VFC = memo(() => {
   return (
@@ -22,6 +23,7 @@ export const Router: VFC = memo(() => {
         <Route exact path="/signin" component={SignIn} />
         <Route exact path="/createpost" component={CreatePost} />
         <Route exact path="/posts/:id" component={Post} />
+        <Route exact path="/posts/:id/edit" component={EditPost} />
         <Route path="*" component={Page404} />
       </Switch>
     </HeaderLayout>

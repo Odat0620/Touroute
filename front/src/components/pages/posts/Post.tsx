@@ -6,6 +6,7 @@ import { VscEllipsis } from "react-icons/vsc";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/menu";
 import { Heading } from "@chakra-ui/layout";
 import { useDisclosure } from "@chakra-ui/hooks";
+import { useSetRecoilState } from "recoil";
 
 import { client } from "../../../lib/api/client";
 import { PostType } from "../../../types/api/posts/PostType";
@@ -23,11 +24,13 @@ import { LikesAndCommtnts } from "../../organisms/posts/LikesAndCommtnts";
 import { CreatedAtArea } from "../../atoms/posts/CreatedAtArea";
 import { ShowPostImage } from "../../molecules/posts/ShowPostImage";
 import { PrefectureShow } from "../../molecules/posts/PrefectureShow";
+import { EditPostState } from "../../../recoil/post";
 
 export const Post: VFC = memo(() => {
   const { currentUser } = useAuthR();
   const [post, setPost] = useState<PostType>();
   const { id } = useParams<{ id: string }>();
+  const setEditPost = useSetRecoilState(EditPostState);
 
   const [isOpenDialog, setIsOpenDialog] = useState<boolean>(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -40,7 +43,17 @@ export const Post: VFC = memo(() => {
   const onClickUser = () => {
     history.push(`/users/${post?.userId}`);
   };
-  const onClickEdit = () => {
+  const onClickEdit = async (p: PostType) => {
+    await setEditPost({
+      id: p.id,
+      title: p.title,
+      text: p.text,
+      route: p.route,
+      userId: p.userId,
+      prefecture: p.prefecture,
+      image: p.image,
+    });
+
     history.push(`/posts/${id}/edit`);
   };
 
@@ -92,7 +105,6 @@ export const Post: VFC = memo(() => {
       });
   };
 
-  console.log(route?.origin);
   useEffect(() => {
     client.get(`posts/${id}`).then(({ data }) => {
       setPost(data);
@@ -129,7 +141,7 @@ export const Post: VFC = memo(() => {
                       borderRadius="50"
                     />
                     <MenuList minW={100}>
-                      <MenuItem icon={<EditIcon />} onClick={onClickEdit}>
+                      <MenuItem icon={<EditIcon />} onClick={() => onClickEdit(post)}>
                         編集
                       </MenuItem>
                       <MenuItem
@@ -145,16 +157,15 @@ export const Post: VFC = memo(() => {
               </Flex>
               {post.prefecture && <PrefectureShow prefectures={post.prefecture} />}
 
+              {post.image && (
+                <ShowPostImage thumbUrl={post.image.thumb!.url} imageUrl={post.image.url!} />
+              )}
               <Divider />
               <Box w="full">
                 <Text textAlign="left" color="gray.700">
                   {post?.text}
                 </Text>
               </Box>
-
-              {post.image && (
-                <ShowPostImage thumbUrl={post.image.thumb!.url} imageUrl={post.image.url!} />
-              )}
 
               {route?.origin && (
                 <RouteShow origin={route?.origin} destination={route?.destination} />

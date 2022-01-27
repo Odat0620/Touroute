@@ -6,7 +6,7 @@ import {
   Marker,
   useLoadScript,
 } from "@react-google-maps/api";
-import { Box, Button, Flex, Heading } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
 
 import { mapStyles } from "../../../theme/mapStyles";
 import { latLngType } from "../../../types/api/posts/latLngType";
@@ -37,6 +37,7 @@ export const RouteCreate: VFC<Props> = memo((props) => {
   const [center, setCenter] = useState<latLngType>(defaultLatLng);
   const [placeStart, setPlaceStart] = useState<boolean>(false);
   const [placeGoal, setPlaceGoal] = useState<boolean>(false);
+  const [distance, setDistance] = useState<string>("");
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GMAP_API_KEY || "",
@@ -49,15 +50,17 @@ export const RouteCreate: VFC<Props> = memo((props) => {
 
   const directionsCallback = useCallback(
     (googleResponse) => {
+      const routeDistance: string = googleResponse.routes[0].legs[0].distance.text;
+
       if (googleResponse) {
         if (currentDirection) {
           if (
             googleResponse.status === "OK" &&
-            googleResponse.geocoded_waypoints.length !==
-              currentDirection.geocoded_waypoints.length
+            googleResponse.geocoded_waypoints.length !== currentDirection.geocoded_waypoints.length
           ) {
             console.log("ルートが変更されたのでstateを更新する");
             setCurrentDirection(googleResponse);
+            setDistance(routeDistance);
           } else {
             console.log("前回と同じルートのためstateを更新しない");
           }
@@ -66,13 +69,15 @@ export const RouteCreate: VFC<Props> = memo((props) => {
             console.log("初めてルートが設定されたため、stateを更新する");
             console.log(googleResponse);
             setCurrentDirection(googleResponse);
+            setDistance(routeDistance);
           } else {
             console.log("前回と同じルートのためstateを更新しない");
+            console.log(googleResponse);
           }
         }
       }
     },
-    [currentDirection]
+    [currentDirection],
   );
 
   const onClickMap = (e: any) => {
@@ -92,11 +97,13 @@ export const RouteCreate: VFC<Props> = memo((props) => {
 
   // 地点設定を開始する関数
   const onClickPlaceStart = () => {
+    setCurrentDirection(null);
     setPlaceGoal(false);
     setOrigin(null);
     setPlaceStart(true);
   };
   const onClickPlaceGoal = () => {
+    setCurrentDirection(null);
     setPlaceStart(false);
     setDestination(null);
     setPlaceGoal(true);
@@ -111,9 +118,12 @@ export const RouteCreate: VFC<Props> = memo((props) => {
       ) : (
         <>
           <Flex my={8} py={8} align="center" flexDirection="column">
-            <Heading as="h2" fontSize="x-large" color="gray.600" mb={3}>
+            <Heading as="h2" fontSize="x-large" color="gray.600">
               ルートの設定
             </Heading>
+            <Text color="gray.600" m="0.5rem">
+              距離：{distance ? distance : "--km"}
+            </Text>
             <Box pb={1} w="100%" align="center">
               <Button
                 bg="green.400"
@@ -167,7 +177,9 @@ export const RouteCreate: VFC<Props> = memo((props) => {
               )}
               {currentDirection !== null && (
                 <DirectionsRenderer
-                  options={{ directions: currentDirection }}
+                  options={{
+                    directions: currentDirection,
+                  }}
                 />
               )}
             </GoogleMap>

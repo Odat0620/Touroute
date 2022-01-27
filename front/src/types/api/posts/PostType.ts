@@ -1,12 +1,13 @@
 import { CommentType } from "./CommentType";
+import { latLngType } from "./latLngType";
 
 export type PostType = {
   id: number;
   title: string;
   text: string;
   route: {
-    origin: { lat: number; lng: number };
-    destination: { lat: number; lng: number };
+    origin: latLngType;
+    destination: latLngType;
   };
   userId: number;
   createdAt: Date;
@@ -36,4 +37,17 @@ export type PostCardType = {
   };
   comments: Array<any>;
   likes: Array<{ userId: number }>;
+};
+
+export type EditPostType = {
+  id: number | null;
+  title: string;
+  text: string;
+  route: {
+    origin: latLngType;
+    destination: latLngType;
+  };
+  userId: number | null;
+  prefecture: Array<number> | undefined;
+  image: { url?: string; thumb?: { url?: string } };
 };
