@@ -2,14 +2,7 @@ import { memo, useState, VFC, useEffect, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import { Input } from "@chakra-ui/input";
 import { Textarea } from "@chakra-ui/textarea";
-import {
-  Flex,
-  Box,
-  Stack,
-  Heading,
-  CloseButton,
-  Image,
-} from "@chakra-ui/react";
+import { Flex, Box, Stack, Heading, CloseButton, Image, HStack } from "@chakra-ui/react";
 
 import { useInput } from "../../../hooks/useInput";
 import { useTextarea } from "../../../hooks/useTextarea";
@@ -20,6 +13,7 @@ import { client } from "../../../lib/api/client";
 import { useAuthR } from "../../../hooks/api/useAuthR";
 import { PrimaryButton } from "../../atoms/button/PrimaryButton";
 import { SelectPrefecture } from "../../organisms/posts/SelectPrefecture";
+import { BackButton } from "../../atoms/button/BackButton";
 
 export const CreatePost: VFC = memo(() => {
   const { currentUser } = useAuthR();
@@ -126,11 +120,7 @@ export const CreatePost: VFC = memo(() => {
             <Heading color="gray.600" textAlign="center" mb="8">
               ツーリング記録を作成
             </Heading>
-            <Input
-              {...title}
-              autoFocus={true}
-              placeholder="タイトル（必須、20文字以内）"
-            />
+            <Input {...title} autoFocus={true} placeholder="タイトル（必須、20文字以内）" />
             <Textarea h={200} {...text} placeholder="本文" />
 
             <SelectPrefecture
@@ -138,12 +128,7 @@ export const CreatePost: VFC = memo(() => {
               setCheckedPrefecture={setCheckedPrefecture}
             />
 
-            <Heading
-              as="h2"
-              fontSize="x-large"
-              color="gray.600"
-              textAlign="center"
-            >
+            <Heading as="h2" fontSize="x-large" color="gray.600" textAlign="center">
               画像を追加
             </Heading>
             <Input
@@ -168,13 +153,22 @@ export const CreatePost: VFC = memo(() => {
               setDestination={setDestination}
             />
 
-            <PrimaryButton
-              onClick={onClickPost}
-              disabled={loadingButton || !currentUser.uid}
-              loading={loadingButton}
-            >
-              投稿
-            </PrimaryButton>
+            <HStack spacing="3rem">
+              <BackButton
+                onClick={() => history.goBack()}
+                disabled={loadingButton || !currentUser.uid}
+                loading={loadingButton}
+              >
+                戻る
+              </BackButton>
+              <PrimaryButton
+                onClick={onClickPost}
+                disabled={loadingButton || !currentUser.uid}
+                loading={loadingButton}
+              >
+                投稿
+              </PrimaryButton>
+            </HStack>
           </Stack>
         </Box>
       </Flex>
