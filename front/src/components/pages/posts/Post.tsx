@@ -6,7 +6,7 @@ import { VscEllipsis } from "react-icons/vsc";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/menu";
 import { Heading } from "@chakra-ui/layout";
 import { useDisclosure } from "@chakra-ui/hooks";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import { client } from "../../../lib/api/client";
 import { PostType } from "../../../types/api/posts/PostType";
@@ -17,17 +17,17 @@ import { CreateComment } from "../../organisms/comments/CreateComment";
 import { PrimaryButton } from "../../atoms/button/PrimaryButton";
 import { ShowComment } from "../../organisms/comments/ShowComment";
 import { DeleteAlert } from "../../organisms/DeleteAlert";
-import { useAuthR } from "../../../hooks/api/useAuthR";
 import { LoadingSpinner } from "../../molecules/LoadingSpinner";
 import { AvatarAndName } from "../../molecules/users/AvatarAndName";
 import { LikesAndCommtnts } from "../../organisms/posts/LikesAndCommtnts";
 import { CreatedAtArea } from "../../atoms/posts/CreatedAtArea";
 import { ShowPostImage } from "../../molecules/posts/ShowPostImage";
 import { PrefectureShow } from "../../molecules/posts/PrefectureShow";
-import { EditPostState } from "../../../recoil/post";
+import { EditPostState } from "../../../store/post";
+import { signInUserState } from "../../../store/auth";
 
 export const Post: VFC = memo(() => {
-  const { currentUser } = useAuthR();
+  const currentUser = useRecoilValue(signInUserState);
   const [post, setPost] = useState<PostType>();
   const { id } = useParams<{ id: string }>();
   const setEditPost = useSetRecoilState(EditPostState);

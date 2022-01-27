@@ -5,81 +5,43 @@ import { Box, Divider, Flex, Heading } from "@chakra-ui/layout";
 import { Text } from "@chakra-ui/react";
 import { MdFiberNew } from "react-icons/md";
 import { AiFillHeart } from "react-icons/ai";
+import { useRecoilValue } from "recoil";
 
 import { client } from "../../lib/api/client";
 import { useMessage } from "../../hooks/useMessage";
 import { PostType } from "../../types/api/posts/PostType";
 import { LoadingSpinner } from "../molecules/LoadingSpinner";
-import { useAuthR } from "../../hooks/api/useAuthR";
 import { PrimaryButton } from "../atoms/button/PrimaryButton";
 import { PostsContainer } from "../organisms/posts/PostsContainer";
 import { DashBoardButton } from "../atoms/button/DashBoardButton";
+import { signInUserState } from "../../store/auth";
+import { useSortPost } from "../../hooks/useSortPost";
 
 export const Home: VFC = memo(() => {
-  const { currentUser } = useAuthR();
+  const currentUser = useRecoilValue(signInUserState);
   const [posts, setPosts] = useState<Array<PostType> | null>(null);
 
   // フックス準備
   const history = useHistory();
   const { showMessage } = useMessage();
+  const sortByLikes = useSortPost(posts, "likes");
+  const sortByCreatedAt = useSortPost(posts, "createdAt");
 
   const onClickShowPost = useCallback((id) => history.push(`/posts/${id}`), []);
 
-  const sortByCreatedAt = () => {
-    if (!posts) return;
-    let c_posts = posts.slice();
-    const compare = (a: PostType, b: PostType) => {
-      const creA = a.createdAt;
-      const creB = b.createdAt;
-      let comparison = 0;
-      if (creA > creB) {
-        comparison = 1;
-      } else if (creA < creB) {
-        comparison = -1;
-      }
-      return comparison * -1;
-    };
-
-    c_posts.sort(compare);
-    setPosts(c_posts);
-  };
-
-  const sortByLikeCounts = () => {
-    if (!posts) return;
-    let c_posts = posts.slice();
-    const compare = (a: PostType, b: PostType) => {
-      const likeA = a.likes.length;
-      const likeB = b.likes.length;
-      let comparison = 0;
-      if (likeA > likeB) {
-        comparison = 1;
-      } else if (likeA < likeB) {
-        comparison = -1;
-      }
-      return comparison * -1;
-    };
-
-    c_posts.sort(compare);
-    setPosts(c_posts);
-  };
-
   useEffect(() => {
-    const getPosts = async () => {
-      await client
-        .get<Array<PostType> | null>("posts")
-        .then(({ data }) => {
-          setPosts(data);
-        })
-        .catch(() => {
-          showMessage({
-            title: "投稿を取得できませんでした。",
-            status: "error",
-          });
+    client
+      .get<Array<PostType> | null>("posts")
+      .then(({ data }) => {
+        setPosts(data);
+      })
+      .catch(() => {
+        showMessage({
+          title: "投稿を取得できませんでした。",
+          status: "error",
         });
-    };
-    getPosts();
+      });
   }, []);
-  console.log(posts);
 
   return (
     <Box align="center">
@@ -103,16 +65,16 @@ export const Home: VFC = memo(() => {
         )}
       </Box>
       <Flex>
-        <Box w="20%" h="300px" m="0.5rem" borderRadius="8px" bg="white" shadow="md">
+        <Box w="20%" maxW="200px" h="200px" m="0.5rem" borderRadius="8px" bg="white" shadow="md">
           <DashBoardButton
             borderTopRadius="8px"
             icon={<MdFiberNew />}
-            onClick={() => sortByCreatedAt()}
+            onClick={() => setPosts(sortByCreatedAt)}
           >
             新着
           </DashBoardButton>
           <Divider />
-          <DashBoardButton icon={<AiFillHeart />} onClick={() => sortByLikeCounts()}>
+          <DashBoardButton icon={<AiFillHeart />} onClick={() => setPosts(sortByLikes)}>
             いいね数
           </DashBoardButton>
         </Box>

@@ -1,16 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { VFC, memo } from "react";
 import { Box, Center, Divider, Text } from "@chakra-ui/react";
+import { useRecoilValue } from "recoil";
 
-import { useAuthR } from "../../../hooks/api/useAuthR";
 import { UserType } from "../../../types/api/users/UserType";
 import { RelationshipButton } from "../../atoms/button/RelationshipButton";
 import { useRelationship } from "../../../hooks/api/useRelationship";
+import { signInUserState } from "../../../store/auth";
 
 export const Relationship: VFC<{
   user: UserType;
 }> = memo(({ user }) => {
-  const { currentUser } = useAuthR();
+  const currentUser = useRecoilValue(signInUserState);
   const { isFollow, followersCount, onClickCreateFollow, onClickDeleteFollow } =
     useRelationship(user);
 

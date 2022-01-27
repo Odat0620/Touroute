@@ -2,15 +2,16 @@ import { memo, useState, VFC, useEffect } from "react";
 import { useHistory } from "react-router";
 import { Input } from "@chakra-ui/input";
 import { Box, Divider, Flex, Heading, Stack } from "@chakra-ui/layout";
+import { useRecoilValue } from "recoil";
 
 import { useInput } from "../../../hooks/useInput";
 import { useMessage } from "../../../hooks/useMessage";
 import { PrimaryButton } from "../../atoms/button/PrimaryButton";
 import { auth } from "../../../utils/Firebase";
-import { useAuthR } from "../../../hooks/api/useAuthR";
+import { signInUserState } from "../../../store/auth";
 
 export const SignIn: VFC = memo(() => {
-  const { currentUser } = useAuthR();
+  const currentUser = useRecoilValue(signInUserState);
 
   const [loading, setLoading] = useState<boolean>(false);
 

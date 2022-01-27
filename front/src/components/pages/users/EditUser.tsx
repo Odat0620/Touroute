@@ -13,20 +13,21 @@ import {
 } from "@chakra-ui/react";
 import React, { useState, VFC, useCallback, useEffect, memo } from "react";
 import { useParams } from "react-router";
+import { useRecoilState } from "recoil";
 
 import { client } from "../../../lib/api/client";
 import { useInput } from "../../../hooks/useInput";
 import { useTextarea } from "../../../hooks/useTextarea";
-import { useAuthR } from "../../../hooks/api/useAuthR";
 import { PrimaryButton } from "../../atoms/button/PrimaryButton";
 import { useMessage } from "../../../hooks/useMessage";
 import { useHistory } from "react-router-dom";
 import { auth } from "../../../utils/Firebase";
 import { DeleteAlert } from "../../organisms/DeleteAlert";
+import { signInUserState } from "../../../store/auth";
 
 export const EditUser: VFC = memo(() => {
   const { id } = useParams<{ id: string }>();
-  const { currentUser, setCurrentUser } = useAuthR();
+  const [currentUser, setCurrentUser] = useRecoilState(signInUserState);
 
   const [avatar, setAvatar] = useState<File>();
   const [preview, setPreview] = useState<string>("");

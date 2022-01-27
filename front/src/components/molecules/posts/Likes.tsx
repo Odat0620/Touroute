@@ -1,8 +1,9 @@
 import { VFC, memo } from "react";
 import { Text, Icon, Flex, Tooltip } from "@chakra-ui/react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import { useRecoilValue } from "recoil";
 
-import { useAuthR } from "../../../hooks/api/useAuthR";
+import { signInUserState } from "../../../store/auth";
 
 type Props = {
   likedCount: number;
@@ -13,7 +14,7 @@ type Props = {
 
 export const Likes: VFC<Props> = memo((props) => {
   const { likedCount, isLiked, onClickCreateLike, onClickDeleteLike } = props;
-  const { currentUser } = useAuthR();
+  const currentUser = useRecoilValue(signInUserState);
 
   return (
     <>

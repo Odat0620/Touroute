@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { Input } from "@chakra-ui/input";
 import { Textarea } from "@chakra-ui/textarea";
 import { Flex, Box, Stack, Heading, CloseButton, Image, HStack } from "@chakra-ui/react";
+import { useRecoilValue } from "recoil";
 
 import { useInput } from "../../../hooks/useInput";
 import { useTextarea } from "../../../hooks/useTextarea";
@@ -10,13 +11,13 @@ import { RouteCreate } from "../../organisms/posts/RouteCreate";
 import { latLngType } from "../../../types/api/posts/latLngType";
 import { useMessage } from "../../../hooks/useMessage";
 import { client } from "../../../lib/api/client";
-import { useAuthR } from "../../../hooks/api/useAuthR";
 import { PrimaryButton } from "../../atoms/button/PrimaryButton";
 import { SelectPrefecture } from "../../organisms/posts/SelectPrefecture";
 import { BackButton } from "../../atoms/button/BackButton";
+import { signInUserState } from "../../../store/auth";
 
 export const CreatePost: VFC = memo(() => {
-  const { currentUser } = useAuthR();
+  const currentUser = useRecoilValue(signInUserState);
 
   // stateを定義
   const [origin, setOrigin] = useState<latLngType | null>(null);

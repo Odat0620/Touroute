@@ -1,9 +1,10 @@
 import { Flex } from "@chakra-ui/react";
 import { memo } from "react";
 import { useEffect, useState, VFC } from "react";
+import { useRecoilValue } from "recoil";
 
-import { useAuthR } from "../../../hooks/api/useAuthR";
 import { client } from "../../../lib/api/client";
+import { signInUserState } from "../../../store/auth";
 import { CommentsCount } from "../../molecules/posts/CommentsCount";
 import { Likes } from "../../molecules/posts/Likes";
 
@@ -15,7 +16,7 @@ type Props = {
 
 export const LikesAndCommtnts: VFC<Props> = memo((props) => {
   const { id, likes, commentsCount } = props;
-  const { currentUser } = useAuthR();
+  const currentUser = useRecoilValue(signInUserState);
 
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [likedCount, setLikedCount] = useState<number>(0);

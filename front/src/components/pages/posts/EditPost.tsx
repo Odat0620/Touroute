@@ -11,14 +11,14 @@ import { RouteCreate } from "../../organisms/posts/RouteCreate";
 import { latLngType } from "../../../types/api/posts/latLngType";
 import { useMessage } from "../../../hooks/useMessage";
 import { client } from "../../../lib/api/client";
-import { useAuthR } from "../../../hooks/api/useAuthR";
 import { PrimaryButton } from "../../atoms/button/PrimaryButton";
 import { SelectPrefecture } from "../../organisms/posts/SelectPrefecture";
-import { EditPostState } from "../../../recoil/post";
+import { EditPostState } from "../../../store/post";
 import { BackButton } from "../../atoms/button/BackButton";
+import { signInUserState } from "../../../store/auth";
 
 export const EditPost: VFC = memo(() => {
-  const { currentUser } = useAuthR();
+  const currentUser = useRecoilValue(signInUserState);
   const post = useRecoilValue(EditPostState);
   const resetPost = useResetRecoilState(EditPostState);
 

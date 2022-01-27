@@ -1,12 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
 
 import { client } from "../../lib/api/client";
-import { useAuthR } from "./useAuthR";
 import { UserType } from "../../types/api/users/UserType";
+import { signInUserState } from "../../store/auth";
 
 export const useRelationship = (user: UserType) => {
-  const { currentUser } = useAuthR();
+  const currentUser = useRecoilValue(signInUserState);
   const [isFollow, setIsFollow] = useState<boolean>(false);
   const [followersCount, setFollowersCount] = useState<number>(0);
 

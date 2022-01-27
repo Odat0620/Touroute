@@ -1,27 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { memo, useCallback, VFC } from "react";
 import { useHistory } from "react-router";
+import { useRecoilValue } from "recoil";
 import { Flex, Heading, Spacer } from "@chakra-ui/layout";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { Menu } from "@chakra-ui/menu";
-import {
-  Avatar,
-  Divider,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Text,
-} from "@chakra-ui/react";
+import { Avatar, Divider, MenuButton, MenuItem, MenuList, Text } from "@chakra-ui/react";
 
 import { MenuIconButton } from "../../atoms/button/MenuIconButton";
 import { MenuDrawer } from "../../molecules/MenuDrawer";
 import { useMessage } from "../../../hooks/useMessage";
 import { auth } from "../../../utils/Firebase";
-import { useAuthR } from "../../../hooks/api/useAuthR";
 import { PrimaryButton } from "../../atoms/button/PrimaryButton";
+import { signInUserState } from "../../../store/auth";
 
 export const Header: VFC = memo(() => {
-  const { currentUser } = useAuthR();
+  const currentUser = useRecoilValue(signInUserState);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { showMessage } = useMessage();
@@ -61,27 +55,15 @@ export const Header: VFC = memo(() => {
                 mr={6}
                 cursor="pointer"
                 as={Avatar}
-                icon={
-                  <Avatar
-                    src={currentUser.avatar?.url}
-                    showBorder
-                    size="full"
-                  />
-                }
+                icon={<Avatar src={currentUser.avatar?.url} showBorder size="full" />}
                 variant="outline"
                 _hover={{ bg: "gray.400", opacity: 0.8 }}
               />
               <MenuList minW={100}>
-                <MenuItem
-                  color="gray.600"
-                  onClick={() => onClickMypage(currentUser.id)}
-                >
+                <MenuItem color="gray.600" onClick={() => onClickMypage(currentUser.id)}>
                   マイページ
                 </MenuItem>
-                <MenuItem
-                  color="gray.600"
-                  onClick={() => onClickUserEdit(currentUser.id)}
-                >
+                <MenuItem color="gray.600" onClick={() => onClickUserEdit(currentUser.id)}>
                   プロフィール設定
                 </MenuItem>
                 <Divider />
@@ -99,9 +81,7 @@ export const Header: VFC = memo(() => {
           <Flex flexGrow={2} display={{ base: "none", md: "flex" }}>
             <Spacer />
             <Flex pr={2} align="center">
-              <PrimaryButton onClick={onClickSignUp}>
-                アカウント登録
-              </PrimaryButton>
+              <PrimaryButton onClick={onClickSignUp}>アカウント登録</PrimaryButton>
               <Text mx="6px">or</Text>
               <PrimaryButton onClick={onClickSignIn}>ログイン</PrimaryButton>
             </Flex>
@@ -126,12 +106,7 @@ export const Header: VFC = memo(() => {
         zIndex="1000"
         w="100%"
       >
-        <Flex
-          align="center"
-          as="a"
-          _hover={{ cursor: "pointer" }}
-          onClick={onClickHome}
-        >
+        <Flex align="center" as="a" _hover={{ cursor: "pointer" }} onClick={onClickHome}>
           <Heading
             as="h1"
             fontSize={{ base: "lg", md: 30 }}
