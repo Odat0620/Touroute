@@ -22,7 +22,7 @@ import { AvatarAndName } from "../../molecules/users/AvatarAndName";
 import { LikesAndCommtnts } from "../../organisms/posts/LikesAndCommtnts";
 import { CreatedAtArea } from "../../atoms/posts/CreatedAtArea";
 import { ShowPostImage } from "../../molecules/posts/ShowPostImage";
-import { PrefectureShow } from "../../molecules/posts/PrefectureShow";
+import { ShowPrefecture } from "../../molecules/posts/ShowPrefecture";
 import { EditPostState } from "../../../store/post";
 import { signInUserState } from "../../../store/auth";
 
@@ -33,6 +33,7 @@ export const Post: VFC = memo(() => {
   const setEditPost = useSetRecoilState(EditPostState);
 
   const [isOpenDialog, setIsOpenDialog] = useState<boolean>(false);
+  const [isOpenDeleteComment, setIsOpenDeleteComment] = useState<boolean>(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const history = useHistory();
   const comment = useTextarea("");
@@ -105,6 +106,21 @@ export const Post: VFC = memo(() => {
       });
   };
 
+  const onClickDeleteComment = async (commentId: number, index: number) => {
+    await client
+      .delete(`/posts/${id}/comments/${commentId}`, { data: { userId: currentUser.id } })
+      .then((res) => {
+        showMessage({ title: "削除しました。", status: "success" });
+        let postCopy = { ...post! };
+        postCopy.comments.splice(index, 1);
+        setPost(postCopy);
+        setIsOpenDeleteComment(false);
+      })
+      .catch(() => {
+        showMessage({ title: "削除に失敗しました。", status: "error" });
+      });
+  };
+
   useEffect(() => {
     client.get(`posts/${id}`).then(({ data }) => {
       setPost(data);
@@ -155,7 +171,7 @@ export const Post: VFC = memo(() => {
                   </Menu>
                 )}
               </Flex>
-              {post.prefecture && <PrefectureShow prefectures={post.prefecture} />}
+              {post.prefecture && <ShowPrefecture prefectures={post.prefecture} />}
 
               {post.image && (
                 <ShowPostImage thumbUrl={post.image.thumb!.url} imageUrl={post.image.url!} />
@@ -174,7 +190,7 @@ export const Post: VFC = memo(() => {
           </Box>
 
           <Box p={6} mb={8} borderRadius={6} align="center" bg="white" shadow="md" w="70%">
-            <Heading mb={3} as="h3" fontSize="x-large">
+            <Heading mb={3} as="h3" fontSize="x-large" color="gray.600">
               コメント一覧
             </Heading>
             {currentUser.uid && <PrimaryButton onClick={onOpen}>コメントする</PrimaryButton>}
@@ -186,12 +202,15 @@ export const Post: VFC = memo(() => {
               </Text>
             )}
             <Wrap direction="column">
-              {post?.comments?.map((comment) => (
+              {post?.comments?.map((comment, index) => (
                 <WrapItem pb={3} key={comment.id}>
                   <ShowComment
                     text={comment.text}
                     createdAt={comment.createdAt}
                     user={comment.user}
+                    isOpen={isOpenDeleteComment}
+                    setIsOpen={setIsOpenDeleteComment}
+                    onClickDelete={() => onClickDeleteComment(comment.id, index)}
                   />
                 </WrapItem>
               ))}
