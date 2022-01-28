@@ -11,15 +11,15 @@ class V1::CommentsController < ApplicationController
   end
 
   def destroy
-    @comment = Comment.find_by(id: params[:comment_id])
+    @comment = Comment.find(params[:id])
 
-    return if @comment.user.id != params[:user_id]
+    return if @comment.user_id != params[:comment][:user_id]
 
     @comment.destroy
   end
 
   private
     def comment_params
-      params.require(:comment).permit(:text, :post_id, :user_id)
+      params.permit(:text, :post_id, :user_id)
     end
 end
