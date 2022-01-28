@@ -81,7 +81,7 @@ export const RouteShow: VFC<Props> = memo((props) => {
               ルート
             </Heading>
             <HStack align="center">
-              <Tag fontWeight="bold" colorScheme="green">
+              <Tag fontWeight="bold" colorScheme="blue">
                 距離
               </Tag>
               <Text color="gray.600">{distance}</Text>

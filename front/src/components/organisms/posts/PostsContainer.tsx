@@ -2,7 +2,7 @@ import { memo, VFC } from "react";
 import { Text, Wrap, WrapItem } from "@chakra-ui/react";
 
 import { PostCard } from "./PostCard";
-import { PostCardType } from '../../../types/api/posts/PostType';
+import { PostCardType } from "../../../types/api/posts/PostType";
 
 export const PostsContainer: VFC<{
   posts?: Array<PostCardType>;
@@ -25,6 +25,7 @@ export const PostsContainer: VFC<{
                 title={post.title}
                 image={post.image?.thumb?.url}
                 createdAt={post.createdAt}
+                prefectures={post.prefecture}
                 commentsCount={post.comments!.length}
                 likes={post.likes!}
                 name={userName || post.user.name}

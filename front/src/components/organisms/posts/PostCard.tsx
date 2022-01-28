@@ -1,17 +1,19 @@
 import { memo, VFC } from "react";
 import { Box, Stack, Text } from "@chakra-ui/layout";
-import { AspectRatio, Image } from "@chakra-ui/react";
+import { AspectRatio, HStack, Image, Tag } from "@chakra-ui/react";
 
 import { CreatedAtArea } from "../../atoms/posts/CreatedAtArea";
 import { LikesAndCommtnts } from "./LikesAndCommtnts";
 import { AvatarAndName } from "../../molecules/users/AvatarAndName";
 import DefaultImage from "../../../img/PostDefaultImg.jpg";
+import { PrefectureArray } from "../../../utils/PrefectureArray";
 
 type Props = {
   id: number;
   title: string;
   image: string | undefined;
   createdAt: Date;
+  prefectures: Array<number> | undefined;
   commentsCount: number;
   likes: Array<{ userId: number }>;
   name: string;
@@ -26,6 +28,7 @@ export const PostCard: VFC<Props> = memo((props) => {
     title,
     image,
     createdAt,
+    prefectures,
     name,
     commentsCount,
     likes,
@@ -39,11 +42,39 @@ export const PostCard: VFC<Props> = memo((props) => {
       h="360px"
       bg="white"
       shadow="md"
+      position="relative"
       border="1px solid #ccc"
       borderRadius="12px"
       _hover={{ cursor: "pointer", opacity: "0.8" }}
       onClick={() => onClick(id)}
     >
+      {prefectures && (
+        <HStack
+          top="0px"
+          left="0px"
+          px="0.3em"
+          py="0.3em"
+          zIndex="1"
+          position="absolute"
+          bg="#00000066"
+          borderTopLeftRadius="12px"
+          borderBottomRightRadius="12px"
+        >
+          {prefectures.map((id, index) =>
+            index <= 1 ? (
+              <Tag colorScheme="green" variant="subtle" fontWeight="bold">
+                {PrefectureArray.find((prefecture) => prefecture.id === id)?.name}
+              </Tag>
+            ) : (
+              index === 3 && (
+                <Tag color="black" bg="gray.300" fontWeight="bold" borderRadius="50">
+                  +{prefectures.length - 2}
+                </Tag>
+              )
+            ),
+          )}
+        </HStack>
+      )}
       <AspectRatio ratio={16 / 10}>
         <Image
           w="280px"
