@@ -7,7 +7,11 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins ['http://localhost:8000']
+    if Rails.env.production?
+      origins ['https://touroute.net']
+    else
+      origins ['http://localhost:8000']
+    end
 
     resource '*',
       headers: :any,

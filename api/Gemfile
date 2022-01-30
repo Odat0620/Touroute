@@ -29,6 +29,7 @@ gem 'firebase-auth-rails'
 gem 'kaminari'
 gem 'carrierwave'
 gem 'rmagick'
+gem 'fog-aws'
 
 
 group :development, :test do
