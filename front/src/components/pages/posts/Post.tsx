@@ -131,46 +131,66 @@ export const Post: VFC = memo(() => {
   return (
     <>
       {post ? (
-        <Flex align="center" justify="center" direction="column">
-          <Box my={8} bg="white" p={8} borderRadius={6} shadow="md" w="70%">
-            <Stack justify="center" align="center" spacing={5}>
+        <Flex align="center" justify="center" direction="column" px="0.5rem">
+          <Box
+            w={{ base: "full", md: "90%" }}
+            my={{ base: "1rem", md: "2rem" }}
+            p={{ base: "1rem", md: "1.5rem" }}
+            bg="white"
+            borderRadius="8px"
+            shadow="md"
+          >
+            <Stack justify="center" align="center" spacing="1.25rem">
               <Heading color="gray.700">{post?.title}</Heading>
-              <Flex align="center" justify="flex-end">
-                <CreatedAtArea createdAt={post.createdAt} />
+              <Stack
+                direction={{ base: "column", md: "row" }}
+                align="center"
+                justify="flex-end"
+                spacing={{ base: "0.5rem", md: "" }}
+              >
+                <Flex>
+                  <CreatedAtArea createdAt={post.createdAt} />
 
-                <LikesAndCommtnts id={id} likes={post.likes} commentsCount={post.comments.length} />
+                  <LikesAndCommtnts
+                    id={id}
+                    likes={post.likes}
+                    commentsCount={post.comments.length}
+                  />
+                </Flex>
 
-                <AvatarAndName
-                  name={post.user.name}
-                  avatarUrl={post.user.avatar.url}
-                  onClick={onClickUser}
-                />
+                <Flex align="center">
+                  <AvatarAndName
+                    name={post.user.name}
+                    avatarUrl={post.user.avatar.url}
+                    onClick={onClickUser}
+                  />
 
-                {post.user.uid === currentUser.uid && (
-                  <Menu>
-                    <MenuButton
-                      as={IconButton}
-                      icon={<VscEllipsis />}
-                      variant="outline"
-                      ml="10px"
-                      h="30px"
-                      borderRadius="50"
-                    />
-                    <MenuList minW={100}>
-                      <MenuItem icon={<EditIcon />} onClick={() => onClickEdit(post)}>
-                        編集
-                      </MenuItem>
-                      <MenuItem
-                        icon={<DeleteIcon />}
-                        color="red"
-                        onClick={() => setIsOpenDialog(true)}
-                      >
-                        削除
-                      </MenuItem>
-                    </MenuList>
-                  </Menu>
-                )}
-              </Flex>
+                  {post.user.uid === currentUser.uid && (
+                    <Menu>
+                      <MenuButton
+                        as={IconButton}
+                        icon={<VscEllipsis />}
+                        variant="outline"
+                        ml="10px"
+                        h="30px"
+                        borderRadius="50"
+                      />
+                      <MenuList minW={100}>
+                        <MenuItem icon={<EditIcon />} onClick={() => onClickEdit(post)}>
+                          編集
+                        </MenuItem>
+                        <MenuItem
+                          icon={<DeleteIcon />}
+                          color="red"
+                          onClick={() => setIsOpenDialog(true)}
+                        >
+                          削除
+                        </MenuItem>
+                      </MenuList>
+                    </Menu>
+                  )}
+                </Flex>
+              </Stack>
               {post.prefecture && <ShowPrefecture prefectures={post.prefecture} />}
 
               {post.image && (
@@ -189,13 +209,21 @@ export const Post: VFC = memo(() => {
             </Stack>
           </Box>
 
-          <Box p={6} mb={8} borderRadius={6} align="center" bg="white" shadow="md" w="70%">
+          <Box
+            w={{ base: "full", md: "90%" }}
+            my={{ base: "1rem", md: "2rem" }}
+            p={{ base: "1rem", md: "1.5rem" }}
+            bg="white"
+            align="center"
+            borderRadius="8px"
+            shadow="md"
+          >
+            {" "}
             <Heading mb={3} as="h3" fontSize="x-large" color="gray.600">
               コメント一覧
             </Heading>
             {currentUser.uid && <PrimaryButton onClick={onOpen}>コメントする</PrimaryButton>}
             <Divider my={5} />
-
             {post?.comments?.length === 0 && (
               <Text color="gray.500" py="20px">
                 コメントはありません。

@@ -1,21 +1,15 @@
 import { memo, useState, VFC, useCallback } from "react";
 import { useHistory } from "react-router-dom";
-import { Input } from "@chakra-ui/input";
-import { Textarea } from "@chakra-ui/textarea";
-import { Flex, Box, Stack, Heading, CloseButton, Image, HStack } from "@chakra-ui/react";
 import { useRecoilValue, useResetRecoilState } from "recoil";
 
 import { useInput } from "../../../hooks/useInput";
 import { useTextarea } from "../../../hooks/useTextarea";
-import { RouteCreate } from "../../organisms/posts/RouteCreate";
 import { latLngType } from "../../../types/api/posts/latLngType";
 import { useMessage } from "../../../hooks/useMessage";
 import { client } from "../../../lib/api/client";
-import { PrimaryButton } from "../../atoms/button/PrimaryButton";
-import { SelectPrefecture } from "../../organisms/posts/SelectPrefecture";
 import { EditPostState } from "../../../store/post";
-import { BackButton } from "../../atoms/button/BackButton";
 import { signInUserState } from "../../../store/auth";
+import { PostCreateTemplate } from "../../templates/posts/PostCreateTemplate";
 
 export const EditPost: VFC = memo(() => {
   const currentUser = useRecoilValue(signInUserState);
@@ -28,7 +22,6 @@ export const EditPost: VFC = memo(() => {
   const [loadingButton, setLoadingButton] = useState<boolean>(false);
   const [image, setImage] = useState<File>();
   const [checkedPrefecture, setCheckedPrefecture] = useState<Array<number>>(post.prefecture || []);
-  const [preview, setPreview] = useState<string>(post.image.url || "");
 
   // 変数にカスタムフックを設定、中身はvalueとonChange
   const title = useInput(post.title);
@@ -38,14 +31,6 @@ export const EditPost: VFC = memo(() => {
   const uploadImage = useCallback((e) => {
     const file = e.target.files[0];
     setImage(file);
-  }, []);
-  const previewImage = useCallback((e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setPreview(window.URL.createObjectURL(file));
-    } else {
-      setPreview("");
-    }
   }, []);
 
   // フックの読み込み
@@ -93,20 +78,17 @@ export const EditPost: VFC = memo(() => {
             title: "更新しました。",
             status: "success",
           });
-          console.log(res);
           resetPost();
-          history.push("/");
+          history.push(`/posts/${post.id}`);
         })
         .catch(({ response }) => {
           showMessage({
             title: `タイトル${response.data.title}`,
             status: "error",
           });
-          console.log(response);
         });
     } catch (res) {
       showMessage({ title: "更新できませんでした。", status: "error" });
-      console.log(res);
     }
     setLoadingButton(false);
   };
@@ -117,65 +99,21 @@ export const EditPost: VFC = memo(() => {
   };
 
   return (
-    <>
-      <Flex align="center" justify="center">
-        <Box bg="white" p={8} shadow="md" my="8" borderRadius={6}>
-          <Stack justify="center" align="center" spacing={5}>
-            <Heading color="gray.600" textAlign="center" mb="8">
-              ツーリング記録を編集
-            </Heading>
-            <Input {...title} autoFocus={true} placeholder="タイトル（必須、20文字以内）" />
-            <Textarea h={200} {...text} placeholder="本文" />
-
-            <SelectPrefecture
-              checkedPrefecture={checkedPrefecture}
-              setCheckedPrefecture={setCheckedPrefecture}
-            />
-
-            <Heading as="h2" fontSize="x-large" color="gray.600" textAlign="center">
-              画像を追加
-            </Heading>
-            <Input
-              accept="image/*"
-              type="file"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                uploadImage(e);
-                previewImage(e);
-              }}
-            />
-            {preview ? (
-              <Box>
-                <CloseButton onClick={() => setPreview("")} />
-                <Image maxH="md" maxw="md" src={preview} alt="preview img" />
-              </Box>
-            ) : null}
-
-            <RouteCreate
-              origin={origin}
-              setOrigin={setOrigin}
-              destination={destination}
-              setDestination={setDestination}
-            />
-
-            <HStack spacing="3rem">
-              <BackButton
-                onClick={goBack}
-                disabled={loadingButton || !currentUser.uid}
-                loading={loadingButton}
-              >
-                戻る
-              </BackButton>
-              <PrimaryButton
-                onClick={onClickPatch}
-                disabled={loadingButton || !currentUser.uid}
-                loading={loadingButton}
-              >
-                更新
-              </PrimaryButton>
-            </HStack>
-          </Stack>
-        </Box>
-      </Flex>
-    </>
+    <PostCreateTemplate
+      process="edit"
+      title={title}
+      text={text}
+      checkedPrefecture={checkedPrefecture}
+      setCheckedPrefecture={setCheckedPrefecture}
+      uploadImage={uploadImage}
+      defPostUrl={post.image.url}
+      origin={origin}
+      setOrigin={setOrigin}
+      destination={destination}
+      setDestination={setDestination}
+      loadingButton={loadingButton}
+      goBack={goBack}
+      onClickSend={onClickPatch}
+    />
   );
 });

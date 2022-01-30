@@ -6,7 +6,7 @@ import {
   AccordionIcon,
   AccordionPanel,
 } from "@chakra-ui/accordion";
-import { VFC, memo } from "react";
+import { VFC, memo, ChangeEvent } from 'react';
 
 import {
   PrefectureArray,
@@ -14,7 +14,7 @@ import {
 } from "../../../utils/PrefectureArray";
 
 export const PrefectureCheckBox: VFC<{
-  onChange: (id: number, check: boolean) => void;
+  onChange: (e: ChangeEvent<HTMLInputElement>, id: number, check: boolean) => void;
   checkedPrefecture: Array<number>;
 }> = memo(({ onChange, checkedPrefecture }) => {
   return (
@@ -50,7 +50,7 @@ export const PrefectureCheckBox: VFC<{
                         (id) => id === prefecture.id
                       )}
                       onChange={(e) =>
-                        onChange(prefecture.id, e.target.checked)
+                        onChange(e, prefecture.id, e.target.checked)
                       }
                     >
                       {prefecture.name.length === 3

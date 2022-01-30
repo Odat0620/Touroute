@@ -22,11 +22,21 @@ export const Header: VFC = memo(() => {
   const history = useHistory();
 
   const onClickHome = useCallback(() => history.push("/"), []);
-  const onClickMypage = useCallback((id) => history.push(`/users/${id}`), []);
-  const onClickSignUp = useCallback(() => history.push("/signup"), []);
-  const onClickSignIn = useCallback(() => history.push("/signin"), []);
-  const onClickUserEdit = useCallback((id) => {
+  const onClickMypage = useCallback((id) => {
+    history.push(`/users/${id}`);
+    onClose();
+  }, []);
+  const onClickSignUp = useCallback(() => {
+    history.push("/signup");
+    onClose();
+  }, []);
+  const onClickSignIn = useCallback(() => {
+    history.push("/signin");
+    onClose();
+  }, []);
+  const onClickSetting = useCallback((id) => {
     history.push(`/users/edit/${id}`);
+    onClose();
   }, []);
 
   const onClickSignOut = async () => {
@@ -38,6 +48,7 @@ export const Header: VFC = memo(() => {
       showMessage({ title: "ログアウトできませんでした", status: "error" });
       console.log(error);
     }
+    onClose();
   };
 
   // 認証完了後はサインアウト用のボタンを表示
@@ -63,7 +74,7 @@ export const Header: VFC = memo(() => {
                 <MenuItem color="gray.600" onClick={() => onClickMypage(currentUser.id)}>
                   マイページ
                 </MenuItem>
-                <MenuItem color="gray.600" onClick={() => onClickUserEdit(currentUser.id)}>
+                <MenuItem color="gray.600" onClick={() => onClickSetting(currentUser.id)}>
                   プロフィール設定
                 </MenuItem>
                 <Divider />
@@ -99,7 +110,7 @@ export const Header: VFC = memo(() => {
         color="gray.50"
         align="center"
         justify="space-between"
-        padding={{ base: 2, md: 2 }}
+        padding="2"
         shadow="md"
         pos="sticky"
         top="0"
@@ -109,7 +120,7 @@ export const Header: VFC = memo(() => {
         <Flex align="center" as="a" _hover={{ cursor: "pointer" }} onClick={onClickHome}>
           <Heading
             as="h1"
-            fontSize={{ base: "lg", md: 30 }}
+            fontSize={{ base: "2xl", md: "30px" }}
             ml={4}
             transition="all 0.3s"
             _hover={{ textShadow: "0px 0px 10px #aaa" }}
@@ -129,6 +140,7 @@ export const Header: VFC = memo(() => {
         onClickSignIn={onClickSignIn}
         onClickSignOut={onClickSignOut}
         onClickMypage={() => onClickMypage(currentUser.id)}
+        onClickSetting={() => onClickSetting(currentUser.id)}
       />
     </>
   );

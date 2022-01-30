@@ -2,7 +2,7 @@
 import { memo, useEffect, VFC, useState, useCallback } from "react";
 import { useParams } from "react-router";
 import { useHistory } from "react-router-dom";
-import { Flex, Stack } from "@chakra-ui/react";
+import { Stack } from "@chakra-ui/react";
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/tabs";
 
 import { client } from "../../../lib/api/client";
@@ -18,10 +18,7 @@ export const User: VFC = memo(() => {
 
   const history = useHistory();
 
-  const onClickShowPost = useCallback(
-    (postId) => history.push(`/posts/${postId}`),
-    []
-  );
+  const onClickShowPost = useCallback((postId) => history.push(`/posts/${postId}`), []);
 
   useEffect(() => {
     client.get(`users/${id}`).then(({ data }) => {
@@ -35,15 +32,13 @@ export const User: VFC = memo(() => {
         <LoadingSpinner />
       ) : (
         <>
-          <Flex>
+          <Stack p={{ base: "0.5rem", md: "1rem" }} direction={{ base: "column", md: "row" }}>
             <UserInfomationContainer user={user} />
 
             <Tabs
               isFitted
               variant="solid-rounded"
               bg="white"
-              my={8}
-              mr={8}
               borderRadius={6}
               borderTopRadius={40}
               shadow="md"
@@ -51,10 +46,10 @@ export const User: VFC = memo(() => {
               colorScheme="cyan"
             >
               <TabList mb="1em" bg="gray.200" borderRadius="50">
-                <Tab>ツーリング記録</Tab>
-                <Tab>フォロー</Tab>
-                <Tab>フォロワー</Tab>
-                <Tab>いいね</Tab>
+                <Tab fontSize={{ base: "0.8rem", lg: "1rem" }}>ツーリング記録</Tab>
+                <Tab fontSize={{ base: "0.8rem", lg: "1rem" }}>フォロー</Tab>
+                <Tab fontSize={{ base: "0.8rem", lg: "1rem" }}>フォロワー</Tab>
+                <Tab fontSize={{ base: "0.8rem", lg: "1rem" }}>いいね</Tab>
               </TabList>
               <TabPanels bg="white">
                 <TabPanel>
@@ -82,14 +77,11 @@ export const User: VFC = memo(() => {
                   </Stack>{" "}
                 </TabPanel>
                 <TabPanel>
-                  <PostsContainer
-                    posts={user.likedPosts}
-                    onClick={onClickShowPost}
-                  />
+                  <PostsContainer posts={user.likedPosts} onClick={onClickShowPost} />
                 </TabPanel>
               </TabPanels>
             </Tabs>
-          </Flex>
+          </Stack>
         </>
       )}
     </>

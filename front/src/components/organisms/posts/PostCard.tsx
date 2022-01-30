@@ -62,12 +62,12 @@ export const PostCard: VFC<Props> = memo((props) => {
         >
           {prefectures.map((id, index) =>
             index <= 1 ? (
-              <Tag colorScheme="green" variant="subtle" fontWeight="bold">
+              <Tag key={index} colorScheme="green" variant="subtle" fontWeight="bold">
                 {PrefectureArray.find((prefecture) => prefecture.id === id)?.name}
               </Tag>
             ) : (
               index === 3 && (
-                <Tag color="black" bg="gray.300" fontWeight="bold" borderRadius="50">
+                <Tag key={index} color="black" bg="gray.300" fontWeight="bold" borderRadius="50">
                   +{prefectures.length - 2}
                 </Tag>
               )

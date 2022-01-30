@@ -70,7 +70,7 @@ export const SignUp: VFC = memo(() => {
   const disableSubmit: boolean = !name.value || !email.value || !password.value;
 
   return (
-    <Flex align="center" justify="center" height="80vh">
+    <Flex align="center" justify="center" height="80vh" px="0.5rem">
       <Box bg="white" w="sm" p={4} borderRadius="md" shadow="md">
         <Heading as="h1" size="lg" textAlign="center">
           ユーザー登録

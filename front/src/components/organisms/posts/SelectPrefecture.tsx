@@ -1,11 +1,5 @@
-import { memo, useEffect, VFC } from "react";
-import {
-  Flex,
-  Tag,
-  TagCloseButton,
-  TagLabel,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { ChangeEvent, memo, VFC } from "react";
+import { Flex, Tag, TagCloseButton, TagLabel, useDisclosure } from "@chakra-ui/react";
 import {
   Modal,
   ModalBody,
@@ -29,50 +23,37 @@ export const SelectPrefecture: VFC<Props> = memo((props) => {
   const { checkedPrefecture, setCheckedPrefecture } = props;
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const handleChange = (id: number, check: boolean) => {
+  // チェックボックス操作時の処理
+  const handleChange = (e: ChangeEvent<HTMLInputElement>, id: number, check: boolean) => {
+    e.preventDefault();
     let c_checkedPrefecture = checkedPrefecture.slice();
 
     if (check) {
-      if (c_checkedPrefecture.findIndex((prefId) => prefId === id) !== -1)
-        return;
+      if (c_checkedPrefecture.findIndex((prefId) => prefId === id) !== -1) return;
       setCheckedPrefecture([...checkedPrefecture, id]);
     } else {
-      const deletePrefecture = c_checkedPrefecture.findIndex(
-        (pref) => pref === id
-      );
+      const deletePrefecture = c_checkedPrefecture.findIndex((pref) => pref === id);
       if (deletePrefecture === -1) return;
       c_checkedPrefecture.splice(deletePrefecture, 1);
       setCheckedPrefecture(c_checkedPrefecture);
     }
   };
 
+  // 選択したエリアを取り消す関数
   const onClickCancel = (id: number) => {
     let c_checkedPrefecture = checkedPrefecture.slice();
-    const deletePrefecture = c_checkedPrefecture.findIndex(
-      (pref) => pref === id
-    );
+    const deletePrefecture = c_checkedPrefecture.findIndex((pref) => pref === id);
     if (deletePrefecture === -1) return;
     c_checkedPrefecture.splice(deletePrefecture, 1);
     setCheckedPrefecture(c_checkedPrefecture);
   };
-
-  useEffect(() => {
-    console.log(checkedPrefecture);
-  }, [checkedPrefecture]);
 
   return (
     <>
       <PrimaryButton onClick={onOpen}>エリア選択</PrimaryButton>
       <Flex pb="50px">
         {checkedPrefecture.map((id) => (
-          <Tag
-            key={id}
-            size="lg"
-            borderRadius="full"
-            variant="subtle"
-            colorScheme="green"
-            m="3px"
-          >
+          <Tag key={id} size="lg" borderRadius="full" variant="subtle" colorScheme="green" m="3px">
             <TagLabel fontWeight="semibold">
               {PrefectureArray.find((prefecture) => prefecture.id === id)?.name}
             </TagLabel>
@@ -87,10 +68,7 @@ export const SelectPrefecture: VFC<Props> = memo((props) => {
           <ModalHeader>エリアを選択する</ModalHeader>
           <ModalCloseButton />
           <ModalBody width="full">
-            <PrefectureCheckBox
-              onChange={handleChange}
-              checkedPrefecture={checkedPrefecture}
-            />
+            <PrefectureCheckBox onChange={handleChange} checkedPrefecture={checkedPrefecture} />
           </ModalBody>
           <ModalFooter>
             <PrimaryButton onClick={onClose}>完了</PrimaryButton>

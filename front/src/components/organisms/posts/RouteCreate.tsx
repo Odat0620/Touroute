@@ -12,8 +12,8 @@ import { mapStyles } from "../../../theme/mapStyles";
 import { latLngType } from "../../../types/api/posts/latLngType";
 
 const mapContainerStyle = {
-  height: "60vh",
-  width: "70vw",
+  height: "100%",
+  width: "100%",
 };
 
 // propsの型定義
@@ -117,7 +117,7 @@ export const RouteCreate: VFC<Props> = memo((props) => {
         <h1>Loading...</h1>
       ) : (
         <>
-          <Flex my={8} py={8} align="center" flexDirection="column">
+          <Flex align="center" flexDirection="column" w="100%">
             <Heading as="h2" fontSize="x-large" color="gray.600">
               ルートの設定
             </Heading>
@@ -128,7 +128,6 @@ export const RouteCreate: VFC<Props> = memo((props) => {
               <Button
                 bg="green.400"
                 color="green.900"
-                width="30%"
                 _hover={{ opacity: 0.8 }}
                 mr={2}
                 onClick={onClickPlaceStart}
@@ -139,7 +138,6 @@ export const RouteCreate: VFC<Props> = memo((props) => {
               <Button
                 bg="red.300"
                 color="red.900"
-                width="30%"
                 _hover={{ opacity: 0.8 }}
                 onClick={onClickPlaceGoal}
                 disabled={placeGoal}
@@ -147,42 +145,45 @@ export const RouteCreate: VFC<Props> = memo((props) => {
                 {!placeGoal ? "ゴール地点" : "設定中..."}
               </Button>
             </Box>
-            <GoogleMap
-              id="map"
-              mapContainerStyle={mapContainerStyle}
-              zoom={8}
-              options={{ styles: mapStyles }}
-              onLoad={onMapLoad}
-              onClick={onClickMap}
-              center={center}
-            >
-              {!destination && (
-                <Marker
-                  label={{ color: "white", text: "S", fontWeight: "bold" }}
-                  position={origin}
-                />
-              )}
-              {!origin && (
-                <Marker
-                  label={{ color: "white", text: "G", fontWeight: "bold" }}
-                  position={destination}
-                />
-              )}
 
-              {origin && destination && (
-                <DirectionsService
-                  options={{ origin, destination, travelMode: "DRIVING" }}
-                  callback={directionsCallback}
-                />
-              )}
-              {currentDirection !== null && (
-                <DirectionsRenderer
-                  options={{
-                    directions: currentDirection,
-                  }}
-                />
-              )}
-            </GoogleMap>
+            <Box h={{ base: "60vh", md: "80vh" }} w="100%">
+              <GoogleMap
+                id="map"
+                mapContainerStyle={mapContainerStyle}
+                zoom={8}
+                options={{ styles: mapStyles }}
+                onLoad={onMapLoad}
+                onClick={onClickMap}
+                center={center}
+              >
+                {!destination && (
+                  <Marker
+                    label={{ color: "white", text: "S", fontWeight: "bold" }}
+                    position={origin}
+                  />
+                )}
+                {!origin && (
+                  <Marker
+                    label={{ color: "white", text: "G", fontWeight: "bold" }}
+                    position={destination}
+                  />
+                )}
+
+                {origin && destination && (
+                  <DirectionsService
+                    options={{ origin, destination, travelMode: "DRIVING" }}
+                    callback={directionsCallback}
+                  />
+                )}
+                {currentDirection !== null && (
+                  <DirectionsRenderer
+                    options={{
+                      directions: currentDirection,
+                    }}
+                  />
+                )}
+              </GoogleMap>
+            </Box>
           </Flex>
         </>
       )}

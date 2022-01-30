@@ -32,32 +32,34 @@ export const ShowComment: VFC<Props> = memo((props) => {
 
   return (
     <>
-      <Box w="100%" pt={4} px={6} bg="blue.50" borderRadius={8}>
+      <Box w="100%" p={{ base: "0.5rem", md: "1rem" }} bg="blue.50" borderRadius={8}>
         <Text color="gray.700" textAlign="left">
           {text}
         </Text>
-        <Flex justify="flex-end" align="center" my={3}>
-          <Text mr={6} color="gray.500">
+        <Flex justify="flex-end" align="center" mt={3}>
+          <Text mr={6} fontSize={{ base: "0.8rem", md: "1rem" }} color="gray.500">
             {moment(createdAt).format("YYYY年MM月DD日 H:mm")}
           </Text>
-          <AvatarAndName name={user.name} avatarUrl={user.avatar.url} onClick={onClickUser} />
-          {currentUser.id === user.id && (
-            <Menu>
-              <MenuButton
-                as={IconButton}
-                icon={<VscEllipsis />}
-                variant="outline"
-                ml="10px"
-                h="30px"
-                borderRadius="50"
-              />
-              <MenuList minW={100}>
-                <MenuItem icon={<DeleteIcon />} color="red" onClick={() => setIsOpen(true)}>
-                  削除
-                </MenuItem>
-              </MenuList>
-            </Menu>
-          )}
+          <Flex align="center">
+            <AvatarAndName name={user.name} avatarUrl={user.avatar.url} onClick={onClickUser} />
+            {currentUser.id === user.id && (
+              <Menu>
+                <MenuButton
+                  as={IconButton}
+                  icon={<VscEllipsis />}
+                  variant="outline"
+                  ml="10px"
+                  h="30px"
+                  borderRadius="50"
+                />
+                <MenuList minW={100}>
+                  <MenuItem icon={<DeleteIcon />} color="red" onClick={() => setIsOpen(true)}>
+                    削除
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+            )}
+          </Flex>
         </Flex>
       </Box>
 

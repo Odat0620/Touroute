@@ -20,12 +20,23 @@ import { useSortPost } from "../../hooks/useSortPost";
 export const Home: VFC = memo(() => {
   const currentUser = useRecoilValue(signInUserState);
   const [posts, setPosts] = useState<Array<PostType> | null>(null);
+  const [sort, setSort] = useState<string>("新着");
 
   // フックス準備
   const history = useHistory();
   const { showMessage } = useMessage();
-  const sortByLikes = useSortPost(posts, "likes");
-  const sortByCreatedAt = useSortPost(posts, "createdAt");
+  const PostsSortedByLikes = useSortPost(posts, "likes");
+  const PostsSortedByCreatedAt = useSortPost(posts, "createdAt");
+
+  const sortByCreatedAt = () => {
+    setPosts(PostsSortedByCreatedAt);
+    setSort("新着");
+  };
+
+  const sortByLikes = () => {
+    setPosts(PostsSortedByLikes);
+    setSort("いいね数");
+  };
 
   const onClickShowPost = useCallback((id) => history.push(`/posts/${id}`), []);
 
@@ -45,7 +56,7 @@ export const Home: VFC = memo(() => {
 
   return (
     <Box align="center">
-      <Box bg="#00a3c4" w="full" mb="1rem" h="200px" align="center" justify="center">
+      <Box bg="#00a3c4" w="full" mb="1.5rem" h="200px" align="center" justify="center">
         <Heading
           as="h1"
           pt="30px"
@@ -64,22 +75,50 @@ export const Home: VFC = memo(() => {
           </>
         )}
       </Box>
-      <Flex>
-        <Box w="20%" maxW="200px" h="200px" m="0.5rem" borderRadius="8px" bg="white" shadow="md">
+      <Flex direction={{ base: "column", md: "row" }} justify="center">
+        <Flex
+          direction={{ base: "row", md: "column" }}
+          w={{ balse: "full", md: "20%" }}
+          minW="150px"
+          h={{ base: "fit-content", md: "200px" }}
+          mx="0.5rem"
+          mb={{ base: "1rem", md: "none" }}
+          borderRadius="8px"
+          bg="white"
+          shadow="md"
+        >
           <DashBoardButton
-            borderTopRadius="8px"
+            px="1rem"
+            borderRadius={{ base: "8px" }}
+            borderTopRadius={{ md: "8px" }}
+            borderBottomRadius={{ md: "none" }}
             icon={<MdFiberNew />}
-            onClick={() => setPosts(sortByCreatedAt)}
+            onClick={sortByCreatedAt}
           >
             新着
           </DashBoardButton>
-          <Divider />
-          <DashBoardButton icon={<AiFillHeart />} onClick={() => setPosts(sortByLikes)}>
+          <Divider display={{ base: "none", md: "block" }} />
+          <DashBoardButton
+            px="1rem"
+            borderRadius={{ base: "8px", md: "none" }}
+            icon={<AiFillHeart />}
+            onClick={sortByLikes}
+          >
             いいね数
           </DashBoardButton>
-        </Box>
+        </Flex>
 
-        <Box w="80%">
+        <Box w={{ base: "full", md: "80%" }} justify="center">
+          <Flex display={{ base: "", md: "flex" }} mx="0.5rem" borderBottom="3px solid #A0AEC0">
+            <Text
+              ml={{ base: "none", md: "1rem" }}
+              fontWeight="bold"
+              fontSize="lg"
+              color="gray.600"
+            >
+              {sort}
+            </Text>
+          </Flex>
           {!posts ? <LoadingSpinner /> : <PostsContainer posts={posts} onClick={onClickShowPost} />}
         </Box>
       </Flex>

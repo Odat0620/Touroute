@@ -149,19 +149,26 @@ export const EditUser: VFC = memo(() => {
 
   return (
     <>
-      <Flex align="center" justify="center" direction="column">
-        <Box my={8} bg="white" p={8} borderRadius={6} shadow="md" w="70%">
+      <Flex align="center" justify="center" px="0.5rem">
+        <Box
+          w={{ base: "full", md: "90%" }}
+          my={{ base: "1rem", md: "2rem" }}
+          p={{ base: "1rem", md: "1.5rem" }}
+          bg="white"
+          shadow="md"
+          borderRadius="8px"
+        >
           <Heading textAlign="center" mb={8}>
             プロフィール編集
           </Heading>
           <Stack justify="center" align="center" spacing="4rem">
-            <Box w="2xl">
+            <Box w="full">
               <Stack>
                 <Text fontWeight="bold">ユーザーネーム</Text>
                 <Input {...userName} />
               </Stack>
             </Box>
-            <Box w="2xl">
+            <Box w="full">
               <Stack>
                 <Text fontWeight="bold">アバター</Text>
                 <Input
@@ -180,13 +187,13 @@ export const EditUser: VFC = memo(() => {
                 ) : null}
               </Stack>
             </Box>
-            <Box w="2xl">
+            <Box w="full">
               <Stack>
                 <Text fontWeight="bold">プロフィール</Text>
                 <Textarea {...profile} autoFocus />
               </Stack>
             </Box>
-            <Box w="2xl">
+            <Box w="full">
               <Stack>
                 <Text fontWeight="bold">活動地域</Text>
                 <Input {...location} />

@@ -21,7 +21,7 @@ export const FollowingAndFollowerList: VFC<{
         follow!.map((f) => (
           <Box
             key={f.id}
-            w="500px"
+            w="280px"
             h="200"
             bg="white"
             shadow="md"
@@ -31,11 +31,7 @@ export const FollowingAndFollowerList: VFC<{
             onClick={() => history.push(`/users/${f.id}`)}
           >
             <Box m={3}>
-              <AvatarAndName
-                name={f.name}
-                avatarUrl={f.avatar.thumb.url}
-                large
-              />
+              <AvatarAndName name={f.name} avatarUrl={f.avatar.thumb.url} large />
             </Box>
             <Box p={3} w="max-auto">
               <Text whiteSpace="pre-wrap">{f.profile}</Text>

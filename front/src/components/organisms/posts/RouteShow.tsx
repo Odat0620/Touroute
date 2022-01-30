@@ -5,13 +5,13 @@ import {
   GoogleMap,
   useLoadScript,
 } from "@react-google-maps/api";
-import { Heading, HStack, Stack, Tag, Text } from "@chakra-ui/react";
+import { Box, Heading, HStack, Stack, Tag, Text } from "@chakra-ui/react";
 
 import { mapStyles } from "../../../theme/mapStyles";
 import { latLngType } from "../../../types/api/posts/latLngType";
 
 const mapContainerStyle = {
-  height: "60vh",
+  height: "100%",
   width: "100%",
   borderRadius: "8px",
 };
@@ -76,7 +76,7 @@ export const RouteShow: VFC<Props> = memo((props) => {
         <h1>Loading...</h1>
       ) : (
         <>
-          <Stack my={8} py={8} w="full" align="center" flexDirection="column">
+          <Stack pt={8} w="full" align="center" flexDirection="column">
             <Heading as="h2" fontSize="x-large" color="gray.700">
               ルート
             </Heading>
@@ -87,21 +87,23 @@ export const RouteShow: VFC<Props> = memo((props) => {
               <Text color="gray.600">{distance}</Text>
             </HStack>
 
-            <GoogleMap
-              id="map"
-              mapContainerStyle={mapContainerStyle}
-              zoom={8}
-              options={{ styles: mapStyles }}
-              onLoad={onMapLoad}
-            >
-              <DirectionsService
-                options={{ origin, destination, travelMode: "DRIVING" }}
-                callback={directionsCallback}
-              />
-              {currentDirection !== null && (
-                <DirectionsRenderer options={{ directions: currentDirection }} />
-              )}
-            </GoogleMap>
+            <Box h={{ base: "60vh", md: "80vh" }} w="100%">
+              <GoogleMap
+                id="map"
+                mapContainerStyle={mapContainerStyle}
+                zoom={8}
+                options={{ styles: mapStyles }}
+                onLoad={onMapLoad}
+              >
+                <DirectionsService
+                  options={{ origin, destination, travelMode: "DRIVING" }}
+                  callback={directionsCallback}
+                />
+                {currentDirection !== null && (
+                  <DirectionsRenderer options={{ directions: currentDirection }} />
+                )}
+              </GoogleMap>
+            </Box>
           </Stack>
         </>
       )}

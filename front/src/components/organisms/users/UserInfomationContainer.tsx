@@ -1,14 +1,5 @@
 import { memo, VFC } from "react";
-import {
-  Avatar,
-  Box,
-  Divider,
-  Flex,
-  Heading,
-  Icon,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Avatar, Box, Divider, Flex, Heading, Icon, Stack, Text } from "@chakra-ui/react";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 
 import { Relationship } from "./Relationship";
@@ -19,36 +10,25 @@ export const UserInfomationContainer: VFC<{
 }> = memo(({ user }) => {
   return (
     <Box
-      m={8}
-      bg="white"
-      p={8}
+      w={{ base: "full", md: "30%" }}
+      minW={{ md: "300px" }}
       h="80vh"
+      p={{ base: "1rem", md: "1.5rem" }}
       minHeight="lg"
+      bg="white"
       borderRadius={6}
       shadow="md"
-      w="sm"
     >
       <Stack justify="center" align="center" spacing={5}>
         <Box align="center">
-          <Avatar
-            size="xl"
-            src={user.avatar?.url}
-            showBorder
-            borderColor="gray.300"
-          />
+          <Avatar size="xl" src={user.avatar?.url} showBorder borderColor="gray.300" />
           <Heading color="gray.600">{user?.name}</Heading>
         </Box>
 
         <Relationship user={user} />
 
         {user.location ? (
-          <Stack
-            w="full"
-            p={3}
-            border="1px solid #ddd"
-            borderRadius="8px"
-            position="relative"
-          >
+          <Stack w="full" p={3} border="1px solid #ddd" borderRadius="8px" position="relative">
             <Flex
               position="absolute"
               top="0"
