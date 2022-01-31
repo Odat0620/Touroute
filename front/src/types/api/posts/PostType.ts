@@ -17,7 +17,7 @@ export type PostType = {
   user: {
     name: string;
     uid?: string;
-    avatar: { url?: string; thumb: { url: string } };
+    avatar: { url?: string | undefined; thumb?: { url?: string | undefined } };
   };
   comments: Array<CommentType>;
   likes: Array<{ userId: number }>;
@@ -34,7 +34,7 @@ export type PostCardType = {
   user: {
     name: string;
     uid?: string;
-    avatar: { url?: string; thumb: { url: string } };
+    avatar: { url?: string | undefined; thumb: { url?: string | undefined } };
   };
   comments: Array<any>;
   likes: Array<{ userId: number }>;

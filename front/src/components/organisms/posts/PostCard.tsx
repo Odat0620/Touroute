@@ -18,7 +18,7 @@ type Props = {
   likes: Array<{ userId: number }>;
   name: string;
   userId: number;
-  avatarUrl?: string;
+  avatarUrl?: string | undefined;
   onClick: (id: number) => void;
 };
 
@@ -91,7 +91,7 @@ export const PostCard: VFC<Props> = memo((props) => {
         </Text>
         <CreatedAtArea createdAt={createdAt} />
         <LikesAndCommtnts likes={likes} commentsCount={commentsCount} id={id} />
-        <AvatarAndName name={name} avatarUrl={avatarUrl} />
+        <AvatarAndName name={name} avatarUrl={avatarUrl || undefined} />
       </Stack>
     </Box>
   );

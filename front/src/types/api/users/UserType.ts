@@ -7,9 +7,9 @@ export type FollowType = {
   location: string | undefined;
   created_at?: Date;
   avatar: {
-    url: string | undefined;
+    url?: string | undefined;
     thumb: {
-      url: string | undefined;
+      url?: string | undefined;
     };
   };
 };
@@ -19,7 +19,7 @@ export type UserType = {
   name: string;
   profile?: string;
   location?: string;
-  avatar?: { url: string; thumb: { url: string } };
+  avatar: { url?: string | undefined; thumb: { url?: string | undefined } };
   posts?: Array<PostCardType>;
   following?: Array<FollowType>;
   followers?: Array<FollowType>;

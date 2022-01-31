@@ -5,5 +5,5 @@ export type CommentType = {
   post_id: number;
   createdAt: Date;
   updatedAt: Date;
-  user: { id: number; name: string; avatar: { url?: string } };
+  user: { id: number; name: string; avatar: { url?: string | undefined } };
 };

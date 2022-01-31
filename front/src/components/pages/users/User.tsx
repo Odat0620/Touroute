@@ -56,7 +56,7 @@ export const User: VFC = memo(() => {
                   <PostsContainer
                     posts={user.posts}
                     userName={user.name}
-                    avatarUrl={user.avatar?.thumb.url}
+                    avatarUrl={user.avatar.url || `${process.env.PUBLIC_URL}/defUserThumb.png`}
                     onClick={onClickShowPost}
                   />
                 </TabPanel>

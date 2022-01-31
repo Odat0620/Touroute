@@ -60,7 +60,7 @@ export const LikesAndCommtnts: VFC<Props> = memo((props) => {
 
   return (
     <>
-      <Flex>
+      <Flex align="center">
         <Likes
           likedCount={likedCount}
           isLiked={isLiked}

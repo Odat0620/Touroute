@@ -9,7 +9,7 @@ import { useRecoilValue } from "recoil";
 
 import { client } from "../../lib/api/client";
 import { useMessage } from "../../hooks/useMessage";
-import { PostType } from "../../types/api/posts/PostType";
+import { PostCardType } from "../../types/api/posts/PostType";
 import { LoadingSpinner } from "../molecules/LoadingSpinner";
 import { PrimaryButton } from "../atoms/button/PrimaryButton";
 import { PostsContainer } from "../organisms/posts/PostsContainer";
@@ -19,7 +19,7 @@ import { useSortPost } from "../../hooks/useSortPost";
 
 export const Home: VFC = memo(() => {
   const currentUser = useRecoilValue(signInUserState);
-  const [posts, setPosts] = useState<Array<PostType> | null>(null);
+  const [posts, setPosts] = useState<Array<PostCardType> | null>(null);
   const [sort, setSort] = useState<string>("新着");
 
   // フックス準備
@@ -42,7 +42,7 @@ export const Home: VFC = memo(() => {
 
   useEffect(() => {
     client
-      .get<Array<PostType> | null>("posts")
+      .get<Array<PostCardType> | null>("posts")
       .then(({ data }) => {
         setPosts(data);
       })

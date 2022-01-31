@@ -13,7 +13,6 @@ import { signInUserState } from "../../../store/auth";
 
 export const SignUp: VFC = memo(() => {
   const [currentUser, setCurrentUser] = useRecoilState(signInUserState);
-
   const [loading, setLoading] = useState<boolean>(false);
 
   // フック使用準備
@@ -32,17 +31,19 @@ export const SignUp: VFC = memo(() => {
       await auth.createUserWithEmailAndPassword(email.value, password.value);
       const token = await auth.currentUser?.getIdToken(true);
       const config = { headers: { authorization: `Bearer ${token}` } };
-      const user_data = { name: name.value, email: email.value };
+      const user_data = {
+        name: name.value,
+        email: email.value,
+      };
       try {
         await client.post("users", user_data, config).then(({ data }) => {
           showMessage({
             title: "アカウントを作成しました。",
             status: "success",
           });
-          console.log(data);
           setCurrentUser({
             id: data.id,
-            email: data.value,
+            email: data.email,
             name: data.name,
             profile: data.profile,
             location: data.location,
@@ -68,14 +69,14 @@ export const SignUp: VFC = memo(() => {
     setLoading(false);
   };
 
-  useEffect(() => {
-    if (currentUser.uid) {
-      history.push("/");
-    }
-  }, [currentUser.uid, history]);
-
   // 入力欄が全て入力されたらfalse
   const disableSubmit: boolean = !name.value || !email.value || !password.value;
+
+  useEffect(() => {
+    if (currentUser.id) {
+      history.push("/");
+    }
+  }, [currentUser.id, history]);
 
   return (
     <Flex align="center" justify="center" height="80vh" px="0.5rem">

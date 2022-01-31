@@ -7,7 +7,7 @@ import { PostCardType } from "../../../types/api/posts/PostType";
 export const PostsContainer: VFC<{
   posts?: Array<PostCardType>;
   userName?: string;
-  avatarUrl?: string;
+  avatarUrl?: string | undefined;
   onClick: (id: number) => void;
 }> = memo(({ posts, userName, avatarUrl, onClick }) => {
   return (
@@ -30,7 +30,7 @@ export const PostsContainer: VFC<{
                 likes={post.likes!}
                 name={userName || post.user.name}
                 userId={post.userId}
-                avatarUrl={avatarUrl || post.user.avatar?.thumb.url}
+                avatarUrl={avatarUrl || post.user.avatar.thumb.url || ""}
                 onClick={() => onClick(post.id)}
               />
             </WrapItem>

@@ -11,5 +11,6 @@ export const signInUserState = atom<currentUserType>({
     profile: "",
     location: "",
     uid: "",
+    avatar: { url: "", thumb: { url: "" } },
   },
 });

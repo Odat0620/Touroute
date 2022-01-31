@@ -38,10 +38,10 @@ export const SignIn: VFC = memo(() => {
 
   // ログインしている場合トップページへ
   useEffect(() => {
-    if (currentUser.uid) {
+    if (currentUser.id) {
       history.push("/");
     }
-  });
+  }, [currentUser.id, history]);
 
   // 入力欄が全て入力されたらfalse(ログインボタンが押せるようになる)
   const disableSubmit: boolean = !email.value || !password.value;

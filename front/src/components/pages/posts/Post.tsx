@@ -118,6 +118,8 @@ export const Post: VFC = memo(() => {
         showMessage({ title: "削除に失敗しました。", status: "error" });
       });
   };
+  console.log(currentUser);
+  
 
   useEffect(() => {
     client.get(`posts/${id}`).then(({ data }) => {

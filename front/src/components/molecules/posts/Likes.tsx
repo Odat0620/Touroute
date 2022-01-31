@@ -20,11 +20,8 @@ export const Likes: VFC<Props> = memo((props) => {
     <>
       <Tooltip label="いいね！" bg="gray.400" fontSize="11px">
         {currentUser.uid ? (
-          <Flex mr={3}>
-            <Text
-              cursor="pointer"
-              onClick={isLiked ? onClickDeleteLike : onClickCreateLike}
-            >
+          <Flex mr={3} align="center" justify="center">
+            <Text cursor="pointer" onClick={isLiked ? onClickDeleteLike : onClickCreateLike}>
               <Icon
                 mr="3px"
                 fontSize="22px"
@@ -35,8 +32,8 @@ export const Likes: VFC<Props> = memo((props) => {
             <Text color="gray.600">{likedCount}</Text>
           </Flex>
         ) : (
-          <Flex mr={3}>
-            <Icon mr="1" fontSize="22px" color="gray.500" as={AiOutlineHeart} />
+          <Flex mr={3} align="center" justify="center">
+            <Icon mr="3px" fontSize="22px" color="gray.500" as={AiOutlineHeart} />
             <Text>{likedCount}</Text>
           </Flex>
         )}

@@ -3,7 +3,7 @@ import { VFC, memo } from "react";
 
 type Props = {
   name: string;
-  avatarUrl?: string;
+  avatarUrl?: string | undefined;
   onClick?: () => void;
   large?: true | undefined;
 };
@@ -16,7 +16,7 @@ export const AvatarAndName: VFC<Props> = memo((props) => {
       <Avatar
         h={large ? "60px" : "40px"}
         w={large ? "60px" : "40px"}
-        src={avatarUrl || ""}
+        src={avatarUrl || `${process.env.PUBLIC_URL}/defUserThumb.png`}
         showBorder
         borderColor="gray.300"
       />

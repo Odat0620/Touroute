@@ -4,6 +4,6 @@ export type currentUserType = {
   name: string;
   profile: string;
   location: string;
-  avatar?: { url: string };
+  avatar: { url?: string | undefined; thumb: { url?: string | undefined } };
   uid: string;
 };

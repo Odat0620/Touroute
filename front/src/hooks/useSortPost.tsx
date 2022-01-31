@@ -1,13 +1,13 @@
-import { PostType } from "../types/api/posts/PostType";
+import { PostCardType } from "../types/api/posts/PostType";
 
 export const useSortPost = (
-  posts: PostType[] | null,
+  posts: PostCardType[] | null,
   sort: "likes" | "createdAt",
-): PostType[] | null => {
+): PostCardType[] | null => {
   if (!posts) return null;
 
   let c_posts = posts.slice();
-  const compare = (a: PostType, b: PostType) => {
+  const compare = (a: PostCardType, b: PostCardType) => {
     let sortA: number | Date = a.createdAt;
     let sortB: number | Date = b.createdAt;
 
