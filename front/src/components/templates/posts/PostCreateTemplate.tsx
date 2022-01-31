@@ -119,10 +119,14 @@ export const PostCreateTemplate: VFC<Props> = (props) => {
             />
 
             <HStack spacing="3rem">
-              <BackButton onClick={goBack} disabled={loadingButton} loading={loadingButton}>
+              <BackButton onClick={goBack} disabled={loadingButton} isLoading={loadingButton}>
                 戻る
               </BackButton>
-              <PrimaryButton onClick={onClickSend} disabled={loadingButton} loading={loadingButton}>
+              <PrimaryButton
+                onClick={onClickSend}
+                disabled={loadingButton}
+                isLoading={loadingButton}
+              >
                 {process === "create" ? "作成" : "更新"}
               </PrimaryButton>
             </HStack>

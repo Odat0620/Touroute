@@ -2,7 +2,7 @@ import { memo, useState, VFC, useEffect } from "react";
 import { useHistory } from "react-router";
 import { Input } from "@chakra-ui/input";
 import { Box, Divider, Flex, Heading, Stack } from "@chakra-ui/layout";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 
 import { useInput } from "../../../hooks/useInput";
 import { useMessage } from "../../../hooks/useMessage";
@@ -12,7 +12,7 @@ import { client } from "../../../lib/api/client";
 import { signInUserState } from "../../../store/auth";
 
 export const SignUp: VFC = memo(() => {
-  const currentUser = useRecoilValue(signInUserState);
+  const [currentUser, setCurrentUser] = useRecoilState(signInUserState);
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -39,6 +39,17 @@ export const SignUp: VFC = memo(() => {
             title: "アカウントを作成しました。",
             status: "success",
           });
+          console.log(data);
+          setCurrentUser({
+            id: data.id,
+            email: data.value,
+            name: data.name,
+            profile: data.profile,
+            location: data.location,
+            uid: data.uid,
+            avatar: data.avatar,
+          });
+          setLoading(false);
           history.push("/");
         });
       } catch (data: any) {
@@ -81,7 +92,7 @@ export const SignUp: VFC = memo(() => {
 
           <Input type="password" {...password} placeholder="パスワード" borderRadius="8px" />
 
-          <PrimaryButton disabled={disableSubmit} loading={loading} onClick={onClickSignUp}>
+          <PrimaryButton disabled={disableSubmit} isLoading={loading} onClick={onClickSignUp}>
             登録
           </PrimaryButton>
         </Stack>

@@ -195,7 +195,7 @@ export const EditUser: VFC = memo(() => {
               </Stack>
             </Box>
 
-            <PrimaryButton loading={loading} onClick={onClickUpdate}>
+            <PrimaryButton isLoading={loading} onClick={onClickUpdate}>
               保存
             </PrimaryButton>
 

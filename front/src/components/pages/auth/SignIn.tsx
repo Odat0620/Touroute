@@ -62,7 +62,7 @@ export const SignIn: VFC = memo(() => {
             borderRadius="8px"
           />
           <Input type="password" {...password} placeholder="パスワード" borderRadius="8px" />
-          <PrimaryButton disabled={disableSubmit} loading={loading} onClick={onClickSignIn}>
+          <PrimaryButton disabled={disableSubmit} isLoading={loading} onClick={onClickSignIn}>
             ログイン
           </PrimaryButton>
         </Stack>

@@ -2,12 +2,11 @@ import { VFC } from "react";
 import { Button, ButtonProps } from "@chakra-ui/button";
 
 type Props = ButtonProps & {
-  loading?: boolean;
   disabled?: boolean;
 };
 
 export const BackButton: VFC<Props> = (props) => {
-  const { loading, disabled } = props;
+  const { disabled } = props;
 
   return (
     <Button
@@ -15,8 +14,7 @@ export const BackButton: VFC<Props> = (props) => {
       color="white"
       shadow="md"
       _hover={{ opacity: 0.8 }}
-      isLoading={loading}
-      disabled={disabled || loading}
+      disabled={disabled}
       {...props}
     />
   );
