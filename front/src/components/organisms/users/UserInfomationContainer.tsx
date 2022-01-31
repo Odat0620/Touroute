@@ -21,7 +21,7 @@ export const UserInfomationContainer: VFC<{
     >
       <Stack justify="center" align="center" spacing={5}>
         <Box align="center">
-          <Avatar size="xl" src={user.avatar?.url} showBorder borderColor="gray.300" />
+          <Avatar size="xl" src={user.avatar?.url || ""} showBorder borderColor="gray.300" />
           <Heading color="gray.600">{user?.name}</Heading>
         </Box>
 

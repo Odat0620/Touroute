@@ -16,16 +16,11 @@ export const AvatarAndName: VFC<Props> = memo((props) => {
       <Avatar
         h={large ? "60px" : "40px"}
         w={large ? "60px" : "40px"}
-        src={avatarUrl}
+        src={avatarUrl || ""}
         showBorder
         borderColor="gray.300"
       />
-      <Text
-        ml={2}
-        fontWeight="bold"
-        color="gray.600"
-        fontSize={large && "32px"}
-      >
+      <Text ml={2} fontWeight="bold" color="gray.600" fontSize={large && "32px"}>
         {name}
       </Text>
     </Flex>
