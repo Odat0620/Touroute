@@ -47,20 +47,15 @@ export const RouteShow: VFC<Props> = memo((props) => {
             googleResponse.status === "OK" &&
             googleResponse.geocoded_waypoints.length !== currentDirection.geocoded_waypoints.length
           ) {
-            console.log("ルートが変更されたのでstateを更新する");
             setCurrentDirection(googleResponse);
             setDistance(routeDistance);
           } else {
-            console.log("前回と同じルートのためstateを更新しない");
           }
         } else {
           if (googleResponse.status === "OK") {
-            console.log("初めてルートが設定されたため、stateを更新する");
-            console.log(googleResponse);
             setCurrentDirection(googleResponse);
             setDistance(routeDistance);
           } else {
-            console.log("前回と同じルートのためstateを更新しない");
           }
         }
       }
@@ -95,10 +90,12 @@ export const RouteShow: VFC<Props> = memo((props) => {
                 options={{ styles: mapStyles }}
                 onLoad={onMapLoad}
               >
-                <DirectionsService
-                  options={{ origin, destination, travelMode: "DRIVING" }}
-                  callback={directionsCallback}
-                />
+                {origin && destination && (
+                  <DirectionsService
+                    options={{ origin, destination, travelMode: "DRIVING" }}
+                    callback={directionsCallback}
+                  />
+                )}
                 {currentDirection !== null && (
                   <DirectionsRenderer options={{ directions: currentDirection }} />
                 )}

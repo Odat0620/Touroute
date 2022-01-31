@@ -39,12 +39,10 @@ export const SignUp: VFC = memo(() => {
             title: "アカウントを作成しました。",
             status: "success",
           });
-          console.log(data);
           history.push("/");
         });
       } catch (data: any) {
         showMessage({ title: `${data.data.errors}`, status: "error" });
-        console.log(data);
       }
     } catch (error: any) {
       if (error.code === "auth/email-already-in-use") {
@@ -55,7 +53,6 @@ export const SignUp: VFC = memo(() => {
       } else {
         showMessage({ title: "ユーザー登録に失敗しました。", status: "error" });
       }
-      console.log(error);
     }
     setLoading(false);
   };

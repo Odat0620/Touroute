@@ -63,7 +63,6 @@ export const Post: VFC = memo(() => {
       .delete(`/posts/${id}`, { data: { userId: currentUser.id } })
       .then((res) => {
         showMessage({ title: "削除しました。", status: "success" });
-        console.log(res);
         history.push("/");
       })
       .catch(() => {
@@ -98,7 +97,6 @@ export const Post: VFC = memo(() => {
         onClose();
       })
       .catch(({ response }) => {
-        console.log(response);
         showMessage({
           title: `コメント${response.data.text}`,
           status: "error",
@@ -124,7 +122,6 @@ export const Post: VFC = memo(() => {
   useEffect(() => {
     client.get(`posts/${id}`).then(({ data }) => {
       setPost(data);
-      console.log(data);
     });
   }, [id]);
 

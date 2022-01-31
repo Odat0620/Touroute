@@ -64,7 +64,6 @@ export const EditUser: VFC = memo(() => {
     formData.append("email", currentUser.email!);
     formData.append("uid", currentUser.uid);
 
-    console.log(formData);
     return formData;
   };
 
@@ -78,7 +77,6 @@ export const EditUser: VFC = memo(() => {
     await client
       .patch(`users/${id}`, data, config)
       .then(({ data }) => {
-        console.log(data);
         showMessage({ title: "保存しました。", status: "success" });
         history.push(`/users/${id}`);
         setCurrentUser({
@@ -93,7 +91,6 @@ export const EditUser: VFC = memo(() => {
         setLoading(false);
       })
       .catch((error) => {
-        console.log(error);
         showMessage({ title: "保存に失敗しました。", status: "error" });
         setLoading(false);
       });
@@ -126,7 +123,6 @@ export const EditUser: VFC = memo(() => {
               title: "アカウントを削除に失敗しました。",
               status: "error",
             });
-            console.log(error);
           });
       })
       .catch((error) => {
@@ -135,7 +131,6 @@ export const EditUser: VFC = memo(() => {
           title: "アカウントを削除に失敗しました。",
           status: "error",
         });
-        console.log(error);
       });
     setIsOpen(false);
   };

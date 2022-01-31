@@ -7,7 +7,7 @@ import "./App.css";
 import { Router } from "./router/Router";
 import theme from "./theme/theme";
 import { auth } from "./utils/Firebase";
-import { fetchUserData } from "./lib/api/User";
+import { fetchUserData } from "./lib/api/user";
 import { signInUserState } from "./store/auth";
 
 function App() {

@@ -32,7 +32,6 @@ export const SignIn: VFC = memo(() => {
       history.push("/");
     } catch (error) {
       showMessage({ title: "ログインに失敗しました。", status: "error" });
-      console.log(error);
     }
     setLoading(false);
   };

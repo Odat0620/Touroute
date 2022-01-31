@@ -58,21 +58,15 @@ export const RouteCreate: VFC<Props> = memo((props) => {
             googleResponse.status === "OK" &&
             googleResponse.geocoded_waypoints.length !== currentDirection.geocoded_waypoints.length
           ) {
-            console.log("ルートが変更されたのでstateを更新する");
             setCurrentDirection(googleResponse);
             setDistance(routeDistance);
           } else {
-            console.log("前回と同じルートのためstateを更新しない");
           }
         } else {
           if (googleResponse.status === "OK") {
-            console.log("初めてルートが設定されたため、stateを更新する");
-            console.log(googleResponse);
             setCurrentDirection(googleResponse);
             setDistance(routeDistance);
           } else {
-            console.log("前回と同じルートのためstateを更新しない");
-            console.log(googleResponse);
           }
         }
       }
@@ -156,13 +150,13 @@ export const RouteCreate: VFC<Props> = memo((props) => {
                 onClick={onClickMap}
                 center={center}
               >
-                {!destination && (
+                {!destination && origin && (
                   <Marker
                     label={{ color: "white", text: "S", fontWeight: "bold" }}
                     position={origin}
                   />
                 )}
-                {!origin && (
+                {!origin && destination && (
                   <Marker
                     label={{ color: "white", text: "G", fontWeight: "bold" }}
                     position={destination}

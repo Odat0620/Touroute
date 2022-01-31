@@ -46,7 +46,6 @@ export const Header: VFC = memo(() => {
       showMessage({ title: "ログアウトしました。", status: "success" });
     } catch (error) {
       showMessage({ title: "ログアウトできませんでした", status: "error" });
-      console.log(error);
     }
     onClose();
   };
