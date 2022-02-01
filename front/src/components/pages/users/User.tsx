@@ -51,7 +51,7 @@ export const User: VFC = memo(() => {
                 <Tab fontSize={{ base: "0.8rem", lg: "1rem" }}>フォロワー</Tab>
                 <Tab fontSize={{ base: "0.8rem", lg: "1rem" }}>いいね</Tab>
               </TabList>
-              <TabPanels bg="white">
+              <TabPanels bg="white" borderBottomRadius="8px">
                 <TabPanel>
                   <PostsContainer
                     posts={user.posts}

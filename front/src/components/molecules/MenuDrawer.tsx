@@ -49,7 +49,7 @@ export const MenuDrawer: VFC<Props> = memo((props) => {
             {currentUser?.id ? (
               <>
                 <Avatar
-                  src={currentUser.avatar?.url}
+                  src={currentUser.avatar?.url || `${process.env.PUBLIC_URL}/defUserThumb.png`}
                   h="40px"
                   w="40px"
                   mr="10px"
