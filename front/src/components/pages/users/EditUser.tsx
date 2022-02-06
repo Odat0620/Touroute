@@ -198,17 +198,20 @@ export const EditUser: VFC = memo(() => {
             <PrimaryButton isLoading={loading} onClick={onClickUpdate}>
               保存
             </PrimaryButton>
+            {currentUser.email !== process.env.REACT_APP_GUEST_EMAIL && (
+              <>
+                <Divider />
 
-            <Divider />
-
-            <Button
-              colorScheme="red"
-              borderRadius={30}
-              isLoading={loading}
-              onClick={() => setIsOpen(true)}
-            >
-              アカウント削除
-            </Button>
+                <Button
+                  colorScheme="red"
+                  borderRadius={30}
+                  isLoading={loading}
+                  onClick={() => setIsOpen(true)}
+                >
+                  アカウント削除
+                </Button>
+              </>
+            )}
           </Stack>
         </Box>
       </Flex>

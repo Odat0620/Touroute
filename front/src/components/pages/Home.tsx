@@ -16,11 +16,13 @@ import { PostsContainer } from "../organisms/posts/PostsContainer";
 import { DashBoardButton } from "../atoms/button/DashBoardButton";
 import { signInUserState } from "../../store/auth";
 import { useSortPost } from "../../hooks/useSortPost";
+import { auth } from "../../utils/Firebase";
 
 export const Home: VFC = memo(() => {
   const currentUser = useRecoilValue(signInUserState);
   const [posts, setPosts] = useState<Array<PostCardType> | null>(null);
   const [sort, setSort] = useState<string>("新着");
+  const [loading, setLoading] = useState<boolean>(false);
 
   // フックス準備
   const history = useHistory();
@@ -39,6 +41,23 @@ export const Home: VFC = memo(() => {
   };
 
   const onClickShowPost = useCallback((id) => history.push(`/posts/${id}`), []);
+
+  // ゲストログイン（仮）
+  const guestLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await auth.signInWithEmailAndPassword(
+        process.env.REACT_APP_GUEST_EMAIL!,
+        process.env.REACT_APP_GUEST_PASSWORD!,
+      );
+      showMessage({ title: "ログインしました。", status: "success" });
+      history.push("/");
+    } catch (error) {
+      showMessage({ title: "ログインに失敗しました。", status: "error" });
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
     client
@@ -69,10 +88,14 @@ export const Home: VFC = memo(() => {
         <Text mb="20px" color="whiteAlpha.900" fontWeight="bold">
           ツーリングルートの共有アプリです。
         </Text>
-        {currentUser.uid && (
+        {currentUser.uid ? (
           <>
             <PrimaryButton onClick={() => history.push("/createpost")}>投稿する</PrimaryButton>
           </>
+        ) : (
+          <PrimaryButton isLoading={loading} onClick={guestLogin}>
+            ゲストログイン
+          </PrimaryButton>
         )}
       </Box>
       <Flex direction={{ base: "column", md: "row" }} justify="center">

@@ -49,6 +49,8 @@ services:
         FIREBASE_APP_ID: $FIREBASE_APP_ID
         FIREBASE_MEASUREMENT_ID: $FIREBASE_MEASUREMENT_ID
         GMAP_API_KEY: $GMAP_API_KEY
+        GUEST_EMAIL: $GUEST_EMAIL
+        GUEST_PASSWORD: $GUEST_PASSWORD
     command: sh -c "yarn start"
     ports:
       - "$FRONT_PORT:3000"
