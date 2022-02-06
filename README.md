@@ -6,7 +6,7 @@ Touroute(ツールート)はツーリングルートを共有できる SNS 型�
 ![touroute](https://user-images.githubusercontent.com/74518397/151886494-ac15ed9b-2458-445b-bc22-883515fe4517.png)
 
 ### レスポンシブ対応
-ツーリング先での利用も想定してレスポンシブに対応してます。
+ツーリング先でのスマホ利用も想定してレスポンシブに対応してます。<br>
 ![レスポンシブ](https://user-images.githubusercontent.com/74518397/151893947-39128634-306a-445d-9044-bd5056ceb3f5.gif)
 
 ## 開発動機
@@ -27,6 +27,7 @@ Touroute(ツールート)はツーリングルートを共有できる SNS 型�
 | 名称                    | 説明                         |
 | ----------------------- | ---------------------------- |
 | React                   | フロントエンドライブラリ     |
+| TypeScript              | 型定義                   |
 | Chakra UI               | UI コンポーネント            |
 | Firebase Authentication | ログイン・ログアウト         |
 
